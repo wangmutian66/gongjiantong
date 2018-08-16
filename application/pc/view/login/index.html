@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <title>{$title}</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="PC_CSS/style.css" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/login.css" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    
+</head>
+
+<body>
+    <div class="header">
+        <div class="wrap">
+            <a class="header-left fl" href="javascript:;">收藏本站</a>
+            <div class="header-right fr">
+                <a class="login" href="{:url('pc/Login/Index')}">登录</a>
+                <span class="line"></span>
+                <a href="{:url('pc/Login/logout')}">退出</a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="wrap">
+            <div class="user-login">
+                <div class="message">用户登录</div>
+                <div class="darkbannerwrap"></div>
+                <div class="login-wrap">
+                    <form onsubmit="return false;">
+                        <input id="phone" name="u_mobile" placeholder="手机号" required="" type="text">
+                        <span class="spa spa1"></span>
+                        <input id="pwd" name="u_passwd" placeholder="密码" required="" type="password" minlength="6">
+                        <span class="spa spa2"></span>
+                        <input type="text" name="captcha" placeholder="验证码" id="u_captcha" style="width: 40%">
+                        <div class="verification_code">
+                            <img src="{:captcha_src()}" alt="captcha" onclick="refreshVerify()" id="captcha_img"/>
+                            <a href="javascript:refreshVerify()">看不清?点击更换</a>
+                        </a>
+                        </div>
+                        <span class="spa spa3"></span>
+                        <input onclick="check_login()" value="登录" type="submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="wrap">
+            <div class="footer-con">
+                <p class="footer-link">
+                    <a href="#">关于我们</a>
+                    <span class="split">|</span>
+                    <a href="#">版权声明</a>
+                    <span class="split">|</span>
+                    <a href="#">帮助中心</a>
+                    <span class="split">|</span>
+                    <a href="#">联系我们</a>
+                    <span class="split">|</span>
+                    <a href="#">加入我们</a>
+                </p>
+                <p>
+                    Copyright © 2017-2017 特讯texun.com 版权所有
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+        window.onload = function() {
+            $("#phone").focus()
+        }
+        /****失焦判断****/
+        $("input").blur(function() {
+            $(".spa").css("color", "#BD362F")
+            if ($(this).is("#phone")) {
+                var ph = /^1[3|5|7|8|][0-9]{9}$/
+                if ($("#phone").val() != "") {
+                    if (!(ph.test($("#phone").val()))) {
+                        $(".spa1").text("请输入正确手机号");
+                        $(this).css("border", "1px solid #BD362F")
+                        return false;
+                    } else if (ph) {
+                        $(".spa1").text("")
+                        $(this).css("border", "1px solid green")
+                        return true;
+                    }
+                } else {
+                    $(".spa1").text("不能为空").css("color", "#BD362F")
+                    $(this).css("border", "1px solid #BD362F")
+                }
+            }
+            if ($(this).is("#pwd")) {
+                var pwd = $("#pwd").val().length
+                if (pwd < 6) {
+                    $(".spa2").text("密码至少6位");
+                    $(this).css("border", "1px solid #BD362F")
+                    return false;
+                } else {
+                    $(".spa2").text("")
+                    $(this).css("border", "1px solid green")
+                    return true;
+                }
+            }
+            if ($(this).is("#u_captcha")) {
+                var ver = $("#u_captcha").val()
+                if (ver != "") {
+                    $(this).css("border", "1px solid green")
+                    $(".spa3").text("")
+                    return true;
+                } else {
+                    $(this).css("border", "1px solid #BD362F")
+                    $(".spa3").text("不能为空")
+                    return false;
+                }
+            }
+        })
+        /****聚焦判断****/
+        $("input").focus(function() {
+            if ($(this).is("#phone")) {
+                $(".spa1").text("11位手机号").css("color", "#aaa")
+            }
+            if ($(this).is("#pwd")) {
+                $(".spa2").text("至少6位密码").css("color", "#aaa")
+            }
+            if ($(this).is("#u_captcha")) {
+                $(".spa3").text("输入右侧看到的数字").css("color", "#aaa")
+            }
+        })
+        /****提交验证****/
+        function check_login() {
+            var ph = /^1[3|5|7|8|][0-9]{9}$/;
+            var pwd = $("#pwd").val().length;
+            var ver = $("#u_captcha").val();
+            var users_mobile = $("#phone").val();
+            var users_passwd = $("#pwd").val();
+            var users_captcha= $("#u_captcha").val();
+            if (ph.test($("#phone").val()) && pwd >= 6 && ver != "") {
+                $.ajax({
+                    url:'{:url("pc/Login/pcLogin")}',
+                    type:'post',
+                    data:{u_mobile:users_mobile,u_passwd:users_passwd,u_captcha:users_captcha},
+                    dataType:'json',
+                    success:function(info){
+                        if (info.code != '1') {
+                            swal({
+                                title: "登录失败!",
+                                text: info.msg
+                            });
+                        }else{
+                            swal({
+                                title: info.msg,
+                            });
+                            window.location.href = '{:url("pc/Index/index")}';
+                        }
+                    },
+                    error:function() {
+                        swal({
+                            title: "通讯出错!",
+                            text: "请联系开发人员或管理员!"
+                        });
+                    }
+                });
+            } else {
+                return false;
+            }
+        }
+        function refreshVerify() {
+            // var ts = Date.parse(new Date())/1000;
+            // $('#captcha_img').attr('src','index.php/captcha?id='+ts);
+            var ts = Date.parse(new Date())/1000;
+            var url ="{:url('/captcha')}"+'?id='+ts;
+            $('#captcha_img').attr('src',url);
+
+        }
+    </script>
+</body>
+</html>

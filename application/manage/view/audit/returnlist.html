@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>退货列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 style="width:40%">退货列表 </h5>
+                       <!--  <div class="ibox-tools" style="margin-right: 15px;">
+                            <a href="{:url('seller/Recruitment/recruitmentAdd')}">
+                                <i class="fa fa-plus"></i>
+                                招聘添加
+                            </a>
+                        </div> -->
+                    </div>
+                    <div class="ibox-content">
+                        
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+
+                                        <th>订单编号</th>
+                                        <th>商品名称</th>
+                                        <th>申请日期</th>
+                                        <th>下单日期</th>
+                                        <th>是否申请售后</th>
+                                        <th>是否确认</th>
+                                        <th>是否收货</th>
+                                        <th>是否退款</th>
+                                        <th>是否完成</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($g_value) and !empty($g_value)"}
+                                    {foreach name="g_value" item="info"}
+                                        <tr id="ri_{$info.o_id}">
+
+                                            <td>
+                                                {$info.o_sn}
+                                            </td>
+                                            <td>
+                                                {$info.g_name}
+                                            </td>
+
+                                            <td>
+                                                {$info.or_time|date='Y-m-d H:i',###}
+                                            </td>
+                                            <td>
+                                                {$info.o_add_time|date='Y-m-d H:i',###}
+                                            </td>
+                                            <td>
+                                                <span style="color: green;">已申请售后</span>
+                                            </td>
+                                            <td>
+                                                {if condition="$info.or_status eq 0"}
+                                                <span style="color: red;">待确认</span>
+                                                {else/}
+                                                <span style="color: green;">已确认</span>
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.or_receiving eq 0"}
+                                                <span style="color: red;">待收货</span>
+                                                {else/}
+                                                <span style="color: green;">已收货</span>
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.or_refund eq 0"}
+                                                <span style="color: red;">待退款</span>
+                                                {elseif condition="$info.or_refund eq 1"}
+                                                <span style="color: blue;">申请退款</span>
+                                                {else/}
+                                                <span style="color: green;">已退款</span>
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.or_over eq 0"}
+                                                <span style="color: red;">待完成</span>
+                                                {else/}
+                                                <span style="color: green;">已完成</span>
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {if $info.or_refund eq '1'}
+                                                <a href="{:url('manage/Audit/return_info',array('or_id'=>$info.or_id))}" class="btn btn-default btn-xs green"><i class="fa fa-list-alt"></i>&nbsp;退货 </a>
+                                                {else/}
+                                                <a href="{:url('manage/Audit/return_info',array('or_id'=>$info.or_id))}" class="btn btn-default btn-xs green"><i class="fa fa-list-alt"></i>&nbsp;编辑 </a>
+                                                {/if}
+
+
+
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- 全局js -->
+    <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="SELLER_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/demo/peity-demo.js"></script>
+    <script src="SELLER_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+
+        function delorder($or_id){
+            sweetAlert({
+                title: "确定删除吗?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#AEDEF4",
+                confirmButtonText: "确定",
+                cancelButtonText:"取消",
+                closeOnConfirm: false
+            }, function(){
+                $.ajax({
+                    url:"{:url('seller/Ordermanage/delorderReturn')}",
+                    data:{or_id:$or_id},
+                    type:"POST",
+                    dataType:"json",
+                    success:function(data){
+                        if(data.code == 200){
+                            swal("删除成功!",
+                                "",
+                                "success");
+                            $(".confirm").click(function(){
+                                window.location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+
+
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            用户行业添加
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/animate.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    </head>
+    <body class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>用户行业添加</h5>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a class="close-link" href="{:url('manage/index/welcome')}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a href="{:url('manage/Users/userIndustryList')}">
+                                    <i class="fa fa-bars"></i>
+                                    用户行业列表
+                                </a>
+                            </div>
+                        </div>  
+                        <div class="ibox-content">
+                            <form class="form-horizontal" method="POST" action="{:url('manage/Users/userIndustryEdit',array('id' => $info.ui_id))}">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        行业名称
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" id="ui_name" onblur="verifyInput('ui_name','chAlp','ui_name_show')" name="ui_name" value="{$info.ui_name}" />
+                                    </div>
+                                    <code id="ui_name_show">请输入中英文!</code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        是否可用
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <div class="switch">
+                                            <div class="onoffswitch">
+                                                <input type="checkbox" {if condition="$info.ui_status eq '1'"}checked{/if} class="onoffswitch-checkbox" id="ui_status" name="ui_status">
+                                                <label class="onoffswitch-label" for="ui_status">
+                                                    <span class="onoffswitch-inner"></span>
+                                                    <span class="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        描述
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <textarea  class="form-control" name="ui_desc" id="" cols="20" rows="10">{$info.ui_desc}</textarea>
+                                    </div>                                   
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="submit" value="保存内容" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 全局js -->
+        <script src="MANAGE_JS/jquery.min.js?v=2.1.4">
+        </script>
+        <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6">
+        </script>
+        <!-- 自定义js -->
+        <script src="MANAGE_JS/content.js?v=1.0.0">
+        </script>
+        <!-- iCheck -->
+        <script src="MANAGE_JS/plugins/iCheck/icheck.min.js">
+        </script>
+        <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+        <script type="text/javascript" src="MANAGE_JS/globals.js"></script>
+        <script>
+            limitInput('ui_name','chAlp');
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>广告列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">手机预览</h4>
+                </div>
+                <div class="modal-body" style="padding: 0;">
+                    <div id="iframe-wrap" class="mobile-width-2">
+                        <div class="modelbg model-ad1">
+                            <div class="adimg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">提交更改</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>广告列表</h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a class="close-link" href="{:url('manage/index/welcome')}">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a href="{:url('manage/Ad/adAdd')}">
+                                <i class="fa fa-plus"></i>
+                                广告添加
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <form action="" method="get">
+                                <div class="col-sm-2 m-b-xs">
+                                    <select class="input-sm form-control input-s-sm inline" name="ma_status" style="height: 31px;">
+                                        <option value="">请选择状态</option>
+                                        <option value="1">开启</option>
+                                        <option value="0">关闭</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="请输入名称" class="input-sm form-control" name="ma_name" value="{if condition="isset($data.map_name)"}{$data.m_name}{/if}">
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-sm btn-primary"> 搜索</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width:3%"> </th>
+                                        <th>ID</th>
+                                        <th>广告标题</th>
+                                        <th>广告链接</th>
+                                        <th>广告图</th>
+                                        <!-- <th>投放地区</th> -->
+                                        <th>广告定位</th>
+                                        <th>状态</th>
+                                        <th>开始时间-结束时间</th>
+                                        <th>添加时间</th>
+                                        <!-- <th>添加人</th> -->
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}
+                                        <tr id="ma_{$info.ma_id}">
+                                            <td>
+                                                <input type="checkbox" class="i-checks" name="ma_id[]" value="{$info.ma_id}">
+                                            </td>
+                                            <td>
+                                                {$info.ma_id}
+                                            </td>
+                                            <td>
+                                                {$info.ma_title}
+                                            </td>
+                                            <td>
+                                                {$info.ma_link}
+                                            </td>
+                                            <td>
+                                                <i class="fa fa-file-picture-o text-navy" onclick="showImg('__UPLOAD__/{$info.ma_image}')"></i>
+                                            </td>
+                                            <!-- <td>
+                                                {$info.r_name}
+                                            </td> -->
+                                            <td>
+                                                {$info.map_name}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.ma_status eq '1'"}
+                                                    开启
+                                                {else /}
+                                                    关闭
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.ma_start_time neq '0' and $info.ma_end_time neq 0"}
+                                                    {$info.ma_start_time|date='Y-m-d',###}-{$info.ma_end_time|date='Y-m-d',###}
+                                                {elseif condition="$info.ma_start_time neq '0' and $info.ma_end_time eq 0" /}
+                                                    {$info.ma_start_time|date='Y-m-d',###}-永久
+                                                {else /}
+                                                    永久
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {$info.ma_add_time|date='Y-m-d',###}
+                                            </td>
+                                            <!-- <td>
+                                                {$info.ma_author}
+                                            </td> -->
+                                            <td>
+                                                {if condition="($info.map_id eq '1') || ($info.map_id eq '2') || ($info.map_id eq '6') || ($info.map_id eq '7')"}
+                                                <a  data-toggle="modal" data-target="#myModal" class="btn btn-default btn-xs" onclick="yulan({$info.map_id},'__UPLOAD__/{$info.ma_image}')"><i class="fa fa-eye text-navy"></i>&nbsp;预览</a>&nbsp;&nbsp;
+                                                {/if}
+                                                <a href="{:url('manage/Ad/adEdit',array('id'=>$info.ma_id))}" class="btn btn-default btn-xs"><i class="fa fa-wrench text-navy"></i>&nbsp;修改</a>&nbsp;&nbsp;
+                                                <a onclick="del('ma_{$info.ma_id}',{$info.ma_id},'{:url(\"manage/Ad/adDel\")}')" class="btn btn-default btn-xs"><i class="fa fa-close text-navy"></i>&nbsp;删除</a>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="MANAGE_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="MANAGE_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/demo/peity-demo.js"></script>
+    <!-- layer javascript -->
+    <script src="MANAGE_JS/plugins/layer/layer.min.js"></script>
+    <script src="MANAGE_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+
+
+        function yulan(map_id,imgsrc){
+            var arrayList = ["1","2","6","7"];
+
+
+            $(".modelbg").removeClass();
+            $("#iframe-wrap > div").addClass("modelbg model-ad"+map_id);
+            $(".adimg").html("<img src='" + imgsrc + "'>");
+
+        }
+    </script>
+</body>
+</html>

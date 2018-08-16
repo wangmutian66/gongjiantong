@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            修改广告
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/animate.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/datapicker/datepicker3.css" rel="stylesheet">
+        <link href="SELLER_CSS/plugins/clockpicker/clockpicker.css" rel="stylesheet">
+        <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    </head>
+    <body class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>修改广告</h5>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a class="close-link" href="{:url('seller/index/welcome')}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a href="{:url('seller/Advertising/advertisingList')}">
+                                    <i class="fa fa-bars"></i>
+                                    广告列表
+                                </a>
+                            </div>
+                        </div>  
+                        <div class="ibox-content">
+                            <form class="form-horizontal" method="POST" action="{:url('seller/Advertising/advertisingEdit',array('id' => $sa_edit.sa_id))}" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        广告定位
+                                    </label>
+                                    <div class="col-sm-5 m-b-xs">
+                                        <select class="input-sm form-control input-s-sm inline" name="sa_position_type" style="height: 32px;">
+                                            <option value="0" {if condition="$sa_edit.sa_position_type eq '0'"}selected{/if}>首页广告</option>
+                                            <option value="1" {if condition="$sa_edit.sa_position_type eq '1'"}selected{/if}>首页banner</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        广告标题
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sa_title" value="{$sa_edit.sa_title}" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        广告链接
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sa_link" value="{$sa_edit.sa_link}" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        上传图片
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-file" type="file" aria-required="true" aria-invalid="true" name="sa_image" />
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        是否开启
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" name="sa_status" id="sa_status1" {if condition="$sa_edit.sa_status eq 1" } checked {/if} value="1" />
+                                            <label for="sa_status1"> 开启 </label>
+                                        </div>
+                                        <div class="radio radio-info radio-inline" >
+                                            <input type="radio" name="sa_status" id="sa_status2"  value="0" {if condition="$sa_edit.sa_status eq 0" } checked {/if}/>
+                                            <label for="sa_status2" > 不开启 </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="data_5">
+                                    <label class="col-sm-2 control-label">展示时间范围</label>
+                                    <div class="col-sm-5">
+                                        <div class="input-daterange input-group" id="datepicker">
+                                            <input type="text" class="input-sm form-control" name="sa_start_time" value="{if condition="$sa_edit.sa_start_time neq '0'"}{$sa_edit.sa_start_time|date='Y-m-d',###}{/if}" />
+                                            <span class="input-group-addon">到</span>
+                                            <input type="text" class="input-sm form-control" name="sa_end_time" value="{if condition="$sa_edit.sa_end_time neq '0'"}{$sa_edit.sa_end_time|date='Y-m-d',###}{/if}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="submit" value="保存内容" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <!-- 全局js -->
+        <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+        <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+        <!-- 自定义js -->
+        <script src="SELLER_JS/content.js?v=1.0.0"></script>
+        <!-- iCheck -->
+        <script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+        <!-- Data picker -->
+        <script src="SELLER_JS/plugins/datapicker/bootstrap-datepicker.js"></script>
+        <!-- Color picker -->
+        <script src="SELLER_JS/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+
+        <!-- Clock picker -->
+        <script src="SELLER_JS/plugins/clockpicker/clockpicker.js"></script>
+        <!-- Image cropper -->
+        <script src="SELLER_JS/plugins/cropper/cropper.min.js"></script>
+        <script src="SELLER_JS/demo/form-advanced-demo.js"></script>
+        <!-- Peity -->
+        <script src="SELLER_JS/demo/peity-demo.js"></script>
+        <script src="SELLER_JS/globals.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+        </script>
+    </body>
+</html>

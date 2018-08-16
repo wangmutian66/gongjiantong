@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+  
+        <title> 工建通客服</title>
+        <link href="favicon.ico" rel="shortcut icon">
+        <link href="SELLER_CSS/bootstrap.min.css" rel="stylesheet">
+        <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+        <link href="SELLER_CSS/animate.css" rel="stylesheet">
+        <link href="SELLER_CSS/style.css" rel="stylesheet">
+        <link href="SELLER_CSS/login.css" rel="stylesheet">
+        <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+        <link href="SELLER_CSS/plugins/toastr/toastr.min.css" rel="stylesheet">
+        <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js">
+        </script>
+        <script src="SELLER_JS/jquery.min.js?v=2.1.4">
+        </script>
+    <style type="text/css">  
+    #login{  
+        display:none;  
+        border:1px solid #ccc;  
+        height:28%;  
+        width:28%;  
+        position:absolute;/*让节点脱离文档流,我的理解就是,从页面上浮出来,不再按照文档其它内容布局*/  
+        top: 369px;
+        left: 16px;  
+        z-index:2;/*个人理解为层级关系,由于这个节点要在顶部显示,所以这个值比其余节点的都大*/  
+        background: white;  
+    }  .chat-message-form{
+               width: 74.4%;
+               border: 0;
+           }
+
+    textarea[name=message]{
+        border: 0;
+        resize: none;
+    }
+
+    #sendt{
+        background: #5c8dde;
+        margin: 4px;
+        width: 100px;
+        border:0;
+    }
+
+    .chat-discussion{
+        background: #ffffff;
+        border-bottom: 1px solid #eeeeee;
+        border-right: 1px solid #eeeeee;
+        padding: 40px 15px;
+    }
+    .chat-message-form{
+        border-right: 1px solid #eeeeee;
+    }
+
+    .messright{
+        position: relative;
+        top:20px;
+        background: #5c8dde;
+        color: #ffffff;
+    }
+    .messright .message-author{
+        position: absolute;
+        top: -21px;
+        right: 0;
+        width:200px;
+        color: #999999;
+    }
+    .chat-message{
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+    .messright span.message-content > div:nth-of-type(1),.messleft span.message-content > div:nth-of-type(1){
+        border: 1px solid #000;
+        /*display: none;*/
+    }
+
+    .messleft{
+        position: relative;
+        top:20px;
+        color: #333333;
+    }
+
+    .message{
+        border: 1px solid #dadada;
+    }
+
+    .ibox-content{
+        position: relative;
+    }
+    .chat-users {
+        overflow-y: auto;
+        height: 526px;
+        position: absolute;
+        top: 0;
+        right: 15px;
+        width: 100%;
+    }
+    </style>                 
+    </head>
+    <body>
+        <input id="user" type="hidden" value="67d4d1d052ce3418">
+        <input id="kefu" type="hidden" value="">
+
+            <input id="user_name" type="hidden" value="{$sm_im.sm_seller_name}">
+                <div class="wrapper wrapper-content animated fadeInRight">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="ibox chat-view">
+                                <div class="ibox-title"  style="display: none;">
+                                    <small class="pull-right text-muted">
+                                    </small>
+                                    聊天窗口
+                                </div>
+                                <div class="ibox-content">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <div class="chat-discussion" id="contents">
+
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="chat-users">
+                                                <div class="chat-users-title">通讯录</div>
+
+                                                <div class="users-list" id="u_im_name">
+                                                    {if condition="isset($im_val) and !empty($im_val)"}
+                                                        {foreach name="im_val" item = "im_val"}
+        <!-- ,'{$im_val.u_name}','{$im_val.ss_name}','{$im_val.ss_logo_img} -->
+
+                                                        <input id="{$im_val.u_im_id}u_name" type="hidden" value="{$im_val.u_name}">
+                                                        <input id="{$im_val.u_im_id}ss_name" type="hidden" value="{$im_val.ss_name}">
+                                                        <input id="{$im_val.u_im_id}ss_logo_img" type="hidden" value="{$im_val.ss_logo_img}">
+                                                            <div class="chat-user" id="{$im_val.u_im_id}" onclick="communication('{$im_val.u_im_id}')">
+                                                                <img alt="" class="chat-avatar" src="/public/upload/{$im_val.u_headimg}">
+                                                                    <div class="chat-user-name">
+                                                                        <a href="#">
+                                                                            {$im_val.u_name}
+                                                                            {if condition='$im_val.im_state eq 1'}
+                                                                            <span  style="width:5px;height: 5px;background:red;display:none;border-radius:50%;">
+                                                                            {else/}
+                                                                            <span id="dian{$im_val.u_im_id}" style="width:5px;height: 5px;background:red;display:inline-block;border-radius:50%;">
+                                                                            {/if}
+
+                                                                            </span>
+                                                                        </a>
+                                                                    </div>
+                                                                </img>
+                                                            </div>
+                                                        {/foreach}
+                                                    {/if}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                     <!--  
+                                   [):][:D][;)][:-o][:p][(H)][:@][:s]
+                                   [:$][:(][:'(][:|][(a)][8o|][8-|][+o(]
+                                   [<o)][|-)][*-)][:-#][:-*][^o)][(|)][(u)]
+                                   [(S)][(*)][(#)][(R)][({)][(})][(k)][(F)]
+                                   [(W)][(D)] -->
+
+                                   <!-- [):][:D][;)][:-o][:p][(H)][:@][:s]
+                                        [:$][:(][:'(][<o)][(a)][8o|][8-|][+o(]
+                                        [:|][|-)][*-)][:-#][:-*][^o)][(|)][(u)]
+                                        [(S)][(*)][(#)][(R)][({)][(})][(k)][(F)]
+                                        [(W)][(D)] -->
+                                    <!-- <img src="FACES/ee_1.png" alt=""> -->
+                                    <div id="login">  
+                                        <img src="FACES/ee_1.png" onclick="frombiaoqing('[):]')">
+                                        <img src="FACES/ee_2.png" onclick="frombiaoqing('[:D]')">
+                                        <img src="FACES/ee_3.png" onclick="frombiaoqing('[;)]')">
+                                        <img src="FACES/ee_4.png" onclick="frombiaoqing('[:-o]')">
+                                        <img src="FACES/ee_5.png" onclick="frombiaoqing('[:p]')">
+                                        <img src="FACES/ee_6.png" onclick="frombiaoqing('[(H)]')">
+                                        <img src="FACES/ee_7.png" onclick="frombiaoqing('[:@]')">
+                                        <img src="FACES/ee_8.png" onclick="frombiaoqing('[:s]')">
+                                        <img src="FACES/ee_9.png" onclick="frombiaoqing('[:$]')">
+                                        <img src="FACES/ee_10.png" onclick="frombiaoqing('[:(]')">
+                                        <img src="FACES/ee_11.png" onclick="frombiaoqing('[:'(]')">
+                                        <img src="FACES/ee_12.png" onclick="frombiaoqing('[<o)]')">
+                                        <img src="FACES/ee_13.png" onclick="frombiaoqing('[(a)]')">
+                                        <img src="FACES/ee_14.png" onclick="frombiaoqing('[8o|]')">
+                                        <img src="FACES/ee_15.png" onclick="frombiaoqing('[8-|]')">
+                                        <img src="FACES/ee_16.png" onclick="frombiaoqing('[+o(]')">
+                                        <img src="FACES/ee_17.png" onclick="frombiaoqing('[|-)]')">
+                                        <img src="FACES/ee_18.png" onclick="frombiaoqing('[:|]')">
+                                        <img src="FACES/ee_19.png" onclick="frombiaoqing('[*-)]')">
+                                        <img src="FACES/ee_20.png" onclick="frombiaoqing('[:-#]')">
+                                        <img src="FACES/ee_21.png" onclick="frombiaoqing('[:-*]')">
+                                        <img src="FACES/ee_22.png" onclick="frombiaoqing('[^o)]')">
+                                        <img src="FACES/ee_23.png" onclick="frombiaoqing('[8-)]')">
+                                        <img src="FACES/ee_24.png" onclick="frombiaoqing('[(|)]')">
+                                        <img src="FACES/ee_25.png" onclick="frombiaoqing('[(u)]')">
+                                        <img src="FACES/ee_26.png" onclick="frombiaoqing('[(S)]')">
+                                        <img src="FACES/ee_27.png" onclick="frombiaoqing('[(*)]')">
+                                        <img src="FACES/ee_28.png" onclick="frombiaoqing('[(#)]')">
+                                        <img src="FACES/ee_29.png" onclick="frombiaoqing('[(R)]')">
+                                        <img src="FACES/ee_30.png" onclick="frombiaoqing('[({)]')">
+                                        <img src="FACES/ee_31.png" onclick="frombiaoqing('[(})]')">
+                                        <img src="FACES/ee_32.png" onclick="frombiaoqing('[(k)]')">
+                                        <img src="FACES/ee_33.png" onclick="frombiaoqing('[(F)]')">
+                                        <img src="FACES/ee_34.png" onclick="frombiaoqing('[(W)]')">
+                                        <img src="FACES/ee_35.png" onclick="frombiaoqing('[(D)]')">
+                                    </div>  
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="chat-message-form">
+                                                <div class="form-group">
+                                                    <textarea class="form-control message-input" name="message" placeholder="输入消息内容" id="val"></textarea>
+                                                    
+                                                    <img src="FACES/smiling.png" alt="" style="width:22px;margin: 4px;cursor:pointer" onclick="biaoqing()"/>
+                                                    <img src="FACES/add.png" alt="" style="width:22px;margin: 4px -2px;cursor:pointer" onclick="image.click();" id='imgs'>
+                                                    <input name="image" type="file" id="image" style="display:none" onchange="paths()">
+                                                    <input type="hidden" id="uimid" value="">
+                                                    <input class="btn btn-primary" type="submit" id="sendt" onclick="send()" value="发送" style="float:right" />
+                                                   <input class="btn btn-primary" type="submit" onclick="sendPrivateImg()" value="发送"  style="float:right;display:none;" id="sendi" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                     
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </input>
+        </input>
+
+    </body>
+    <!-- 全局js -->
+    <script src="SELLER_JS/jquery.min.js?v=2.1.4">
+    </script>
+    <script src="SELLER_JS/bootstrap.min.js?v=3.3.6">
+    </script>
+    <!-- 自定义js -->
+    <script src="SELLER_JS/content.js?v=1.0.0">
+    </script>
+    <!-- Toastr script -->
+    <script src="SELLER_JS/plugins/toastr/toastr.min.js">
+    </script>
+    <!-- 客服js -->
+    <script src="__STATIC__/customer_service/webim.config.js" type="text/javascript">
+    </script>
+    <script src="__STATIC__/customer_service/strophe-1.2.8.min.js" type="text/javascript">
+    </script>
+    <script src="__STATIC__/customer_service/websdk-1.4.13.js" type="text/javascript">
+    </script>
+    <script src="__STATIC__/customer_service/customerservicem.js" type="text/javascript">
+    </script>
+    <!-- 结束 -->
+    <script type="text/javascript">
+        window.onload = function(){
+
+            $(document).keydown(function(e) {  
+                if (e.which == 13){
+                    if ($("#sendt").is(":visible")==true) {
+                        send();
+                    }else{
+                        sendPrivateImg();
+                    }
+                    
+                }
+            });
+            var user = $("#user").val();
+            var options = {
+                apiUrl: WebIM.config.apiURL,
+                user: user,
+                pwd: '123456',
+                appKey: WebIM.config.appkey
+            };
+            conn.open(options);
+            var urls = window.location.href;
+            var index = urls.indexOf("flag");
+            if (index) {
+                var uid=urls.split("?")[1].split("=")[1];
+                communication(uid);
+            };
+            $("#contents").empty();
+        }
+        function paths() {
+            var   p=document.getElementById("image").value;
+
+            if (p) {
+                document.getElementById("sendt").style.display = "none";
+                document.getElementById("sendi").style.display = "block";
+                $("#val").val($("#val").val()+p);
+                $("#imgs").removeAttr("onclick");
+                $("#val").attr("readonly","readonly");
+            }else{
+                document.getElementById("sendt").style.display = "block";
+                document.getElementById("sendi").style.display = "none";
+                $("#val").removeAttr("readonly");
+                $("#imgs").attr("onclick","image.click();");
+                $("#val").val('');
+            }
+        }
+
+        function biaoqing() {
+            // var login = document.getElementById('login');  
+            $("#login").toggle();
+        }
+        function frombiaoqing(fases) {
+            $("#val").val($("#val").val()+fases);
+            $("#login").toggle();
+        }
+
+        var u_im_ids = '';
+        var users = $("#user").val();
+        function customerServiceUserList(sm_im_id,u_im_id) {
+                $.ajax({
+                    type:'POST',
+                    data:{"sm_im_id":'67d4d1d052ce3418'},
+                    url:'{:url("manage/Users/customerServiceUserList")}',
+                    success:function(data){
+                        if(data.code != 200){
+                            swal({
+                                title: "通讯出错!",
+                                text: data.msg
+                            });
+                        }else{
+                            
+                             $(".ibox-content").load(location.href+" .ibox-content");
+                            // u_im_ids = u_im_id;
+                            // communication(u_im_ids);
+                        }
+                    },
+                    error:function () {
+                        swal({
+                            title: "通讯出错!",
+                            text: "请联系开发人员或管理员!"
+                        });
+                    }
+                });
+        }
+        function communication(u_im_id) {
+            $("#dian"+u_im_id).hide();
+            $("#uimid").val(u_im_id);
+            // alert(u_im_id);
+            $.get("{:url('manage/Users/ajaximg')}",{"u_im_id":u_im_id}, function(result){
+                var uimg =result.data;
+                $(".chat-user").css("background","");
+                $("#"+u_im_id).css("background","#eee");
+                $("#contents").empty();
+                $("#kefu").val(sname);
+                var uname = $("#"+u_im_id+"u_name").val();
+                var sname = $("#"+u_im_id+"ss_name").val();
+                var ss_logo_img =$("#"+u_im_id+"ss_logo_img").val();
+                u_im_ids = u_im_id;
+                $.getJSON("__ROOT__/log/67d4d1d052ce3418.js?t="+new Date().getTime(), function(json){
+                    var t = '';
+                    $("#contents").empty();
+                    $.each(json, function(i, n) {
+                        // if ((n.u_im_ids == u_im_ids) && (users == n.sm_im_id) && (n.type == 2)) {
+                        //     console.log(n);
+                        // };
+
+                        if((n.u_im_ids == u_im_ids) && (users == n.sm_im_id) && (n.type == 1)){
+                            t += '<div class="chat-message">';
+                                t +='<img class="message-avatar" src="__UPLOAD__/'+ss_logo_img+'" alt="" style="float: right;margin: 0px;border: 1px solid #fff;">';
+                                t +='<div class="message messright" style="text-align: right;margin:0px 6px 0px 0px;display: inline-block;float: right;">';
+                                    t +='<a class="message-author" href="#"> '+ n.s_name +'</a>';
+                                    t +='<span class="message-content" style="max-width: 577px;">';
+                                    //t +='<div style="color: #bbb;font-size: 12px;"> '+ n.time +'</div>';
+
+                                         var re = n.msgs.replace(/\[\):\]/g, '<img src="FACES/ee_1.png" alt="">');
+                                        var re = re.replace(/\[\:D\]/g, '<img src="FACES/ee_2.png" alt="">');
+                                        var re = re.replace(/\[;\)\]/g, '<img src="FACES/ee_3.png" alt="">');
+                                        var re = re.replace(/\[\:-o\]/g, '<img src="FACES/ee_4.png" alt="">');
+                                        var re = re.replace(/\[\:p\]/g, '<img src="FACES/ee_5.png" alt="">');
+                                        var re = re.replace(/\[\(\H\)\]/g, '<img src="FACES/ee_6.png" alt="">');
+                                        var re = re.replace(/\[\:@\]/g, '<img src="FACES/ee_7.png" alt="">');
+                                        var re = re.replace(/\[\:s\]/g, '<img src="FACES/ee_8.png" alt="">');
+                                        var re = re.replace(/\[\:\$\]/g, '<img src="FACES/ee_9.png" alt="">');
+                                        var re = re.replace(/\[:\(\]/g, '<img src="FACES/ee_10.png" alt="">');
+                                        var re = re.replace(/\[\:\'\(\]/g, '<img src="FACES/ee_11.png" alt="">');
+                                        var re = re.replace(/\[\<\o\)\]/g, '<img src="FACES/ee_12.png" alt="">');
+                                        var re = re.replace(/\[\(\a\)\]/g, '<img src="FACES/ee_13.png" alt="">');
+                                        var re = re.replace(/\[8o\|\]/g, '<img src="FACES/ee_14.png" alt="">');
+                                        var re = re.replace(/\[8-\|\]/g, '<img src="FACES/ee_15.png" alt="">');
+                                        var re = re.replace(/\[\+o\(\]/g, '<img src="FACES/ee_16.png" alt="">');
+                                        var re = re.replace(/\[\|\-\)\]/g, '<img src="FACES/ee_17.png" alt="">');
+                                        var re = re.replace(/\[\:\|\]/g, '<img src="FACES/ee_18.png" alt="">');
+                                        var re = re.replace(/\[\*\-\)\]/g, '<img src="FACES/ee_19.png" alt="">');
+                                        var re = re.replace(/\[\:\-\#\]/g, '<img src="FACES/ee_20.png" alt="">');
+                                        var re = re.replace(/\[\^\o\)\]/g, '<img src="FACES/ee_21.png" alt="">');
+                                        var re = re.replace(/\[\:-\*\]/g, '<img src="FACES/ee_22.png" alt="">');
+                                        var re = re.replace(/\[8-\)\]/g, '<img src="FACES/ee_23.png" alt="">');
+                                        var re = re.replace(/\[\(\|\)\]/g, '<img src="FACES/ee_24.png" alt="">');
+                                        var re = re.replace(/\[\(u\)\]/g, '<img src="FACES/ee_25.png" alt="">');
+                                        var re = re.replace(/\[\(S\)\]/g, '<img src="FACES/ee_26.png" alt="">');
+                                        var re = re.replace(/\[\(\*\)\]/g, '<img src="FACES/ee_27.png" alt="">');
+                                        var re = re.replace(/\[\(#\)\]/g, '<img src="FACES/ee_28.png" alt="">');
+                                        var re = re.replace(/\[\(R\)\]/g, '<img src="FACES/ee_29.png" alt="">');
+                                        var re = re.replace(/\[\({\)\]/g, '<img src="FACES/ee_30.png" alt="">');
+                                        var re = re.replace(/\[\(}\)\]/g, '<img src="FACES/ee_31.png" alt="">');
+                                        var re = re.replace(/\[\(k\)\]/g, '<img src="FACES/ee_32.png" alt="">');
+                                        var re = re.replace(/\[\(F\)\]/g, '<img src="FACES/ee_33.png" alt="">');
+                                        var re = re.replace(/\[\(W\)\]/g, '<img src="FACES/ee_34.png" alt="">');
+                                        var re = re.replace(/\[\(D\)\]/g, '<img src="FACES/ee_35.png" alt="">');
+                                        if (re.indexOf("https") == '-1') {
+                                            t+=  re;
+                                        }else{
+                                            t+= '<img src="'+re+'" alt="" style="width: 100%;"/>' ;
+                                        }
+                                    t +='</span>';
+                                t +='</div>';
+                            t +='</div>';
+                            t +='<div style="clear:both"></div>';
+                        }else if((n.u_im_ids == u_im_ids) && (users == n.sm_im_id) && (n.type == 2)){
+                            t += '<div class="chat-message">';
+                                if (uimg.indexOf("http") == '-1') {
+                                    t +='<img class="message-avatar" src="__UPLOAD__/'+uimg+'" alt="" style="float: left;margin-left: 0px;border: 1px solid #fff;">';
+                                }else{
+                                    t +='<img class="message-avatar" src="'+uimg+'" alt="" style="float: left;margin-left: 0px;border: 1px solid #fff;">';
+                                }
+                                t +='<div class="message messleft" style="text-align: left;margin: 0px 0px 0px 0px;display: inline-block;float: left;">';
+                                    t +='<a class="message-author" href="#"> '+ uname +'</a>';
+                                    t +='<span class="message-content" style="max-width: 577px;">';
+                                    //t +='<div style="color: #bbb;font-size: 12px;"> '+ n.time +'</div>';
+                                        var re = n.msgs.replace(/\[\):\]/g, '<img src="FACES/ee_1.png" alt="">');
+                                        var re = re.replace(/\[\:D\]/g, '<img src="FACES/ee_2.png" alt="">');
+                                        var re = re.replace(/\[;\)\]/g, '<img src="FACES/ee_3.png" alt="">');
+                                        var re = re.replace(/\[\:-o\]/g, '<img src="FACES/ee_4.png" alt="">');
+                                        var re = re.replace(/\[\:p\]/g, '<img src="FACES/ee_5.png" alt="">');
+                                        var re = re.replace(/\[\(\H\)\]/g, '<img src="FACES/ee_6.png" alt="">');
+                                        var re = re.replace(/\[\:@\]/g, '<img src="FACES/ee_7.png" alt="">');
+                                        var re = re.replace(/\[\:s\]/g, '<img src="FACES/ee_8.png" alt="">');
+                                        var re = re.replace(/\[\:\$\]/g, '<img src="FACES/ee_9.png" alt="">');
+                                        var re = re.replace(/\[:\(\]/g, '<img src="FACES/ee_10.png" alt="">');
+                                        var re = re.replace(/\[\:\'\(\]/g, '<img src="FACES/ee_11.png" alt="">');
+                                        var re = re.replace(/\[\<\o\)\]/g, '<img src="FACES/ee_12.png" alt="">');
+                                        var re = re.replace(/\[\(\a\)\]/g, '<img src="FACES/ee_13.png" alt="">');
+                                        var re = re.replace(/\[8o\|\]/g, '<img src="FACES/ee_14.png" alt="">');
+                                        var re = re.replace(/\[8-\|\]/g, '<img src="FACES/ee_15.png" alt="">');
+                                        var re = re.replace(/\[\+o\(\]/g, '<img src="FACES/ee_16.png" alt="">');
+                                        var re = re.replace(/\[\|\-\)\]/g, '<img src="FACES/ee_17.png" alt="">');
+                                        var re = re.replace(/\[\:\|\]/g, '<img src="FACES/ee_18.png" alt="">');
+                                        var re = re.replace(/\[\*\-\)\]/g, '<img src="FACES/ee_19.png" alt="">');
+                                        var re = re.replace(/\[\:\-\#\]/g, '<img src="FACES/ee_20.png" alt="">');
+                                        var re = re.replace(/\[\^\o\)\]/g, '<img src="FACES/ee_21.png" alt="">');
+                                        var re = re.replace(/\[\:-\*\]/g, '<img src="FACES/ee_22.png" alt="">');
+                                        var re = re.replace(/\[8-\)\]/g, '<img src="FACES/ee_23.png" alt="">');
+                                        var re = re.replace(/\[\(\|\)\]/g, '<img src="FACES/ee_24.png" alt="">');
+                                        var re = re.replace(/\[\(u\)\]/g, '<img src="FACES/ee_25.png" alt="">');
+                                        var re = re.replace(/\[\(S\)\]/g, '<img src="FACES/ee_26.png" alt="">');
+                                        var re = re.replace(/\[\(\*\)\]/g, '<img src="FACES/ee_27.png" alt="">');
+                                        var re = re.replace(/\[\(#\)\]/g, '<img src="FACES/ee_28.png" alt="">');
+                                        var re = re.replace(/\[\(R\)\]/g, '<img src="FACES/ee_29.png" alt="">');
+                                        var re = re.replace(/\[\({\)\]/g, '<img src="FACES/ee_30.png" alt="">');
+                                        var re = re.replace(/\[\(}\)\]/g, '<img src="FACES/ee_31.png" alt="">');
+                                        var re = re.replace(/\[\(k\)\]/g, '<img src="FACES/ee_32.png" alt="">');
+                                        var re = re.replace(/\[\(F\)\]/g, '<img src="FACES/ee_33.png" alt="">');
+                                        var re = re.replace(/\[\(W\)\]/g, '<img src="FACES/ee_34.png" alt="">');
+                                        var re = re.replace(/\[\(D\)\]/g, '<img src="FACES/ee_35.png" alt="">');
+                                        if (re.indexOf("https") == '-1') {
+                                            t+=  re;
+                                        }else{
+                                            t+= '<img src="'+re+'" alt="" style="width: 55%;"/>' ;
+                                        }
+
+                                    t +='</span>';
+                                t +='</div>';
+                            t +='</div>';
+                            t +='<div style="clear:both"></div>';
+                        }else if((n.u_im_ids == u_im_ids) && (users == n.sm_im_id) && (n.type == 3)){
+                            t += '<div class="chat-message">';
+                                if (uimg.indexOf("http") == '-1') {
+                                    t +='<img class="message-avatar" src="__UPLOAD__/'+uimg+'" alt="" style="float: left;margin-left: 0px;border: 1px solid #fff;">';
+                                }else{
+                                    t +='<img class="message-avatar" src="'+uimg+'" alt="" style="float: left;margin-left: 0px;border: 1px solid #fff;">';
+                                }
+                                t +='<div class="message messleft" style="text-align: left;margin: 0px 0px 0px 0px;display: inline-block;float: left;">';
+                                    t +='<a class="message-author" href="#"> '+ uname +'</a>';
+                                    t +='<span class="message-content"  style="max-width: 577px;">';
+                                    //t +='<div style="color: #bbb;font-size: 12px;"> '+ n.time +'</div>';
+                                    t+= '<img src="'+n.msgs+'" alt="" style="width: 100%;"/>' ;
+                                    t +='</span>';
+                                t +='</div>';
+                            t +='</div>';
+                            t +='<div style="clear:both"></div>';
+                        }else if((n.u_im_ids == u_im_ids) && (users == n.sm_im_id) && (n.type == 4)){
+                            t += '<div class="chat-message">';
+                                if (uimg.indexOf("http") == '-1') {
+                                    t +='<img class="message-avatar" src="__UPLOAD__/'+uimg+'" alt="" style="float: left;margin-left: 0px;border: 1px solid #fff;">';
+                                }else{
+                                    t +='<img class="message-avatar" src="'+uimg+'" alt="" style="float: left;margin-left: 0px;border: 1px solid #fff;">';
+                                }
+                                t +='<div class="message messleft" style="text-align: left;margin: 0px 0px 0px 0px;display: inline-block;float: left;">';
+                                    t +='<a class="message-author" href="#"> '+ uname +'</a>';
+                                    t +='<span class="message-content" style="max-width: 577px;">';
+                                    //t +='<div style="color: #bbb;font-size: 12px;"> '+ n.time +'</div>';
+                                    t+= '<audio src="'+n.msgs+'" controls ></audio>' ;
+                                    t +='</span>';
+                                t +='</div>';
+                            t +='</div>';
+                            t +='<div style="clear:both"></div>';
+                        }else if((n.u_im_ids == u_im_ids) && (users == n.sm_im_id) && (n.type == 5)){
+                            t += '<div class="chat-message">';
+                                if (uimg.indexOf("http") == '-1') {
+                                    t +='<img class="message-avatar" src="__UPLOAD__/'+uimg+'" alt="" style="float: left;margin-left: 0px;border: 1px solid #fff;">';
+                                }else{
+                                    t +='<img class="message-avatar" src="'+uimg+'" alt="" style="float: left;margin-left: 0px;border: 1px solid #fff;">';
+                                }
+                                    
+                                t +='<div class="message messleft" style="text-align: left;margin: 0px 0px 0px 0px;display: inline-block;float: left;">';
+                                    t+='<a class="message-author" href="#"> '+ uname +'</a>';
+                                    t+='<span class="message-content" style="max-width: 577px;">';
+                                    //t+='<div style="color: #bbb;font-size: 12px;"> '+ n.time +'</div>';
+                                    t+='<div style="width: 416px;border: 1px solid #eee;padding: 2px;">'
+                                    t+='<table  border=0 style="width:100%;margin: 4px;">';
+                                    t+='<tr style="    border-bottom: solid 1px #eee;">';
+                                    t+='<td  style="padding: 1px 10px;">';
+                                    t+='订单号：<a href="{:url("seller/Ordermanage/saverdetails")}?order_id='+n.msgs.o_sn+'">'+n.msgs.o_sn+'</a>';
+                                    t+='</td>';
+                                    t+='<td style="text-align:center">';
+                                    t+=n.msgs.o_add_time ;
+                                    t+='</td>';
+                                    t+='</tr>';
+                                    t+='<tr style="height:85px">';
+                                    t+='<td colspan="2" style="padding: 1px 0px;">';
+                                        t+='<table  border=0 style="width:98%;">';
+                                        t+='<tr>';
+                                        t+='<td style="width: 22%;">';
+                                        t+='<img src="'+n.msgs.g_show_img_path+'" alt="" width="80px"/>' ;
+                                        t+='</td>';
+                                        t+='<td style="width: 60%;">';
+                                            t+='<table  border=0 style="width:100%;">';
+                                            t+='<tr>';
+                                            t+='<td style="height:27px">';
+                                            t+= n.msgs.g_name ;
+                                            t+='</td>';
+                                            t+='</tr>';
+                                            t+='<tr>';
+                                            t+='<td style="height:27px">';
+                                            t+= n.msgs.sp_name ;
+                                            t+='</td>';
+                                            t+='</tr>';
+                                            t+='</table>';
+                                        t+='</td>';
+                                        t+='<td style="width: 20%;">';
+                                            t+='<table  border=0 style="width:100%;">';
+                                            t+='<tr>';
+                                            if (n.msgs.member_goods_price=='0') {
+                                                t+='<td style="text-align: right;">';
+                                            }else{
+                                                t+='<td style="text-align: right;text-decoration: line-through;">';
+                                            }
+                                            t+= n.msgs.g_current_price ;
+                                            t+='</td>';
+                                            t+='</tr>';
+                                            t+='<tr>';
+                                            t+='<td style="text-align: right;">';
+                                            if (n.msgs.member_goods_price=='0') {
+                                                t+='';
+                                            }else{
+                                                t+= n.msgs.member_goods_price ;
+                                            }
+                                            t+='</td>';
+                                            t+='</tr>';
+                                            t+='<tr>';
+                                            t+='<td style="text-align: right;">';
+                                            t+= n.msgs.order_type ;
+                                            t+='</td>';
+                                            t+='</tr>';
+                                            t+='</table>';
+                                        t+='</td>';
+                                        t+='</tr>';
+                                      
+                                        t+='</table>';
+                                    t+='</td>';
+                                    t+='</tr>';
+                                    t+='</table>';
+                                    t+='</div>';
+                                    t+='</span>';
+                                t +='</div>';
+
+                            t +='</div>';
+                            t +='<div style="clear:both"></div>';
+                        }
+                    });
+                    $("#contents").append(t);
+                    var scrollDiv = document.getElementById('contents');
+                    scrollDiv.scrollTop = scrollDiv.scrollHeight;
+                });
+            });
+
+        }
+        function send() {
+            if(u_im_ids != ''){
+                var msgs = $("#val").val();
+                var user_name = $("#user_name").val();
+                // 单聊发送文本消息
+                var id = conn.getUniqueId();                 // 生成本地消息id
+                var msg = new WebIM.message('txt', id);      // 创建文本消息
+                msg.set({
+                    msg: msgs,                               // 消息内容
+                    to:  u_im_ids,  // 接收消息对象（用户id）
+                    roomType: false,
+                    success: function (id, serverMsgId) {
+                        var type = 1;
+                        chatRecordLogs(u_im_ids,users,msgs,type);
+                        var t = '';
+                        t += '<div class="chat-message">';
+                            t +='<img class="message-avatar" src="" alt="" style="float: right;margin: 0px;border: 1px solid #fff;">';
+                            t +='<div class="message messright" style="text-align: right;margin:0px 6px 0px 0px;display: inline-block;float: right;">';
+                                t +='<a class="message-author" href="#"> 工建通在线客服</a>';
+                                t +='<span class="message-content">';
+                                     var re = msgs.replace(/\[\):\]/g, '<img src="FACES/ee_1.png" alt="">');
+                                        var re = re.replace(/\[\:D\]/g, '<img src="FACES/ee_2.png" alt="">');
+                                        var re = re.replace(/\[;\)\]/g, '<img src="FACES/ee_3.png" alt="">');
+                                        var re = re.replace(/\[\:-o\]/g, '<img src="FACES/ee_4.png" alt="">');
+                                        var re = re.replace(/\[\:p\]/g, '<img src="FACES/ee_5.png" alt="">');
+                                        var re = re.replace(/\[\(\H\)\]/g, '<img src="FACES/ee_6.png" alt="">');
+                                        var re = re.replace(/\[\:@\]/g, '<img src="FACES/ee_7.png" alt="">');
+                                        var re = re.replace(/\[\:s\]/g, '<img src="FACES/ee_8.png" alt="">');
+                                        var re = re.replace(/\[\:\$\]/g, '<img src="FACES/ee_9.png" alt="">');
+                                        var re = re.replace(/\[:\(\]/g, '<img src="FACES/ee_10.png" alt="">');
+                                        var re = re.replace(/\[\:\'\(\]/g, '<img src="FACES/ee_11.png" alt="">');
+                                        var re = re.replace(/\[\<\o\)\]/g, '<img src="FACES/ee_12.png" alt="">');
+                                        var re = re.replace(/\[\(\a\)\]/g, '<img src="FACES/ee_13.png" alt="">');
+                                        var re = re.replace(/\[8o\|\]/g, '<img src="FACES/ee_14.png" alt="">');
+                                        var re = re.replace(/\[8-\|\]/g, '<img src="FACES/ee_15.png" alt="">');
+                                        var re = re.replace(/\[\+o\(\]/g, '<img src="FACES/ee_16.png" alt="">');
+                                        var re = re.replace(/\[\|\-\)\]/g, '<img src="FACES/ee_17.png" alt="">');
+                                        var re = re.replace(/\[\:\|\]/g, '<img src="FACES/ee_18.png" alt="">');
+                                        var re = re.replace(/\[\*\-\)\]/g, '<img src="FACES/ee_19.png" alt="">');
+                                        var re = re.replace(/\[\:\-\#\]/g, '<img src="FACES/ee_20.png" alt="">');
+                                        var re = re.replace(/\[\^\o\)\]/g, '<img src="FACES/ee_21.png" alt="">');
+                                        var re = re.replace(/\[\:-\*\]/g, '<img src="FACES/ee_22.png" alt="">');
+                                        var re = re.replace(/\[8-\)\]/g, '<img src="FACES/ee_23.png" alt="">');
+                                        var re = re.replace(/\[\(\|\)\]/g, '<img src="FACES/ee_24.png" alt="">');
+                                        var re = re.replace(/\[\(u\)\]/g, '<img src="FACES/ee_25.png" alt="">');
+                                        var re = re.replace(/\[\(S\)\]/g, '<img src="FACES/ee_26.png" alt="">');
+                                        var re = re.replace(/\[\(\*\)\]/g, '<img src="FACES/ee_27.png" alt="">');
+                                        var re = re.replace(/\[\(#\)\]/g, '<img src="FACES/ee_28.png" alt="">');
+                                        var re = re.replace(/\[\(R\)\]/g, '<img src="FACES/ee_29.png" alt="">');
+                                        var re = re.replace(/\[\({\)\]/g, '<img src="FACES/ee_30.png" alt="">');
+                                        var re = re.replace(/\[\(}\)\]/g, '<img src="FACES/ee_31.png" alt="">');
+                                        var re = re.replace(/\[\(k\)\]/g, '<img src="FACES/ee_32.png" alt="">');
+                                        var re = re.replace(/\[\(F\)\]/g, '<img src="FACES/ee_33.png" alt="">');
+                                        var re = re.replace(/\[\(W\)\]/g, '<img src="FACES/ee_34.png" alt="">');
+                                        var re = re.replace(/\[\(D\)\]/g, '<img src="FACES/ee_35.png" alt="">');
+                                        t+=  re;
+                                t +='</span>';
+                            t +='</div>';
+                        t +='</div>';
+                        t +='<div style="clear:both"></div>';
+                        $("#contents").append(t);
+                        var scrollDiv = document.getElementById('contents');
+                        scrollDiv.scrollTop = scrollDiv.scrollHeight;
+                    },
+                    fail: function(e){
+                        swal({
+                            title: "发送失败!",
+                            text: "请检查网络!"
+                        });
+                    }
+                });
+                msg.body.chatType = 'singleChat';
+                conn.send(msg.body);
+                $("#val").val('');
+            }else{
+                swal({
+                    title: "发送失败!",
+                    text: "请选择用户!"
+                });
+            }
+        }
+        /**
+         * @author 袁中旭
+         * @e-mail iron_boy@yeah.net
+         * @date   2017-11-19
+         * @param  {[type]}          u_im_ids [接收人ID]
+         * @param  {[type]}          sm_im_id [发送人ID]
+         * @param  {[type]}          msgs     [发送的内容]
+         * @param  {[type]}          type     [发送人的类型]
+         */
+        function chatRecordLogs(u_im_ids,sm_im_id,msgs,type) {
+            $.ajax({
+                type:'POST',
+                data:{"u_im_ids":u_im_ids,"sm_im_id":'67d4d1d052ce3418',"msgs":msgs,"type":type},
+                url:'{:url("manage/Users/ajaxChatRecord1")}',
+                success:function(data){
+                    return data.code;
+                },
+                error:function () {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            });
+        }
+
+        function sendPrivateImg() {
+            var u_im_ids =$("#uimid").val();
+            if(u_im_ids != ''){
+                var id = conn.getUniqueId();                   // 生成本地消息id
+                var msg = new WebIM.message('img', id);        // 创建图片消息
+                var input = document.getElementById('image');  // 选择图片的input
+                var file = WebIM.utils.getFileUrl(input);      // 将图片转化为二进制文件
+                var allowType = {
+                    'jpg': true,
+                    'gif': true,
+                    'png': true,
+                    'bmp': true
+                }
+                if (file.filetype.toLowerCase() in allowType) {
+                    var option = {
+                        apiUrl: WebIM.config.apiURL,
+                        file: file,
+                        to: u_im_ids,                       // 接收消息对象
+                        roomType: false,
+                        chatType: 'singleChat',
+                        onFileUploadError: function () {      // 消息上传失败
+                            // console.log('onFileUploadError');
+                        },
+                        onFileUploadComplete: function (aa) {   // 消息上传成功
+                            img_url = aa.uri+"/"+aa.entities[0].uuid;
+                            var type = 1;
+                            chatRecordLogs(u_im_ids,users,img_url,type);
+                            var t = '';
+                                t += '<div class="chat-message">';
+                                    t +='<img class="message-avatar" src="" alt="" style="float: right;margin: 0px;border: 1px solid #fff;">';
+                                    t +='<div class="message messright" style="text-align: right;margin:0px 6px 0px 0px;display: inline-block;float: right;">';
+                                        t +='<a class="message-author" href="#"> 工建通在线客服</a>';
+                                        t +='<span class="message-content">';
+                                        t+= '<img src="'+img_url+'" alt="" style="width:55%">';
+                                        t +='</span>';
+                                    t +='</div>';
+                                t +='</div>';
+                                t +='<div style="clear:both"></div>';
+                                $("#contents").append(t);
+                                var scrollDiv = document.getElementById('contents');
+                                scrollDiv.scrollTop = scrollDiv.scrollHeight;
+                        },
+                        success: function () {                // 消息发送成功
+                            
+                           
+                        },
+                        flashUpload: WebIM.flashUpload
+                    };
+                    msg.set(option);
+                    conn.send(msg.body);
+                    document.getElementById("image").value='';
+                    paths();
+
+                }
+            }else{
+                swal({
+                    title: "发送失败!",
+                    text: "请选择用户!"
+                });
+            }
+        };
+    </script>
+</html>

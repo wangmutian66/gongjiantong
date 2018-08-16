@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            修改管理员
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/animate.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/datapicker/datepicker3.css" rel="stylesheet">
+        <link href="SELLER_CSS/plugins/clockpicker/clockpicker.css" rel="stylesheet">
+    </head>
+    <body class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>修改管理员</h5>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a class="close-link" href="{:url('seller/index/sellerWelcome')}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a href="{:url('seller/Seller/sellermanagerList')}">
+                                    <i class="fa fa-bars"></i>
+                                    管理员列表
+                                </a>
+                            </div>
+                        </div>  
+                        <div class="ibox-content">
+                            <form class="form-horizontal" method="POST" action="{:url('seller/Seller/sellermanagerEdit',array('id' => $sm_info['sm_id']))}">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        管理员名称
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sm_seller_name" value="{if condition='isset($sm_info.sm_seller_name)'}{$sm_info.sm_seller_name}{/if}" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        管理员密码
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" type="password" required="" aria-required="true" aria-invalid="true" name="sm_seller_passwd"  value="{if condition='isset($sm_info.sm_seller_passwd)'}{$sm_info.sm_seller_passwd}{/if}"/>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        确认管理员密码
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" type="password" required="" aria-required="true" aria-invalid="true" name="sm_seller_passwd_confirm" value="{if condition='isset($sm_info.sm_seller_passwd)'}{$sm_info.sm_seller_passwd}{/if}" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        状态
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select class="input-sm form-control input-s-sm inline" name="sm_status" style="height: 32px;">
+                                            <option value="">请选择</option>
+                                            <option value="1"{if condition='isset($sm_info.sm_status) and $sm_info.sm_status eq "1"'}selected{/if}>普通管理员</option>
+                                            <option value="0"{if condition='isset($sm_info.sm_status) and $sm_info.sm_status eq "0"'}selected{/if}>禁用</option>
+                                            <!-- <option value="9"{if condition='isset($sm_info.sm_status) and $sm_info.sm_status eq "9"'}selected{/if}>超级管理员</option> -->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        权限组
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select class="input-sm form-control input-s-sm inline" name="spg_id" style="height: 32px;">
+                                            <option value="">请选择权限组</option>
+                                            {if condition="isset($spg_list) and !empty($spg_list)"}
+                                                {foreach name="spg_list" item="spg"}
+                                                    <option value="{$spg.spg_id}"{if condition='isset($sm_info.spg_id) and $sm_info.spg_id eq $spg.spg_id'}selected{/if}>{$spg.spg_name}</option>
+                                                {/foreach}
+                                            {/if}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="data_5">
+                                    <label class="col-sm-2 control-label">选择时间范围</label>
+                                    <div class="col-sm-8">
+                                        <div class="input-daterange input-group" id="datepicker">
+                                            <input type="text" class="input-sm form-control" name="sm_start_time" value="{if condition='isset($sm_info.sm_start_time) and $sm_info.sm_start_time neq 0'}{$sm_info.sm_start_time|date='Y-m-d',###}{/if}" />
+                                            <span class="input-group-addon">到</span>
+                                            <input type="text" class="input-sm form-control" name="sm_end_time" value="{if condition='isset($sm_info.sm_end_time) and $sm_info.sm_end_time neq 0'}{$sm_info.sm_end_time|date='Y-m-d',###}{/if}" />
+                                        </div>
+                                    </div>
+                                    <label class="col-sm-2">*如果不填写为永久有效!</label>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="submit" value="保存内容" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1);" value="取消" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 全局js -->
+        <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+        <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+        <!-- 自定义js -->
+        <script src="SELLER_JS/content.js?v=1.0.0"></script>
+        <!-- iCheck -->
+        <script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+        <!-- Data picker -->
+        <script src="SELLER_JS/plugins/datapicker/bootstrap-datepicker.js"></script>
+        <!-- Color picker -->
+        <script src="SELLER_JS/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+
+        <!-- Clock picker -->
+        <script src="SELLER_JS/plugins/clockpicker/clockpicker.js"></script>
+        <!-- Image cropper -->
+        <script src="SELLER_JS/plugins/cropper/cropper.min.js"></script>
+        <script src="SELLER_JS/demo/form-advanced-demo.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+        </script>
+    </body>
+</html>

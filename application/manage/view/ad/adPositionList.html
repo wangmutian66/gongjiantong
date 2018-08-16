@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>广告定位列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>广告定位列表</h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a class="close-link" href="{:url('manage/index/welcome')}">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a href="{:url('manage/Ad/adPositionAdd')}">
+                                <i class="fa fa-plus"></i>
+                                广告定位添加
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <form action="" method="get">
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="请输入定位名称" class="input-sm form-control" name="map_name" value="{if condition="isset($data.map_name)"}{$data.map_name}{/if}">
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-sm btn-primary"> 搜索</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width:3%"> </th>
+                                        <th>ID</th>
+                                        <th>广告定位名</th>
+                                        <th>广告定位值</th>
+                                        <th>类型</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}
+                                        <tr id="map_{$info.map_id}">
+                                            <td>
+                                                <input type="checkbox" class="i-checks" name="map_id[]" value="{$info.map_id}">
+                                            </td>
+                                            <td>
+                                                {$info.map_id}
+                                            </td>
+                                            <td>
+                                                {$info.map_name}
+                                            </td>
+                                            <td>
+                                                {$info.map_value}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.map_type eq '1'"}
+                                                    banner
+                                                {else /}
+                                                    单图
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.map_status eq '1'"}
+                                                    开启
+                                                {else /}
+                                                    关闭
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                <a href="{:url('manage/Ad/adPositionEdit',array('id'=>$info.map_id))}" class="btn btn-default btn-xs"><i class="fa fa-wrench text-navy"></i>&nbsp;修改</a>&nbsp;&nbsp;
+                                                <a onclick="del('map_{$info.map_id}',{$info.map_id},'{:url(\"manage/Ad/adPositionDel\")}')" class="btn btn-default btn-xs"><i class="fa fa-close text-navy"></i>&nbsp;删除</a>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="MANAGE_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="MANAGE_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/demo/peity-demo.js"></script>
+    <script src="MANAGE_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <title>{$title}</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="MANAGE_CSS/bootstrap.min.css" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css" rel="stylesheet">
+    <link href="MANAGE_CSS/login.css" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <link href="SELLER_CSS/styleindex.css" rel="stylesheet">
+    <style>
+        #captcha_img{ cursor: pointer;}
+    </style>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <script>
+        if (window.top !== window.self) {
+            window.top.location = window.location;
+        }
+    </script>
+
+</head>
+
+<body>
+    <div class="ileft">
+        <img src="SELLER_IMG/logo_03.png">
+        <div class="ilefttext">工建通后台管理系统</div>
+    </div>
+    <div class="iright">
+        <div class="iright-box">
+            <div class="irbox-1">
+                <div class="irbox-1-title">工建通后台登录</div>
+                <div class="irbox-2">
+                    <div class="irbox-2-label">
+                        <input type="text" placeholder="用户名" name="m_name" id="m_name" > <img src="SELLER_IMG/icon_user.jpg">
+                    </div>
+                    <div class="irbox-2-label">
+                        <input type="password" placeholder="密码" name="m_passwd" id="m_passwd"> <img src="SELLER_IMG/icon_pwd.jpg">
+                    </div>
+
+
+
+
+                    <button onclick="check_login()">登  录</button>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="irighttext">© {$company}</div>
+    </div>
+
+
+
+    <!--<div class="signinpanel">-->
+        <!--<div class="row">-->
+            <!--<div class="col-sm-12">-->
+                <!--<form onsubmit="return false;">-->
+                    <!--<h4 class="no-margins">登录：</h4>-->
+                    <!--<p class="m-t-md">{$title}</p>-->
+                    <!--<input type="text" class="form-control uname" name="m_name" placeholder="用户名" id="m_name" />-->
+                    <!--<input type="password" class="form-control pword m-b" name="m_passwd" placeholder="密码" id="m_passwd" />-->
+                    <!--&lt;!&ndash; <a href="">忘记密码了？</a> &ndash;&gt;-->
+                    <!--<button onclick="check_login()" class="btn btn-success btn-block">登录</button>-->
+                <!--</form>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="signup-footer">-->
+            <!--<div class="pull-left">-->
+                <!--&copy; {$company}-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+</body>
+<script type="text/javascript">
+
+    $(function(){
+        document.onkeydown = function(e){
+            var ev = document.all ? window.event : e;
+            if(ev.keyCode==13) {
+                check_login();
+                return false;
+
+            }
+        }
+    });
+    function check_login() {
+        var manager_name = $("#m_name").val();
+        var manager_passwd = $("#m_passwd").val();
+        if (manager_name == '' && manager_passwd == '') {
+            swal({
+                title: "抱歉出错了!",
+                text: "用户名和密码是必填项哦!"
+            });
+        }else if (manager_name == '') {
+            swal({
+                title: "抱歉出错了!",
+                text: "用户名不能为空哦!"
+            });
+        }else if (manager_passwd == '') {
+            swal({
+                title: "抱歉出错了!",
+                text: "密码不能为空哦!"
+            });
+        }else{
+            $.ajax({
+                url:'{:url("manage/login/doLogin")}',
+                type:'post',
+                data:{m_name:manager_name,m_passwd:manager_passwd},
+                dataType:'json',
+                success:function(info){
+                    // console.log(info);
+                    if (info.code != '1') {
+                        swal({
+                            title: "登录失败!",
+                            text: info.msg
+                        });
+                    }else{
+                        swal({
+                            title: info.msg,
+                        });
+                        window.location.href = '{:url("manage/index/index")}';
+                    }
+                },
+                error:function() {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            });
+        }
+    }
+</script>
+</html>

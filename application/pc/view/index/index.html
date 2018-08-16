@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{$title}</title>
+    <link href="PC_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="PC_CSS/SettledIn.css" rel="stylesheet">
+    <script src="PC_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="PC_JS/plugins/sweetalert/sweetalert.min.js"></script>
+</head>
+<script>
+    if (window.top !== window.self) {
+        window.top.location = window.location;
+    }
+</script>
+<body>
+    <div class="settled-container bg-ligtGary">
+        <div class="w w1200">
+            <div class="sett-process-warp clearfix">
+                <div class="sett-process-warp clearfix">
+                        <div class="s-p-steps">
+                        <ul>
+                            <li class="curr">
+                                <span>
+                                    1. 入驻须知
+                                </span>
+                                <i class="iconfont icon-arrow-right-alt">
+                                </i>
+                            </li>
+                            <li>
+                                <span>
+                                    2. 基本信息填写
+                                </span>
+                                <i class="iconfont icon-arrow-right-alt">
+                                </i>
+                            </li>
+                            <li>
+                                <span>
+                                    3. 入驻信息认证
+                                </span>
+                                <i class="iconfont icon-arrow-right-alt">
+                                </i>
+                            </li>
+                             <!--<li>-->
+                                <!--<span>-->
+                                    <!--4. 店铺信息认证-->
+                                <!--</span>-->
+                                <!--<i class="iconfont icon-arrow-right-alt">-->
+                                <!--</i>-->
+                            <!--</li>-->
+                            <li class="last ">
+                                <span>
+                                    4. 等待审核
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                <div class="panel">
+                    <form action="merchants_steps_action.php" id="stepForm" method="post" name="stepForm">
+                        <div class="panel-content">
+                            <div class="bg-warp sid-frist">
+                                <div class="title">
+                                    {$article.a_title}
+                                </div>
+                                <div class="textareay">
+                                    <div class="agreement">
+                                       {$article.a_content}
+                                    </div>
+                                </div>
+                                <div class="btn-group">
+                                    <input name="agreement" type="hidden" value="1"/>
+
+                                    <input class="btn" type="button" value="同意以上协议，下一步" onclick="protocol()"/>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    function protocol() {
+        var sr_id = "{$sr_value.sr_id}";
+        if(sr_id=="0"){
+            window.location.href = '{:url("pc/index/settledInTwo")}';
+        }else{
+            window.location.href = '{:url("pc/index/settledInTwo",array("id"=>$sr_value.sr_id))}';
+        }
+
+    }
+</script>
+</html>

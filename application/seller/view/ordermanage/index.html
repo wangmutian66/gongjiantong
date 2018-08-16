@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品订单</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>订单列表</h5>
+                        
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <form action="" method="get" id="ss_form">
+                                <div class="col-sm-2 m-b-xs">
+                                    <select class="input-sm form-control input-s-sm inline" style="padding: 0;" name="o_status" onchange="changeform()">
+                                        <option value="">请选择订单状态</option>
+                                        <option value="0"{if condition="$o_status eq '0'"}selected{/if}>未确认</option>
+                                        <option value="1"{if condition="$o_status eq '1'"}selected{/if}>已确认</option>
+                                        <option value="2"{if condition="$o_status eq '2'"}selected{/if}>已取消</option>
+                                        <option value="5"{if condition="$o_status eq '5'"}selected{/if}>已完成</option>
+                                    </select>
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>订单编号</th>
+                                        <th>收货人</th>
+                                        <th>总金额</th>
+                                        <th>应付金额</th>
+                                        <th>订单状态</th>
+                                        <th>支付状态</th>
+                                        <th>送货状态</th>
+                                        <th>支付方式</th>
+                                        <th>配送方式</th>
+                                        <th>下单时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}
+                                    <tr>
+                                        <td>{$info.o_sn}</td>
+                                        <td>{$info.userinfo}</td>
+                                        <td>{$info.o_goods_price}</td>
+                                        <td>{$info.o_payable_price}</td>
+                                        <td>
+                                            {if condition="$info.o_status eq '0'"}
+                                            <span style="color:red">未确认</span>
+                                            {elseif condition="$info.o_status eq '1'"}
+                                            <span style="color:green">已确认</span>
+                                            {elseif condition="$info.o_status eq '2'"}
+                                            <span style="color:red">已取消</span>
+                                            {elseif condition="$info.o_status eq '5'"}
+                                            <span style="color:#00a1ff">已完成</span>
+                                            {elseif condition="$info.o_status eq '6'"}
+                                                {if condition="$info.or_type eq '1'"}
+                                                换货
+                                                {else/}
+                                                退款
+                                                {/if}
+                                            {/if}
+                                        </td>
+                                        <td>
+                                            {if condition="$info.o_pay_status eq '0'"}
+                                            <span style="color:red">未支付</span>
+                                            {elseif condition="$info.o_pay_status eq '1'"}
+                                            <span style="color:green">已支付</span>
+                                            {elseif condition="$info.o_pay_status eq '2'"}
+                                            <span style="color:red">待支付</span>
+                                            {/if}
+                                        </td>
+                                        <td>
+                                            {if condition="$info.o_shipping_status eq '0'"}
+                                            <span style="color:red">未发货</span>
+                                            {elseif condition="$info.o_shipping_status eq '2'"}
+                                            <span style="color:green">已发货</span>
+                                            {/if}
+                                        </td>
+                                        <td>
+                                            {if condition="$info.o_pay_name eq 'wechatPay'"}
+                                            微信支付
+                                            {elseif condition="$info.o_pay_name eq 'alipay'"}
+                                            支付宝支付
+                                            {/if}
+                                        </td>
+                                        <td>{$info.o_shipping_name}</td>
+                                        <td>{$info.o_add_time} </td>
+                                        <td>
+                                            <a href="{:url('seller/Ordermanage/detail',array('order_id'=>$info.o_id))}" class="btn btn-default btn-xs green"><i class="fa fa-list-alt"></i>&nbsp;查看 </a>
+                                            <a onclick="delorder({$info.o_id})" class="btn btn-default btn-xs red"><i class="fa fa-trash-o"></i>&nbsp;删除 </a>
+                                            <?php 
+                                            $o_invoice=$info['o_invoice']; 
+                                            ?>
+                                               {if condition="$o_invoice neq '[null]'"}
+                                            <a href="{:url('seller/Ordermanage/fapiao',array('order_id'=>$info.o_id))}" class="btn btn-default btn-xs green"><i class="fa fa-file-text-o"></i>&nbsp;查看发票 </a>
+                                            {/if}
+                                        </td>
+                                    </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="SELLER_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/demo/peity-demo.js"></script>
+    <!-- layer javascript -->
+    <script src="SELLER_JS/plugins/layer/layer.min.js"></script>
+    <script src="SELLER_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+        function changeform(){
+            $("#ss_form").submit();
+        }
+        function delorder($oid){
+            sweetAlert({
+                title: "确定删除吗?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#AEDEF4",
+                confirmButtonText: "确定",
+                cancelButtonText:"取消",
+                closeOnConfirm: false
+            }, function(){
+
+                $.ajax({
+                    url:"{:url('seller/Ordermanage/delorder')}",
+                    data:{oid:$oid},
+                    dataType:"json",
+                    type:"POST",
+                    success:function(data){
+                        if(data.code == 200){
+                            swal("删除成功!",
+                                "",
+                                "success");
+                            $(".confirm").click(function(){
+                                window.location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+
+        }
+
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品品牌</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 style="width:50%">商品品牌<span style="margin:0% 5%;color:red">品牌审核成功后将不允许 修改 / 删除 ,请慎重填写</span></h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a href="{:url('seller/Goods/goodsBrandAdd')}">
+                                <i class="fa fa-plus"></i>
+                                商品品牌添加
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <!-- <th style="width:3%"> </th> -->
+                                        <!--<th>ID</th>-->
+                                        <th>品牌名称</th>
+                                        <th>品牌英文名</th>
+                                        <th>品牌logo</th>
+                                        <!-- <th>品牌网址</th> -->
+                                        <th>品牌描述</th>  
+                                        <th>审核状态</th>  
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}
+                                        <tr id="sba_{$info.sba_id}">
+                                            <!-- <td>
+                                                <input type="checkbox" class="i-checks" name="sba_id[]" value="{$info.sba_id}">
+                                            </td> -->
+                                            <!--<td>-->
+                                                <!--{$info.sba_id}-->
+                                            <!--</td>-->
+                                            <td>
+                                                {$info.sba_name}
+                                            </td>
+                                            <td>
+                                                {$info.sba_english_name}
+                                            </td>
+                                            <td>
+                                                <img src="__UPLOAD__/{$info.sba_logo_path}" onclick="showImg('__UPLOAD__/{$info.sba_logo_path}')" style="width:120px;height:100px" >
+                                            </td>
+                                            <!-- <td>
+                                                {$info.sba_official_website}
+                                            </td> -->
+                                            <td>
+                                                {$info.sba_desc}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.sba_status eq 0"}
+                                                    <span style="color:red">未通过</span>
+                                                <div>原因：{$info.sba_reason}</div>
+                                                {/if}
+                                                {if condition="$info.sba_status eq 1"}
+                                                    <span style="color:#FF8F23">审核中</span>
+                                                {/if}
+                                                {if condition="$info.sba_status eq 2"}
+                                                    <span style="color:green">审核通过</span>
+                                                {/if}
+                                            </td>
+                                            {if condition="$info.sba_status neq 2"}
+                                                <td>
+                                                    <a href="{:url('seller/Goods/goodsBrandEdit',array('id'=>$info.sba_id))}" class="btn btn-default btn-xs"><i class="fa fa-wrench text-navy"></i>&nbsp;修改</a>&nbsp;&nbsp;
+                                                    
+                                                    <a onclick="del('sba_{$info.sba_id}',{$info.sba_id},'{:url(\"seller/Goods/goodsBrandDel\")}')" class="btn btn-default btn-xs"><i class="fa fa-close text-navy"></i>&nbsp;删除</a>
+                                                </td>
+                                                {else}
+                                                <td>
+                                                </td>
+                                            {/if}
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="SELLER_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/demo/peity-demo.js"></script>
+    <!-- layer javascript -->
+    <script src="SELLER_JS/plugins/layer/layer.min.js"></script>
+    <script src="SELLER_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品品牌</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+    <style>
+        input[type="text"], input[type="password"], textarea, select, .editable, .editable2, .editable-tarea, .editable-tarea2 {
+            padding: 2px 4px;
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            border-radius: 4px;
+            resize: none;
+        }
+        input[type="text"], input[type="password"], textarea, select, .editable, .editable-tarea {
+            color: #333333;
+            background-color: #FFF;
+            border: solid 1px #D7D7D7;
+        }
+        input[type="text"]:focus, input[type="text"]:hover, input[type="text"]:active, input[type="password"]:focus, input[type="password"]:hover, input[type="password"]:active, textarea:hover, textarea:focus, textarea:active {
+            color: #33464F;
+            background-color: #fff;
+            border: 1px solid;
+            border-color: #2CBCA3;
+            -moz-box-shadow: 0 0 0 2px rgba(82, 168, 236, 0.15);
+            -webkit-box-shadow: 0 0 0 0 2px rgba(82, 168, 236, 0.15);
+            box-shadow: 0 0 0 2px rgba(82, 168, 236, 0.15);
+            outline: 0 none;
+        }
+        select{
+            height: 28px;
+            float:left;
+        }
+        a.btn {
+            background: #fff none repeat scroll 0 0;
+            border: 1px solid #f5f5f5;
+            border-radius: 4px;
+            color: #999;
+            cursor: pointer !important;
+            display: inline-block;
+            font-size: 12px;
+            font-weight: normal;
+            /*height: 20px;*/
+            letter-spacing: normal;
+            line-height: 20px;
+            margin: 0 5px 0 0;
+            padding: 1px 6px;
+            vertical-align: top;
+        }
+        a.red:hover {
+            background-color: #e84c3d;
+            border-color: #c1392b;
+            color: #fff;
+        }
+
+        .imgload {
+            float: left;
+            width: 20px;
+            text-align: center;
+            height: 30px;
+        }
+        .imgload img {
+            display: none;
+        }
+
+        #goodtable tr th{
+            background: #edfbf8;
+        }
+    </style>
+</head>
+<body>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">选择商品</h4>
+            </div>
+            <div class="modal-body">
+                <table id="goodtable" class="table table-bordered table-hover">
+                    <tr>
+                        <th>商品名称</th>
+                        <th>规格</th>
+                        <th>价格</th>
+                        <th>活动价格</th>
+                    </tr>
+                </table>
+                <div id="page" class="page_div"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="okgood()">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>修改订单</h5>
+                    <div class="ibox-tools" style="margin-right: 15px;">
+                        <a class="close-link" href="{:url('seller/index/welcome')}">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="ibox-content">
+                    <form action="#" method="post" id="seletfrom" name="seletfrom" >
+                    <div class="ncap-form-default">
+                        <dl class="row">
+                            <dt class="tit">
+                                <label><em></em>订单总额</label>
+                            </dt>
+                            <dd class="opt">
+                                <strong>{$oRow.o_goods_total}</strong>(商品总价:{$oRow.o_goods_price} 运费:{$oRow.o_shipping_price})
+                                <span class="err"></span>
+                                <p class="notic">订单总额=商品总价+运费 </p>
+                            </dd>
+                        </dl>
+                        <dl class="row">
+                            <dt class="tit">
+                                <label for="consignee">收货人</label>
+                            </dt>
+                            <dd class="opt">
+                                <input type="text" name="usa_user_name" id="usa_user_name" value="{$oRow.usa_user_name}" class="input-txt" placeholder="收货人名字">
+                            </dd>
+                        </dl>
+                        <dl class="row">
+                            <dt class="tit">
+                                <label for="consignee">手机</label>
+                            </dt>
+                            <dd class="opt">
+                                <input type="text" name="usa_mobile" id="usa_mobile" value="{$oRow.usa_mobile}" class="input-txt" placeholder="收货人联系电话">
+                            </dd>
+                        </dl>
+                        <dl class="row">
+                            <dt class="tit">
+                                <label for="consignee">地址</label>
+                            </dt>
+                            <dd class="opt">
+                                <select id="province" name="usa_province"  class="catselectB" onchange="getRegion('city',this.value,'city','' ,'{:url('pc/Base/getRegion')}','area');">
+                                    <option value="">
+                                        请选择省
+                                    </option>
+                                    {foreach name="rlist" item="vo"}
+                                    {if condition="$vo.r_id eq $oRow.usa_province"}
+                                    <option value="{$vo.r_id}" selected="selected">
+                                        {$vo.r_name}
+                                    </option>
+                                    {else/}
+                                    <option value="{$vo.r_id}" >
+                                        {$vo.r_name}
+                                    </option>
+                                    {/if}
+                                    {/foreach}
+                                </select>
+                                <div class="imgload"><img src="PC_IMG/loading.gif"></div>
+                                <select id="city" name="usa_city" onchange="getRegion('area',this.value,'area','' ,'{:url('pc/Base/getRegion')}');" class="catselectB">
+                                    <option value="">
+                                        请选择市
+                                    </option>
+                                    {foreach name="plist" item="vo"}
+                                    {if condition="$vo.r_id eq $oRow.usa_city"}
+                                    <option value="{$vo.r_id}" selected="selected">
+                                        {$vo.r_name}
+                                    </option>
+                                    {else/}
+                                    <option value="{$vo.r_id}" >
+                                        {$vo.r_name}
+                                    </option>
+                                    {/if}
+                                    {/foreach}
+                                </select>
+                                <div class="imgload"><img src="PC_IMG/loading.gif"></div>
+                                <select id="area" name="usa_district" class="catselectB">
+                                    <option value="">
+                                        请选择区
+                                    </option>
+                                    {foreach name="clist" item="vo"}
+                                    {if condition="$vo.r_id eq $oRow.usa_district"}
+                                    <option value="{$vo.r_id}" selected="selected">
+                                        {$vo.r_name}
+                                    </option>
+                                    {else/}
+                                    <option value="{$vo.r_id}" >
+                                        {$vo.r_name}
+                                    </option>
+                                    {/if}
+                                    {/foreach}
+                                </select>
+                                <div class="imgload"><img src="PC_IMG/loading.gif"></div>
+                                <input type="text" name="usa_address" id="address" value="{$oRow.usa_address}" class="input-txt" placeholder="详细地址">
+                            </dd>
+                        </dl>
+                        <dl class="row">
+                            <dt class="tit">
+                                <label for="shipping">配送物流</label>
+                            </dt>
+                            <dd class="opt">
+                                <select id="logid" name="log_id">
+                                    {foreach name="loglist" item="vo"}
+                                    <option value="{$vo.log_id}" {if condition="$vo.log_id eq $oRow.log_id"}selected{/if}>{$vo.log_name}</option>
+                                    {/foreach}
+                                </select>
+                            </dd>
+                        </dl>
+
+                        <dl class="row">
+                            <dt class="tit">
+                                <label for="invoice_title">发票抬头</label>
+                            </dt>
+                            <dd class="opt">
+                                <input type="text" name="o_invoice_title" value="{$oRow.o_invoice_title}" class="input-txt" placeholder="发票抬头">
+                            </dd>
+                        </dl>
+                        <dl class="row">
+                            <dt class="tit">
+                                <label for="invoice_title" >添加商品</label>
+                            </dt>
+                            <dd class="opt">
+                                <a  onclick="selectGoods(1)"  data-toggle="modal" data-target="#myModal" class="ncap-btn-big ncap-btn-green"><i class="fa fa-search"></i>添加商品</a>
+                            </dd>
+                        </dl>
+                        <dl class="row">
+                            <dt class="tit">
+                                <label for="invoice_title">商品列表</label>
+                            </dt>
+                            <dd class="opt">
+                                <div class="ncap-order-details">
+                                    <div class="hDivBox" id="ajax_return">
+                                        <table cellspacing="0" cellpadding="0" style="border:0px">
+                                            <thead>
+                                            <tr>
+
+                                                <th align="left" abbr="order_sn" axis="col3" class="">
+                                                    <div style="text-align: left;  width: 200px;" class="">商品名称</div>
+                                                </th>
+                                                <th align="left" abbr="consignee" axis="col4" class="">
+                                                    <div style="text-align: left;" class="">规格</div>
+                                                </th>
+                                                <th align="left" abbr="consignee" axis="col4" class="">
+                                                    <div style="text-align: left; " class="">价格</div>
+                                                </th>
+                                                <th align="center" abbr="article_show" axis="col5" class="">
+                                                    <div style="text-align: center; " class="">数量</div>
+                                                </th>
+                                                <th align="center"  class="">
+                                                    <div style="text-align: center; " class="">活动</div>
+                                                </th>
+                                                <th align="center" class="">
+                                                    <div style="text-align: center; " class="">折扣价</div>
+                                                </th>
+                                                <th align="center" abbr="article_time" axis="col6" class="">
+                                                    <div style="text-align: center; width: 80px;" class="">操作</div>
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {if condition="isset($gsplist) and !empty($gsplist)"}
+                                            {foreach name="gsplist" item="info"}
+                                            <tr>
+
+                                                <td align="left" abbr="goods_name" axis="col3" class="">
+                                                    <div style="text-align: left; width: 200px;" class="">{$info.goods_name}</div>
+                                                </td>
+                                                <td align="left" abbr="spec_key_name" axis="col4" class="">
+                                                    <div style="text-align: left; " class="">{$info.sp_name}</div>
+                                                </td>
+                                                <td align="left" abbr="goods_price" axis="col4" class="">
+                                                    <div style="text-align: left; " class="">{$info.gsp_price}</div>
+                                                </td>
+                                                <td align="center" abbr="article_show" axis="col5" class="">
+                                                    <div style="text-align: center; " class="">
+
+                                                        <input type="text" class="input-txt" style="width:60px !important;text-align:center" name="old_goods[{$info.g_id}_{$info.sp_id}]" value="{$info.goods_buy_num}" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')">
+                                                    </div>
+                                                </td>
+                                                <td align="left" abbr="goods_price" axis="col4" class="">
+                                                    <div style="text-align: center; " class=""><div>{if condition="$info.act_type eq '1'"}<span style="color:red;">折扣</span>{elseif condition="$info.act_type eq '2'"}<span style="color:red;">满{$info.act_meet}减{$info.act_reduction}</span>{else/}{/if}</div></div>
+                                                </td>
+                                                <td align="left" abbr="goods_price" axis="col4" class="">
+                                                    <div style="text-align: center; " class="">{$info.g_discount_price}</div>
+                                                </td>
+                                                <td align="center" abbr="article_time" axis="col6" class="">
+                                                    <div style="text-align: center; width: 80px;" class="">
+                                                        <a class="btn red" href="javascript:void(0);" onclick="javascript:$(this).parent().parent().parent().remove();"><i class="fa fa-trash-o"></i>删除</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {/foreach}
+                                            {/if}
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+
+                            </dd>
+                        </dl>
+                        <dl class="row">
+                            <dt class="tit">管理员备注</dt>
+                            <dd class="opt">
+                                <textarea class="tarea" style="width:440px; height:150px;" name="o_admin_note" id="admin_note">{$oRow.o_admin_note}</textarea>
+                                <span class="err"></span>
+                                <p class="notic"></p>
+                            </dd>
+                        </dl>
+                        <input type="hidden" name="order_id" value="1455">
+                        <div class="bot"><a href="JavaScript:void(0);" onclick="checkSubmit()" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a></div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="SELLER_JS/photoclip/jquery-2.1.3.min.js?v=2.1.4"></script>
+    <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="SELLER_JS/paging.js"></script>
+    <script src="SELLER_JS/globals.js"></script>
+    <script type="text/javascript">
+        function checkSubmit(){
+            $.ajax({
+                data:$("#seletfrom").serialize(),
+                type:"POST",
+                dataType:"json",
+                success:function(data){
+
+                    if(data.code == 200){
+                        swal({
+                            title: "通讯提示!",
+                            text: "操作成功!"
+                        });
+                        $(".sa-button-container .confirm").click(function(){
+                            window.history.back();
+                        });
+                    }else{
+                        swal({
+                            title: "通讯提示!",
+                            text: data.msg
+                        });
+                    }
+
+
+                }
+            });
+            //document.seletfrom.submit();
+        }
+
+
+
+        //seletfrom
+        function selectGoods(page){
+            $.ajax({
+                url:"{:url('seller/Ordermanage/selectGoods')}",
+                type:"POST",
+                data:{page:page},
+                dataType:"json",
+                success:function(list){
+                    var data = list.list;
+                    var pageCount = list.pageCount;
+                    var str="";
+                    for(var i in data){
+                        str+="<tr data-index='"+data[i]["g_id"]+"_"+data[i]["sp_id"]+"'><td><span class='g_name'>"+data[i]["g_name"]+"</span></td><td><span class='sp_name'>"+data[i]["sp_name"]+"</span></td><td><span class='gsp_price'>"+data[i]["gsp_price"]+"</span></td>";
+                        str+="<td>";
+                        if(data[i]["act_type"]==1){
+                            str+="<span style='color: red;'  class='acttitle'>折扣价</span> &nbsp; <span class='g_discount_price'>"+data[i]["g_discount_price"]+"</span>";
+                        }else if(data[i]["act_type"]==2){
+                            str+="<span style='color: red;' class='acttitle'>满"+data[i]["act_meet"]+"减"+data[i]["act_reduction"]+"</span> &nbsp; <span class='g_discount_price'>"+data[i]["g_discount_price"]+"</span>";
+                        }else{
+                            str+="<span style='color:#999;' class='acttitle'>无折扣价格</span> <span class='g_discount_price'></span>";
+                        }
+                        str+="</td>";
+                        str+="</tr>";
+                    }
+                    $("#page").paging({
+                        pageNo:page,
+                        totalPage: pageCount,
+                        callback: function(num) {
+                            selectGoods(num);
+                        }
+                    });
+                    $("#goodtable tr:gt(0)").remove();
+                    $("#goodtable tr").eq(0).after(str);
+                    $("#goodtable tr").click(function(){
+                        if($(this).hasClass("trSelected")){
+                            $(this).removeClass("trSelected");
+                        }else{
+                            $(this).addClass("trSelected");
+                        }
+                    });
+                }
+
+            });
+        }
+
+        function okgood(){
+            var str="";
+            $("#goodtable .trSelected").each(function(key,element){
+                var trindex = $(this).attr("data-index");
+
+                var g_name = $(element).find(".g_name").text();
+                var sp_name = $(element).find(".sp_name").text();
+                var gsp_price = $(element).find(".gsp_price").text();
+                var acttitle = $(element).find(".acttitle").text();
+                var g_discount_price = $(element).find(".g_discount_price").text();
+                str+='<tr>';
+
+                str+='<td align="left" abbr="goods_name" axis="col3" class="">';
+                str+='    <div style="text-align: left; width: 200px;" class="">'+g_name+'</div>';
+                str+='   </td>';
+                str+='    <td align="left" abbr="spec_key_name" axis="col4" class="">';
+                str+='    <div style="text-align: left; " class="">'+sp_name+'</div>';
+                str+='</td>';
+                str+='<td align="left" abbr="goods_price" axis="col4" class="">';
+                str+='    <div style="text-align: left; " class="">'+gsp_price+'</div>';
+                str+='    </td>';
+                str+='    <td align="center" abbr="article_show" axis="col5" class="">';
+                str+='    <div style="text-align: center; " class="">';
+
+                str+='    <input type="text" class="input-txt" style="width:60px !important;text-align:center" name="old_goods['+trindex+']" value="1" onkeyup="this.value=this.value.replace(/[^\d.]/g,\'\')" onpaste="this.value=this.value.replace(/[^\d.]/g,\'\')">';
+                str+='    </div>';
+                str+='    </td>';
+                str+='    <td align="left" abbr="goods_price" axis="col4" class="">';
+                str+='    <div style="text-align: center; " class=""><div><span style="color:red;">'+acttitle+'</span></div></div>';
+                str+='</td>';
+                str+='<td align="left" abbr="goods_price" axis="col4" class="">';
+                str+='    <div style="text-align: center; " class="">'+g_discount_price+'</div>';
+                str+='    </td>';
+                str+='    <td align="center" abbr="article_time" axis="col6" class="">';
+                str+='    <div style="text-align: center; width: 80px;" class="">';
+                str+='   <a class="btn red" href="javascript:void(0);" onclick="javascript:$(this).parent().parent().parent().remove();"><i class="fa fa-trash-o"></i>删除</a>';
+                str+='</div>';
+                str+='</td>';
+                str+='</tr>';
+
+            });
+            $("#ajax_return tbody").append(str);
+        }
+
+
+    </script>
+
+</body>
+</html>

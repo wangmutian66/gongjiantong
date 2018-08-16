@@ -1,0 +1,44 @@
+ 个人入驻：
+'sr_id' 注册商户id
+'sr_latitude_and_longitude' 个人经纬度
+'sr_legal_person_idcard' 身份证号
+'sr_idcard_positive' 身份证正面
+'sr_idcard_background' 身份证反面
+'sr_legal_person' 身份证名
+
+公司入驻：
+'sr_id'
+'sr_company_name' 公司名称/开户行公司名
+'sr_business_path' 营业执照图片
+'sr_business_license_number' 营业执照注册号
+'sr_business_license_province' 营业执照省
+'sr_business_license_city' 营业执照市
+'sr_business_license_area' 营业执照区
+'sr_business_license_address' 营业执照地址
+'sr_date_of_establishment'  成立时间
+'sr_operating_period'  营业期限
+'sr_registered_capital'  注册资本
+'sr_business_scope'    营业范围
+'sr_company_location_province' 公司所在地省份
+'sr_company_location_city'  公司所在地市
+'sr_company_location_area'   公司所在地区
+'sr_company_location_address' 公司所在地详细地址
+'sr_company_phone'             公司电话
+'sr_latitude_and_longitude'   公司经纬度
+'sr_legal_person' 身份证名
+'sr_legal_person_idcard' 身份证号
+'sr_idcard_positive' 身份证正面
+'sr_idcard_background' 身份证反面
+
+店铺信息：
+ss_name 店铺名称
+ss_desc 店铺简介
+mgc_id  经营一级类目
+ss_mgc_ids 经营二级类目
+ss_shop_province 店铺所在省
+ss_shop_city 店铺所在市
+ss_shop_area 店铺所在区
+ss_shop_address 店铺详细地址
+ss_shop_location 店铺定位
+ss_is_shipping 是否配送
+ss_payer 承担配送费用方

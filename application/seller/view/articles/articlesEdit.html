@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            文章修改
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/animate.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/ueditor.config.js"></script>
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/ueditor.all.min.js"> </script>
+        <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+        <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+        <script type="text/javascript" charset="utf-8" src="lang/zh-cn/zh-cn.js"></script>
+    </head>
+    <body class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>文章修改</h5>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a class="close-link" href="{:url('seller/index/sellerWelcome')}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a href="{:url('seller/Articles/articlesList')}">
+                                    <i class="fa fa-bars"></i>
+                                    文章列表
+                                </a>
+                            </div>
+                        </div>  
+                        <div class="ibox-content">
+                            <form class="form-horizontal" method="POST" action="{:url('seller/Articles/articlesEdit',array('id'=>$info.sa_id))}" enctype="multipart/form-data" >
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        分类
+                                    </label>
+                                    {if condition="isset($parent) and !empty($parent)"}
+                                    <div class="col-sm-2 m-b-xs">
+                                        <select class="input-sm form-control input-s-sm inline" onchange="getCategory(this.value,2)" name="sac_parent_id_1" style="height: 32px;">
+                                            <option value="">请选择文章分类</option>
+                                            {foreach name="parent" item="parentq"}
+                                                {if condition="$parentq.sac_level eq 1"}
+                                                    <option value="{$parentq.sac_id}" {if condition="$parentq.sac_id eq $parent_1"}selected{/if}>{$parentq.sac_name}</option>
+                                                {/if}
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 m-b-xs">
+                                        <select class="input-sm form-control input-s-sm inline" name="sac_parent_id_2" onchange="getCategory(this.value,3)" id="sac_parent_id_2" style="height: 32px;">
+                                            <option value="">请选择文章分类</option>
+                                            {neq name="parent_1" value=""}
+                                                {foreach name="parent" item="parentw"}
+                                                    {if condition="$parentw.sac_level eq 2"}
+                                                        <option value="{$parentw.sac_id}" {if condition="$parentw.sac_id eq $parent_2"}selected{/if}>{$parentw.sac_name}</option>
+                                                    {/if}
+                                                {/foreach}
+                                            {/neq}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 m-b-xs">
+                                        <select class="input-sm form-control input-s-sm inline" id="sac_parent_id_3" name="sac_parent_id_3" style="height: 32px;">
+                                            <option value="">请选择文章分类</option>
+                                            {neq name="parent_2" value=""}
+                                                {foreach name="parent" item="parente"}
+                                                    {if condition="$parente.sac_level eq 3"}
+                                                        <option value="{$parente.sac_id}" {if condition="$parente.sac_id eq $parent_3"}selected{/if}>{$parente.sac_name}</option>
+                                                    {/if}
+                                                {/foreach}
+                                            {/neq}
+                                        </select>
+                                    </div>
+                                    {/if}
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        标题
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sa_title" value="{$info.sa_title}" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        作者
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input  class="form-control" name="sa_author" value="{$info.sa_author}" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        类型
+                                    </label>
+                                    <div class="col-sm-5 m-b-xs">
+                                        <select class="input-sm form-control input-s-sm inline" name="sa_type" style="height: 32px;">
+                                            <option value="0" {if condition="isset($info.sa_type) and $info.sa_type eq '0'"}selected{/if}>原创</option>
+                                            <option value="1" {if condition="isset($info.sa_type) and $info.sa_type eq '1'"}selected{/if}>转载</option>
+                                            <option value="2" {if condition="isset($info.sa_type) and $info.sa_type eq '2'"}selected{/if}>翻译</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        链接地址
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input  class="form-control" name="sa_link" value="{$info.sa_link}" />
+                                    </div>
+                                    <div class="col-sm-5" style="color:red;">
+                                        必须以http://或者https://开头
+                                    </div> 
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        关键字
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input  class="form-control" name="sa_keywords" value="{$info.sa_keywords}" />
+                                    </div>
+                                    <div class="col-sm-5" style="color:red;">
+                                        如果多个用逗号","分隔
+                                    </div> 
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        是否开启
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" name="sa_is_open" id="sa_is_open1" {if condition="$info.sa_is_open eq '1'"}checked{/if} value="1" />
+                                            <label for="sa_is_open1"> 开启 </label>
+                                        </div>
+                                        <div class="radio radio-info radio-inline" >
+                                            <input type="radio" name="sa_is_open" id="sa_is_open2"  value="0" {if condition="$info.sa_is_open eq '0'"}checked{/if}/>
+                                            <label for="sa_is_open2" > 不开启 </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        文章缩略图
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-file" type="file" aria-required="true" aria-invalid="true" name="sa_thumb_path" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        简述
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sa_description" value="{$info.sa_description}" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        内容
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <script id="editor" type="text/plain" style="height:500px;" name="sa_content">{$info.sa_content}</script>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="submit" value="保存内容" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 全局js -->
+        <script src="SELLER_JS/jquery.min.js?v=2.1.4">
+        </script>
+        <script src="SELLER_JS/bootstrap.min.js?v=3.3.6">
+        </script>
+        <!-- 自定义js -->
+        <script src="SELLER_JS/content.js?v=1.0.0">
+        </script>
+        <!-- iCheck -->
+        <script src="SELLER_JS/plugins/iCheck/icheck.min.js">
+        </script>
+        <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+        <script>
+            var ue = UE.getEditor('editor');
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+            function getCategory(id,add) {
+                if (id > 0) {
+                    $.ajax({
+                        url:"{:url('seller/Articles/getArticlesCategory')}",
+                        type:"post",
+                        data:{id:id},
+                        dataType:"json",
+                        success:function(info){
+                            $("#sac_parent_id_"+add).empty();
+                            if (info.code == 200) {
+                                var opt = "<option>请选择文章分类</option>";
+                                var data = JSON.parse(info.data);
+                                $.each(data,function(i,n){
+                                    opt += "<option value='" + n.sac_id + "'>" + n.sac_name + "</option>";
+                                })
+                                $("#sac_parent_id_"+add).append(opt);
+                            }
+                        },
+                        error:function(){
+                            swal({
+                                title: "通讯出错!",
+                                text: "请联系开发人员或管理员!"
+                            });
+                        }
+                    })
+                }else{
+                    $("#sac_parent_id_"+add).empty();
+                    var opt = "<option>请选择文章分类</option>";
+                    $("#sac_parent_id_"+add).append(opt);
+                }
+            }
+        </script>
+    </body>
+</html>

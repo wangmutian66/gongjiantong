@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品订单</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>商品订单</h5>
+                    <div class="ibox-tools" style="margin-right: 15px;">
+                        <a class="close-link" href="{:url('seller/index/welcome')}">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="ibox-content">
+                    <div class="ncap-order-style">
+
+                        {if condition="$oRow.o_shipping_status neq '2'"}
+                        <a href="{:url('seller/Ordermanage/editorder',array('order_id'=>$order_id))}" class="ncap-btn-big ncap-btn-green"><i class="fa fa-search"></i>修改订单</a>
+                        {/if}
+                        <div class="ncap-order-details">
+
+                            <form id="order-action">
+                                <div class="tabs-panels">
+                                    <div class="misc-info">
+                                        <h3>基本信息</h3>
+                                        <dl>
+                                            <dt>订单 ID：</dt>
+                                            <dd>{$oRow.o_id}</dd>
+                                            <dt>订单号：</dt>
+                                            <dd>{$oRow.o_sn}</dd>
+                                            <dt>用户：</dt>
+                                            <dd>{$userinfo.u_name}  ID:{$oRow.u_id}</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>E-Mail：</dt>
+                                            <dd>{$oRow.o_email}</dd>
+                                            <dt>电话：</dt>
+                                            <dd>{$userinfo.u_mobile}</dd>
+                                            <dt>应付金额：</dt>
+                                            <dd>{$oRow.o_payable_price}</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>订单状态：</dt>
+                                            <dd>
+                                                {if condition="$oRow.o_status eq '0'"}
+                                                未确认
+                                                {elseif condition="$oRow.o_status eq '1'"}
+                                                已确认
+                                                {elseif condition="$oRow.o_status eq '2'"}
+                                                已取消
+                                                {elseif condition="$oRow.o_status eq '3'"}
+                                                待评价
+                                                {elseif condition="$oRow.o_status eq '4'"}
+                                                已评论
+                                                {elseif condition="$oRow.o_status eq '5'"}
+                                                已成功
+                                                {elseif condition="$oRow.o_status eq '6'"}
+                                                退货
+                                                {/if}/
+                                                {if condition="$oRow.o_pay_status eq '0'"}
+                                                未支付
+                                                {elseif condition="$oRow.o_pay_status eq '1'"}
+                                                已支付
+                                                {elseif condition="$oRow.o_pay_status eq '2'"}
+                                                待支付
+                                                {/if}/
+                                                {if condition="$oRow.o_shipping_status eq '0'"}
+                                                未发货
+                                                {elseif condition="$oRow.o_shipping_status eq '1'"}
+                                                发货中
+                                                {elseif condition="$oRow.o_shipping_status eq '2'"}
+                                                已发货
+                                                {/if}</dd>
+                                            <dt>下单时间：</dt>
+                                            <dd>{$oRow['o_add_time']|date="Y-m-d H:i",###}</dd>
+                                            <dt>支付时间：</dt>
+                                            <dd>
+                                                {if condition="$oRow.o_pay_time neq '0'"}
+                                                {$oRow['o_pay_time']|date="Y-m-d H:i",###}
+                                                {else/}
+                                                N
+                                                {/if}
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>支付方式：</dt>
+                                            <dd>{$oRow.o_pay_name}</dd>
+                                            <dt>发票抬头：</dt>
+                                            <dd>
+                                                {$oRow.o_invoice_title}
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>物流公司：</dt>
+                                            <dd>
+                                                {$oRow.o_shipping_name}
+                                            </dd>
+                                            <dt>物流编号：</dt>
+                                            <dd>{$oRow.o_shipping_code}</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="addr-note">
+                                        <h4>收货信息</h4>
+                                        <dl>
+                                            <dt>收货人：</dt>
+                                            <dd>{$usainfo.usa_user_name}</dd>
+                                            <dt>联系方式：</dt>
+                                            <dd>{$usainfo.usa_mobile}</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>收货地址：</dt>
+                                            <dd>{$reginone[0]},{$reginone[1]},{if condition="isset($reginone[2])"}{$reginone[2]},{/if}{$usainfo.usa_address}</dd>
+                                        </dl>
+
+                                        <dl>
+                                            <dt>配送方式：</dt>
+                                            <dd>{$oRow.o_shipping_name}</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>留言：</dt>
+                                            <dd>{$oRow.o_user_note}</dd>
+                                        </dl>
+                                    </div>
+
+
+                                    <div class="goods-info">
+                                        <h4>商品信息</h4>
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th>商品编号</th>
+                                                <th colspan="2">商品</th>
+                                                <th>规格属性</th>
+                                                <th>数量</th>
+                                                <th>单品价格</th>
+                                                <th>活动</th>
+                                                <th>折扣价</th>
+                                                <th>单品小计</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {if condition="isset($gsplist) and !empty($gsplist)"}
+                                            {foreach name="gsplist" item="info"}
+                                            <tr>
+                                                <td class="w60">{$info.goods_sn}</td>
+                                                <td class="w30"><div class="goods-thumb"><img alt="" src="/public/upload/{$info.g_show_img_path}" width="50"></div></td>
+                                                <td style="text-align: left;">{$info.goods_name}<br></td>
+                                                <td class="w80">{$info.sp_name}</td>
+                                                <td class="w60">{$info.goods_buy_num}</td>
+                                                <td class="w100">{$info.gsp_price}</td>
+                                                <td><div>{if condition="$info.act_type eq '1'"}<span style="color:red;">折扣</span>{elseif condition="$info.act_type eq '2'"}<span style="color:red;">满{$info.act_meet}减{$info.act_reduction}</span>{else/}{/if}</div></td>
+                                                <td class="w60">{$info.g_discount_price} </td>
+                                                <td class="w80">{$info.xiaoji}</td>
+                                            </tr>
+                                            {/foreach}
+                                            {/if}
+                                            </tbody></table>
+                                    </div>
+                                    <div class="total-amount contact-info">
+                                        <h3>订单总额：￥{$o_total_amount}</h3>
+                                    </div>
+                                    <div class="contact-info">
+                                        <h3>费用信息 </h3>
+                                        <div class="form_class">
+                                            <a class="btn green" href="{:url('seller/Ordermanage/editprice',array('order_id'=>$order_id))}"><i class="fa fa-pencil-square-o"></i>修改费用</a>
+                                        </div>
+                                        <dl>
+                                            <dt>小计：</dt>
+                                            <dd>{$oRow.o_goods_price}</dd>
+                                            <dt>运费：</dt>
+                                            <dd>+{$oRow.o_shipping_price}</dd>
+                                            <dt>价格调整：</dt>
+                                            <dd><!--减：-->{$oRow.o_diffvalue}</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>应付：</dt>
+                                            <dd><strong class="red_common">{$oRow.o_payable_price}</strong></dd>
+                                        </dl>
+                                    </div>
+                                    <div class="contact-info">
+                                        <h3>操作信息</h3>
+                                        <dl class="row">
+                                            <dt class="tit">
+                                                <label for="note">操作备注</label>
+                                            </dt>
+                                            <dd class="opt" style="margin-left:10px">
+                                                <textarea id="note" name="note" style="width:600px" rows="6" placeholder="请输入操作备注" class="tarea"></textarea>
+                                            </dd>
+                                        </dl>
+                                        <dl class="row">
+                                            <dt class="tit">
+                                                <label for="note">可执行操作</label>
+                                            </dt>
+                                            <dd class="opt" style="margin-left:10px">
+
+                                                {if condition="$oRow.o_status eq '0'"}
+                                                <a class="ncap-btn-big ncap-btn-green" onclick="ajax_submit_form('{:url('seller/Ordermanage/orderaction',array('order_id'=>$order_id,'type'=>'pay'))}');">
+                                                    确认订单</a>
+                                                {elseif condition="$oRow.o_shipping_status eq '0' and $oRow.o_status neq '2' "}
+
+                                                <a class="ncap-btn-big ncap-btn-green" href="{:url('seller/Ordermanage/deliverygoods',array('id'=>$order_id))}">
+                                                    去发货</a>
+                                                {/if}
+
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div class="goods-info">
+                                        <h4>操作记录</h4>
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th>操作者</th>
+                                                <th>操作时间</th>
+                                                <th>订单状态</th>
+                                                <th>付款状态</th>
+                                                <th>发货状态</th>
+                                                <th>描述</th>
+                                                <th>备注</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {foreach name="oalist" item="info"}
+                                            <tr>
+                                                <td class="text-center">
+                                                    {if condition="$info.oa_role eq '0'"}
+                                                    用户
+                                                    {else/}
+                                                    管理员
+                                                    {/if}
+                                                    ：{$info.u_name}</td>
+                                                <td class="text-center">{$info['oa_time']|date="Y-m-d H:i",###}</td>
+                                                <td class="text-center">
+                                                    {if condition="$info.oa_order_status eq '0'"}
+                                                    未确认
+                                                    {elseif condition="$info.oa_order_status eq '1'"}
+                                                    已确认
+                                                    {elseif condition="$info.oa_order_status eq '2'"}
+                                                    已取消
+                                                    {elseif condition="$info.oa_order_status eq '3'"}
+                                                    待评论
+                                                    {elseif condition="$info.oa_order_status eq '4'"}
+                                                    已评论
+                                                    {elseif condition="$info.oa_order_status eq '5'"}
+                                                    已完成
+                                                    {elseif condition="$info.oa_order_status eq '6'"}
+                                                    退货
+                                                    {/if}
+                                                </td>
+                                                <td class="text-center">
+
+                                                    {if condition="$info.oa_pay_status eq '0'"}
+                                                    未支付
+                                                    {elseif condition="$info.oa_pay_status eq '1'"}
+                                                    已支付
+                                                    {/if}
+
+                                                </td>
+                                                <td class="text-center">
+                                                    {if condition="$oRow.o_shipping_status eq '0'"}
+                                                    未发货
+                                                    {elseif condition="$oRow.o_shipping_status eq '1'"}
+                                                    发货中
+                                                    {elseif condition="$oRow.o_shipping_status eq '2'"}
+                                                    已发货
+                                                    {/if}
+                                                </td>
+                                                <td class="text-center">{$info.oa_status_desc}</td>
+                                                <td class="text-center">{$info.oa_note}</td>
+                                            </tr>
+                                            {/foreach}
+                                            </tbody></table>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <script type="text/javascript">
+        function ajax_submit_form(url){
+            $.ajax({
+                url:url,
+                type:"POST",
+                data:{"note":$("#note").val()},
+                dataType:"json",
+                success:function(data){
+                    if(data.code == 200){
+                        swal({
+                            title: "通讯提示!",
+                            text: "操作成功!"
+                        });
+                        $(".sa-button-container .confirm").click(function(){
+                            window.location.reload();
+                        });
+
+                    }else{
+                        swal({
+                            title: "通讯提示!",
+                            text: "操作失败!"
+                        });
+                    }
+
+                }
+            });
+        }
+    </script>
+</body>
+</html>

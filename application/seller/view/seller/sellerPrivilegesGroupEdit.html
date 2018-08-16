@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            修改管理员分组信息
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/animate.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+        <style>
+        .colposur{
+            overflow: hidden;
+            cursor: pointer;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 5px 15px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        </style>
+    </head>
+    <body class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>分组修改</h5>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a class="close-link" href="{:url('seller/index/sellerWelcome')}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a href="{:url('seller/Seller/sellerPrivilegesGroupList')}">
+                                    <i class="fa fa-bars"></i>
+                                    分组列表
+                                </a>
+                            </div>
+                        </div>  
+                        <div class="ibox-content">
+                            <form class="form-horizontal" method="POST" action="{:url('seller/Seller/sellerPrivilegesGroupEdit',array('id' => $spg_info.spg_id))}">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        权限组名称
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="spg_name" value="{if condition='isset($spg_info.spg_name)'}{$spg_info.spg_name}{/if}" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        状态
+                                    </label>
+                                    <div class="col-sm-2 m-b-xs">
+                                        <select class="input-sm form-control input-s-sm inline" name="spg_status" style="height: 32px;">
+                                            <option value="">请选择</option>
+                                            <option value="1" {if condition="isset($spg_info.spg_status) and $spg_info.spg_status eq '1'"}selected{/if}>开启</option>
+                                            <option value="0" {if condition="isset($spg_info.spg_status) and $spg_info.spg_status eq '0'"}selected{/if}>未开启</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        选择分组权限
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <fieldset>
+                                        <div class="col-sm-5">
+                                            <div class="colposur panel-heading">
+                                                <span>全选</span>
+                                            </div>
+                                            <div >
+                                                <table border="1" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+                                                    
+                                                    <tr><td style="width:57px">
+                                                      <input type="checkbox" onclick="checkAll()" id="checkall" style="width: 20px; height:20px;">
+                                                    </td>
+                                                    <td>
+                                                        <label for="checkall">全选</label>
+                                                </td></tr>
+                                                </table> 
+                                            </div>
+                                        </div>
+                                        <div style="clear:both"></div>
+                                        {if condition="isset($spm_list)"}
+                                       <!--  {foreach name="spm_list" item="spm"}
+                                            <div class="checkbox checkbox-success checkbox-inline">
+                                                <input type="checkbox" value="{$spm.spm_id}" name="spm_ids[]" id="inlineCheckbox2" {if condition="isset($spm.checked) and $spm.checked eq 1 "}checked{/if}>
+                                                <label class="inlineCheckbox2">{$spm.spm_name}</label>
+                                            </div>
+                                        {/foreach} -->
+                                        <!-- {$spg_info['spm_ids']} -->
+                                        <div class="col-sm-5">
+                                            <div class="colposur panel-heading">
+                                                 <span>商户店铺</span>
+                                            </div>
+                                            <div >
+                                                 <table border="1" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+                                                    <tr><td><input type="checkbox"  onclick="checkAlls()" id="dianpuss" style="width: 20px; height:20px;" ></td><td>权限名称</td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="17" name="spm_ids[]" class="
+                                                        dianpu" id="inlineCheckbox3" <?php if(in_array('17',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                    </td><td>
+                                                        <label for="inlineCheckbox3">商户店铺设置显示</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="18" name="spm_ids[]" class="
+                                                        dianpu" id="inlineCheckbox18" <?php if(in_array('18',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                    </td><td>
+                                                        <label for="inlineCheckbox18">商户店铺设置修改</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="19" name="spm_ids[]" class="
+                                                        dianpu" id="inlineCheckbox19" <?php if(in_array('19',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                    </td><td>
+                                                        <label for="inlineCheckbox19">商户后台客服</label>
+                                                </td></tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div style="clear:both"></div>
+                                        <div class="col-sm-5">
+                                            <div class="colposur panel-heading">
+                                                 <span>商户商品</span>
+                                            </div>
+                                            <div >
+                                                <table border="1" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+                                                    <tr><td><input type="checkbox"  onclick="checkAlls()" id="shangpins" style="width: 20px; height:20px;" ></td><td>权限名称</td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="41" name="spm_ids[]" class="
+                                                        shangpin" id="inlineCheckbox41" <?php if(in_array('41',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                    </td><td>
+                                                        <label for="inlineCheckbox41">商户后台商品列表</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="42" name="spm_ids[]" class="
+                                                        shangpin" id="inlineCheckbox42" <?php if(in_array('42',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                    </td><td>
+                                                        <label for="inlineCheckbox42">商户后台商品显示</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="43" name="spm_ids[]" class="
+                                                        shangpin" id="inlineCheckbox43" <?php if(in_array('43',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                    </td><td>
+                                                        <label for="inlineCheckbox43">商户后台商品添加</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="44" name="spm_ids[]" class="
+                                                        shangpin" id="inlineCheckbox44" <?php if(in_array('44',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                    </td><td>
+                                                        <label for="inlineCheckbox44">商户后台商品修改</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="45" name="spm_ids[]" class="
+                                                        shangpin" id="inlineCheckbox45" <?php if(in_array('45',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                    </td><td>
+                                                        <label for="inlineCheckbox45">商户后台商品删除</label>
+                                                </td></tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div style="clear:both"></div>
+                                        <div class="col-sm-5">
+                                            <div class="colposur panel-heading">
+                                                 <span>商户品牌</span>
+                                            </div>
+                                            <div >
+                                                <table border="1" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+                                                    <tr><td><input type="checkbox"  onclick="checkAlls()" id="pinpais" style="width: 20px; height:20px;" ></td><td>权限名称</td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="51" name="spm_ids[]" class="
+                                                        pinpai" id="inlineCheckbox51" <?php if(in_array('51',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox51">商户后台品牌列表</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="52" name="spm_ids[]" class="
+                                                        pinpai" id="inlineCheckbox52" <?php if(in_array('52',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox52">商户申请品牌列表</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="53" name="spm_ids[]" class="
+                                                        pinpai" id="inlineCheckbox53" <?php if(in_array('53',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox53">商户后台商品品牌添加</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="54" name="spm_ids[]" class="
+                                                        pinpai" id="inlineCheckbox54" <?php if(in_array('54',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox54">商户后台商品品牌修改</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="56" name="spm_ids[]" class="
+                                                        pinpai" id="inlineCheckbox56" <?php if(in_array('56',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox56">商户后台商品品牌删除</label>
+                                                 </td></tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div style="clear:both"></div>
+                                        <div class="col-sm-5">
+                                            <div class="colposur panel-heading">
+                                                 <span>商户商品系列</span>
+                                            </div>
+                                            <div >
+                                                <table border="1" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+                                                    <tr><td><input type="checkbox"  onclick="checkAlls()" id="xilies" style="width: 20px; height:20px;" ></td><td>权限名称</td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="57" name="spm_ids[]" class="
+                                                        xilie" id="inlineCheckbox57" <?php if(in_array('57',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox57">商户后台商品系列列表</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="58" name="spm_ids[]" class="
+                                                        xilie" id="inlineCheckbox58" <?php if(in_array('58',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox58">商户后台商品系列添加</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="59" name="spm_ids[]" class="
+                                                        xilie" id="inlineCheckbox59" <?php if(in_array('59',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox59">商户后台商品系列修改</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="60" name="spm_ids[]" class="
+                                                        xilie" id="inlineCheckbox60" <?php if(in_array('60',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox60">商户后台商品系列删除</label>
+                                                </td></tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div style="clear:both"></div>
+                                        <div class="col-sm-5">
+                                            <div class="colposur panel-heading">
+                                                 <span>商户文章分类</span>
+                                            </div>
+                                            <div >
+                                                <table border="1" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+                                                    <tr><td><input type="checkbox"  onclick="checkAlls()" id="fenleis" style="width: 20px; height:20px;" ></td><td>权限名称</td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="65" name="spm_ids[]" class="
+                                                        fenlei" id="inlineCheckbox65" <?php if(in_array('65',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                        </td><td>
+                                                        <label for="inlineCheckbox65">商户文章分类列表</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="66" name="spm_ids[]" class="
+                                                        fenlei" id="inlineCheckbox66" <?php if(in_array('66',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox66">商户文章分类添加</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="67" name="spm_ids[]" class="
+                                                        fenlei" id="inlineCheckbox67" <?php if(in_array('67',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox67">商户文章分类详情</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="68" name="spm_ids[]" class="
+                                                        fenlei" id="inlineCheckbox68" <?php if(in_array('68',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox68">商户文章分类修改</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="69" name="spm_ids[]" class="
+                                                        fenlei" id="inlineCheckbox69" <?php if(in_array('69',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox69">商户文章分类删除</label>
+                                                </td></tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div style="clear:both"></div>
+                                        <div class="col-sm-5">
+                                            <div class="colposur panel-heading">
+                                                 <span>商户文章</span>
+                                            </div>
+                                            <div >
+                                                <table border="1" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+                                                    <tr><td><input type="checkbox"  onclick="checkAlls()" id="wenzhangs" style="width: 20px; height:20px;" ></td><td>权限名称</td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="70" name="spm_ids[]" class="
+                                                        wenzhang" id="inlineCheckbox70" <?php if(in_array('70',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox70">商户文章列表</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="74" name="spm_ids[]" class="
+                                                        wenzhang" id="inlineCheckbox74" <?php if(in_array('74',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox74">商户文章展示</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="71" name="spm_ids[]" class="
+                                                        wenzhang" id="inlineCheckbox71" <?php if(in_array('71',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox71">商户文章添加</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="72" name="spm_ids[]" class="
+                                                        wenzhang" id="inlineCheckbox72" <?php if(in_array('72',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox72">商户文章修改</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="73" name="spm_ids[]" class="
+                                                        wenzhang" id="inlineCheckbox73" <?php if(in_array('73',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox73">商户文章删除</label>
+                                                </td></tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div style="clear:both"></div>
+                                        <div class="col-sm-5">
+                                            <div class="colposur panel-heading">
+                                                 <span>商户广告</span>
+                                            </div>
+                                            <div >
+                                                <table border="1" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+                                                    <tr><td><input type="checkbox"  onclick="checkAlls()" id="guanggaos" style="width: 20px; height:20px;" ></td><td>权限名称</td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="75" name="spm_ids[]" class="guanggao" id="inlineCheckbox75" <?php if(in_array('75',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox75">广告列表</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="77" name="spm_ids[]" class="guanggao" id="inlineCheckbox77" <?php if(in_array('77',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox77">广告展示</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="76" name="spm_ids[]" class="guanggao" id="inlineCheckbox76" <?php if(in_array('76',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox76">广告添加</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="78" name="spm_ids[]" class="guanggao" id="inlineCheckbox78" <?php if(in_array('78',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox78">广告修改</label>
+                                                </td></tr>
+                                                <tr><td>
+                                                        <input type="checkbox" value="79" name="spm_ids[]" class="guanggao" id="inlineCheckbox79" <?php if(in_array('79',$s_spginfo)){echo 'checked="checked"'; }?>>
+                                                </td><td>
+                                                        <label for="inlineCheckbox79">广告删除</label>
+                                                </td></tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        {/if}
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="submit" value="保存内容" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1);" value="取消" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 全局js -->
+        <script src="MANAGE_JS/jquery.min.js?v=2.1.4">
+        </script>
+        <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6">
+        </script>
+        <!-- 自定义js -->
+        <script src="MANAGE_JS/content.js?v=1.0.0">
+        </script>
+        <!-- iCheck -->
+        <script src="MANAGE_JS/plugins/iCheck/icheck.min.js">
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+            
+           function checkAll(){                 
+                if ($("#checkall").prop("checked")) { 
+                    $("#dianpuss").prop("checked",true);
+                    $("#shangpins").prop("checked",true);
+                    $("#pinpais").prop("checked",true);
+                    $("#xilies").prop("checked",true);
+                    $("#fenleis").prop("checked",true);
+                    $("#wenzhangs").prop("checked",true);
+                    $("#guanggaos").prop("checked",true);
+                    $("input[type='checkbox'][name='spm_ids[]']").prop("checked",true);//全选
+                } else { 
+                    $("#dianpuss").prop("checked",false);
+                    $("#shangpins").prop("checked",false);
+                    $("#pinpais").prop("checked",false);
+                    $("#xilies").prop("checked",false);
+                    $("#fenleis").prop("checked",false);
+                    $("#wenzhangs").prop("checked",false);
+                    $("#guanggaos").prop("checked",false);
+                    $("input[type='checkbox'][name='spm_ids[]']").prop("checked",false);  //取消全选     
+                }  
+            }  
+
+            function checkAlls(){
+                if ($("#dianpuss").prop("checked")) { 
+                    $(".dianpu").prop("checked",true);//全选
+                } else { 
+                    $(".dianpu").prop("checked",false);  //取消全选     
+                }  
+                if ($("#shangpins").prop("checked")) { 
+                    $(".shangpin").prop("checked",true);//全选
+                } else { 
+                    $(".shangpin").prop("checked",false);  //取消全选     
+                }  
+                if ($("#pinpais").prop("checked")) { 
+                    $(".pinpai").prop("checked",true);//全选
+                } else { 
+                    $(".pinpai").prop("checked",false);  //取消全选     
+                }
+                if ($("#xilies").prop("checked")) { 
+                    $(".xilie").prop("checked",true);//全选
+                } else { 
+                    $(".xilie").prop("checked",false);  //取消全选     
+                }
+                if ($("#fenleis").prop("checked")) { 
+                    $(".fenlei").prop("checked",true);//全选
+                } else { 
+                    $(".fenlei").prop("checked",false);  //取消全选     
+                }
+                if ($("#wenzhangs").prop("checked")) { 
+                    $(".wenzhang").prop("checked",true);//全选
+                } else { 
+                    $(".wenzhang").prop("checked",false);  //取消全选     
+                }
+                if ($("#guanggaos").prop("checked")) { 
+                    $(".guanggao").prop("checked",true);//全选
+                } else { 
+                    $(".guanggao").prop("checked",false);  //取消全选     
+                }
+            }  
+            
+        </script>
+    </body>
+</html>

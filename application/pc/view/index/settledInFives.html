@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>
+            {$title}
+        </title>
+        <link href="PC_CSS/SettledIn.css" rel="stylesheet"/>
+    </head>
+    <style type="text/css">
+            .header {
+                width: 100%;
+                height: 35px;
+                background-color: #f9f9f9;
+                border-bottom: 1px solid #ececec;
+            }
+            .wrap {
+                width: 80%;
+                height: 100%;
+                margin: 0 auto;
+                position: relative;
+            }
+            .header-right {
+                margin-right: 10%;
+            }
+
+            .fr {
+                float: right;
+            }
+            .header a {
+                text-decoration: none;
+                line-height: 36px;
+                color:#ec5151
+            }
+            .line {
+                height: 16px;
+                border-left: 1px solid #ec5151;
+                vertical-align: middle;
+                margin: 0 8px 0 5px;
+            }
+        </style>
+<body>
+
+    <div class="header">
+        <div class="wrap">
+            <div class="header-right fr">
+                <!-- <a class="login" href="{:url('pc/Login/Index')}">登录</a> -->
+                {$mobile}
+                <span class="line"></span>
+                <a href="{:url('seller/Login/index')}">退出</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="settled-container bg-ligtGary">
+        <div class="w w1200">
+            <div class="sett-process-warp clearfix">
+                <div class="s-p-steps">
+                    <ul>
+                        <li class="cur">
+                            <span>
+                                1. 入驻须知
+                            </span>
+                            <i class="iconfont icon-arrow-right-alt">
+                            </i>
+                        </li>
+                        <li class="cur">
+                            <span>
+                                2. 基本信息填写
+                            </span>
+                            <i class="iconfont icon-arrow-right-alt">
+                            </i>
+                        </li>
+                        <li class="cur">
+                            <span>
+                                3. 入驻信息认证
+                            </span>
+                            <i class="iconfont icon-arrow-right-alt">
+                            </i>
+                        </li>
+                        <!--<li class="cur">-->
+                            <!--<span>-->
+                                <!--4. 店铺信息认证-->
+                            <!--</span>-->
+                            <!--<i class="iconfont icon-arrow-right-alt">-->
+                            <!--</i>-->
+                        <!--</li>-->
+                        <li class="last curr">
+                            <span>
+                                4. 等待审核
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="settled-container settled-prog-container">
+        <div class="w w1200">
+            <div class="sett-process-warp clearfix">
+                
+                <div class="panel">
+                    <div class="settled-prog-warp">
+                        <div class="che">
+                            <img src="PC_IMG/che.png"/>
+                        </div>
+                        <div class="spw-cont">
+                            <div class="spw-tit">
+                                <h1>
+                                    审核进度
+                                </h1>
+                            </div>
+                            <div class="spw-mian spw-wait">
+                                <i class="spw-icon">
+                                </i>
+                                <div class="spw-info">
+                                    <h2>
+                                        {if condition="isset($settledInFives.ss_approval_status) and $settledInFives.ss_approval_status eq 1"}
+                                            审核通过
+                                        {elseif condition="$settledInFives.ss_approval_status eq 2" }
+                                            未通过
+                                        {else /}
+                                            正在审核中...
+                                        {/if}
+                                    </h2>
+                                    <div class="spw-txt">
+                                        <p>
+                                            平台将在三个工作日内进行审核，
+                                        </p>
+                                        <p>
+                                            审核结果将以短信和邮件的形式发送，
+                                        </p>
+                                        <p>
+                                            请注意查收！
+                                        </p>
+                                    </div>
+                                    <!-- <div class="spw-txt">
+                                        <p>
+                                            感谢您在本店申请商家入驻！
+                                        </p>
+                                        <span>
+                                            期望店铺名称：
+                                            <strong class="orange2">
+                                                {if condition="isset($settledInFives.ss_name)"}{$settledInFives.ss_name}{/if}
+                                            </strong>
+                                        </span>
+                                        <span style="margin-top: 2%;">
+                                            店铺描述：
+                                            <em>
+                                                {if condition="isset($settledInFives.ss_desc)"}{$settledInFives.ss_desc}{/if}
+                                            </em>
+                                        </span>
+                                    </div> -->
+                                   <!--  <div class="setted-footer" style="margin-top: 2%;">
+                                        {if condition="isset($settledInFives.ss_approval_status) and $settledInFives.ss_approval_status eq 1"}
+                                            <a class="ftx-05" href="{:url('seller/Seller/index')}" style="color:#08B4DA;font-size:14px;">
+                                                进入商户后台
+                                            </a>
+                                        {/if}
+                                        {if condition="isset($settledInFives.ss_approval_status) and $settledInFives.ss_approval_status neq 0 and $settledInFives.ss_approval_status neq 1"} 
+                                            <h3 style="color:#FF8F23;font-size:14px;">未通过原因：{$settledInFives.sr_reason}</h3>  
+                                            <a class="ftx-05" href="{:url('pc/Index/settledInTwo',array('id'=>$settledInFives.sr_id))}" style="color:#08B4DA;font-size:14px;">
+                                                修改入驻信息
+                                            </a>
+                                        {/if}
+                                    </div>  -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

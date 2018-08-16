@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            添加广告定位
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/animate.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+    </head>
+    <body class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>添加广告定位</h5>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a class="close-link" href="{:url('manage/index/welcome')}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a href="{:url('manage/Ad/adPositionList')}">
+                                    <i class="fa fa-bars"></i>
+                                    广告定位列表
+                                </a>
+                            </div>
+                        </div>  
+                        <div class="ibox-content">
+                            <form class="form-horizontal" method="POST" action="{:url('manage/Ad/adPositionAdd')}" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        广告定位名
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="map_name" id="map_name" onblur="verifyInput('map_name','ch','map_name_show')" />
+                                    </div>
+                                    <code id="map_name_show">请填写中文!</code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        广告定位值
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="map_value" id="map_value" onblur="verifyInput('map_value','alphaNum','map_name_show')" />
+                                    </div>
+                                    <code id="map_value_show">请填写英文,数字!</code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">宽:</label>
+                                    <div class="col-sm-5">
+                                             <input class="form-control" type="text" name="map_width" style="width: 100px;display: inline-block;"  />
+                                            <b>&nbsp;高:&nbsp;&nbsp;&nbsp;&nbsp;</b> <input class="form-control" type="text" name="map_height" style="width: 100px;display: inline-block;"  />
+
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        类型
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" id="map_type0" value="0" name="map_type" checked />
+                                            <label for="map_type0"> 广告 </label>
+                                        </div>
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" id="map_type1" value="1" name="map_type" />
+                                            <label for="map_type1"> banner </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        状态
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" id="map_status0" value="1" name="map_status" checked />
+                                            <label for="map_status0"> 开启 </label>
+                                        </div>
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" id="map_status1" value="0" name="map_status" />
+                                            <label for="map_status1"> 关闭 </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="submit" value="保存内容" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 全局js -->
+        <script src="MANAGE_JS/jquery.min.js?v=2.1.4">
+        </script>
+        <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6">
+        </script>
+        <!-- 自定义js -->
+        <script src="MANAGE_JS/content.js?v=1.0.0">
+        </script>
+        <!-- iCheck -->
+        <script src="MANAGE_JS/plugins/iCheck/icheck.min.js">
+        </script>
+        <script type="text/javascript" src="MANAGE_JS/globals.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+            limitInput('map_name','ch');
+            limitInput('map_value','alphaNum');
+        </script>
+    </body>
+</html>

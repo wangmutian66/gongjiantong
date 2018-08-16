@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            店铺设置
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/animate.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+        <link href="SELLER_CSS/photoclip/jquery.gridly.css" rel="stylesheet">
+        <link href="SELLER_CSS/preview/style.css" rel="stylesheet">
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/ueditor.config.js"></script>
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/ueditor.all.min.js"> </script>
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/lang/zh-cn/zh-cn.js"></script>
+
+        <script src="SELLER_JS/photoclip/jquery-1.11.2.min.js"></script>
+        <!--<script src="SELLER_JS/photoclip/vendor/jquery.ui.widget.js"></script>
+        <script src="SELLER_JS/photoclip/jquery.iframe-transport.js"></script>-->
+        <script type="text/javascript" src="SELLER_JS/photoclip/tools.js"></script>
+        <script src="SELLER_JS/photoclip/ajaxfileupload.js"></script>
+        <script src="SELLER_JS/photoclip/jquery.gridly.js" type="text/javascript"></script>
+        <script src="SELLER_JS/photoclip/iscroll-zoom.js"></script>
+        <script src="SELLER_JS/photoclip/hammer.js"></script>
+        <script src="SELLER_JS/photoclip/lrz.all.bundle.js"></script>
+        <script src="SELLER_JS/photoclip/jquery.photoClip.js"></script>
+
+        <style>
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                  -webkit-appearance: none;
+            }
+            .box span{ cursor: pointer;}
+            .imgs img{height: 500px}
+            .sr_other img{
+                margin-right: 10px;
+                margin-bottom: 10px;
+            }
+
+
+
+
+
+        </style>
+
+         <script type="application/javascript">
+            function ajaxFileUploads(){
+                if($("#g_show_img_path").val()==""){
+
+                    return false;
+                }
+                $.ajaxFileUpload
+                (
+                    {
+
+                        url: '{:url("seller/Goods/goodsImgupdate")}', //用于文件上传的服务器端请求地址
+                        secureuri: false, //是否需要安全协议，一般设置为false
+                        data: { img:$("#g_show_img_path").val() },
+                        fileElementId: ['g_show_img_path'], //文件上传域的ID
+                        dataType: 'json', //返回值类型 一般设置为json
+                        success: function (data, status)  //服务器成功响应处理函数
+                        {
+                            $("input[name=qualifications1]").val(data["pic_cover"]);
+                            $("#views").html("<img src='/public/upload/"+data["pic_cover"]+"' width='200'>");
+
+                        },
+                        error: function (data, status, e)//服务器响应失败处理函数
+                        {
+                            alert(data);
+                        }
+                    }
+                )
+                return false;
+            }
+
+
+            function ajaxFileUploadsimg(){
+                if($("#ss_logo_img").val()==""){
+
+                    return false;
+                }
+                $.ajaxFileUpload
+                (
+                    {
+
+                        url: '{:url("seller/Goods/goodsImgupdate")}', //用于文件上传的服务器端请求地址
+                        secureuri: false, //是否需要安全协议，一般设置为false
+                        data: { img:$("#ss_logo_img").val() },
+                        fileElementId: ['ss_logo_img'], //文件上传域的ID
+                        dataType: 'json', //返回值类型 一般设置为json
+                        success: function (data, status)  //服务器成功响应处理函数
+                        {
+
+                            $("input[name=ss_logo_img1]").val(data["pic_cover"]);
+                            $("#view1").html("<img src='/public/upload/"+data["pic_cover"]+"' width='200'>");
+
+                        },
+                        error: function (data, status, e)//服务器响应失败处理函数
+                        {
+                            console.log(data);
+                            // alert(data);
+                        }
+                    }
+                )
+                return false;
+            }
+
+
+
+
+            function ajaxFileUploadsOther(str_id){
+
+                if($("#"+str_id).val()==""){
+
+                    return false;
+                }
+                $.ajaxFileUpload
+                (
+                    {
+
+                        url: '{:url("seller/Goods/goodsImgupdate")}', //用于文件上传的服务器端请求地址
+                        secureuri: false, //是否需要安全协议，一般设置为false
+                        data: { img:$("#"+str_id).val() },
+                        fileElementId: [str_id], //文件上传域的ID
+                        dataType: 'json', //返回值类型 一般设置为json
+                        success: function (data, status)  //服务器成功响应处理函数
+                        {
+                            var pic_cover = $("[name="+str_id+"_text]").val();
+                            if(pic_cover != ""){
+                                pic_cover += ","+data["pic_cover"];
+                            }else{
+                                pic_cover = data["pic_cover"];
+                            }
+
+                            $("[name="+str_id+"_text]").val(pic_cover);
+                            var imglen = $("."+str_id).children("img").length;
+                            var index = imglen-2;
+                            if(index < 0){
+                                $("."+str_id).prepend("<img src='/public/upload/"+data["pic_cover"]+"'  style='width:25%;height:100px'/>");
+                            }else{
+                                $("."+str_id).children("img").eq(index).after("&nbsp;<img src='/public/upload/"+data["pic_cover"]+"'  style='width:25%;height:100px'/>");
+                            }
+                        },
+                        error: function (data, status, e)//服务器响应失败处理函数
+                        {
+                            console.log(data);
+                        }
+                    }
+                )
+                return false;
+            }
+
+        </script>
+    </head>
+    <body class="gray-bg">
+    <!--style="display: none;"-->
+    <a  data-toggle="modal" data-target="#myModal3" class="yulan" style="display: none;">预览</a>
+    <div class="modal " id="myModal3" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">商品详情</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="iframe-wrap" class="mobile-width-2">
+                        <!--手机预览html开始-->
+                        <div class="demo " id="outer" style="padding-bottom: 10px;">
+                            <div class="ztl-line"></div>
+
+                            <div class="headline">
+                                <img src="SELLER_IMG/preview/fanhui_07.jpg" />
+                                <ul>
+
+                                    <li style="width: 100%;">{$shop_settings.ss_name}</li>
+
+                                </ul>
+                                <img src="SELLER_IMG/preview/fanhui_04.jpg" />
+                            </div>
+                            <div class="linebox">
+                                <div class="lineli">
+                                    <span>{$shop_settings.ss_confirm_time|date='Y-m-d',###}</span>
+                                    <div class="">入驻时间</div>
+                                </div>
+                                <div class="lineli">
+                                    <span>{$mgc_name}</span>
+                                    <div class="">商品种类</div>
+                                </div>
+                                <div class="lineli">
+                                    <span>{$gcount}</span>
+                                    <div class="">商品数量</div>
+                                </div>
+                                <div class="lineli">
+                                    <div class="">商铺资质</div>
+                                </div>
+
+                                <div class="dptitle zz">营业执照</div>
+                                <div class="dpimg zzimg">
+                                    <img src="/public/upload/{$sr_value.sr_business_path}" />
+                                </div>
+                                <div class="dptitle zz nature">代理资质</div>
+                                <div class="dpimg zzimg nature">
+                                    <img src="SELLER_IMG/a1.jpg" />
+                                </div>
+                                <div class="lineli" style="border: none;">
+                                    <div class="">店铺简介</div>
+                                </div>
+                                <div class="dpimg zzimg" id="ucontent">
+                                    <img src="SELLER_IMG/a1.jpg" />
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+                        <!--手机预览html结束-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+         <a data-toggle="modal" data-target="#myModal23" id="mysqlqietu">
+        <i class="fa fa-plus"></i>
+        商品添加
+    </a>
+       <div class="modal inmodal" id="myModal23" tabindex="-1" role="dialog" aria-hidden="true">
+
+            <div class="modal-dialog">
+                <div class="modal-content animated flipInY">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">图片截取</h4>
+                    </div>
+                    <div style="padding: 0px 30px 30px 30px;">
+                        <div id="clipArea" class="imgs"></div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-primary" id="clipBtn"  data-dismiss="modal"> 确定</button>
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div>
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li class="tabli1 active"><a data-toggle="tab" aria-expanded="true" onclick="tab('1')">基本信息</a>
+                            </li>
+                            <li class="tabli2"><a href="#" data-toggle="tab" aria-expanded="false" onclick="tab('2')">注册信息</a>
+                            <li class="tabli3"><a data-toggle="tab" aria-expanded="false" onclick="tab('3')">用户协议</a>
+                            <li class="tabli4"><a data-toggle="tab" aria-expanded="false" onclick="tab('4')">店铺活动</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <form class="form-horizontal" method="POST" action="{:url('seller/ShopSettings/shopSettingsEdit')}" enctype="multipart/form-data" onsubmit="return shopsetting()" onkeydown="if(event.keyCode==13){return false;}">
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="panel-body">
+                                        <div class="col-sm-12">
+                                            <div class="ibox float-e-margins">
+                                                <div class="ibox-content">
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            店铺名称
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="ss_name" value="{$shop_settings.ss_name}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            店铺Logo
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input type="hidden" name="ss_logo_img1" value="{$shop_settings.ss_logo_img}">
+                                                            <input class="form-file" type="file" id="ss_logo_img" name="ss_logo_img" style="display: block;width: 100%; margin-bottom: 10px;" onchange="ajaxFileUploadsimg()"/>
+                                                            <div id="view1">
+                                                            <img src="__UPLOAD__/{$shop_settings.ss_logo_img}" style="width:25%;{if  condition="$shop_settings.ss_logo_img eq ''"}display:none;{/if}"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                  <div class="hr-line-dashed"></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">
+                                                                店铺地址
+                                                            </label>
+                                                            <div class="col-sm-2 m-b-xs">
+                                                                <select class="input-sm form-control input-s-sm inline" name="ss_shop_province" style="height: 32px;" onchange="getRegion('ss_shop_city',this.value,'ss_shop_city','','{:url('seller/Base/getRegion')}')">
+                                                                    {if condition="isset($r_value) and !empty($r_value)"}
+                                                                        {foreach name="r_value" item = "r"}
+                                                                            <option value="{$r.r_id}" {eq name="$shop_settings.ss_shop_province"  value="$r.r_id"} selected {/eq} >{$r.r_name}</option>
+                                                                        {/foreach}
+                                                                    {/if}
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-2 m-b-xs">
+                                                                <select class="input-sm form-control input-s-sm inline" name="ss_shop_city" style="height: 32px;" id="ss_shop_city" onchange="getRegion('ss_shop_area',this.value,'ss_shop_area','','{:url('seller/Base/getRegion')}')">>
+                                                                    <option value="">请选择</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-2 m-b-xs">
+                                                                <select class="input-sm form-control input-s-sm inline" name="ss_shop_area" style="height: 32px;" id="ss_shop_area">
+                                                                    <option value="">请选择</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="hr-line-dashed"></div>
+
+
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            卖家保障
+                                                        </label>
+                                                        <div class="col-sm-10 checked3">
+                                                            {if condition="isset($gu_value) and !empty($gu_value )"}
+                                                            {foreach name="gu_value" item="info"}
+                                                                <div class="checkbox checkbox-info checkbox-inline">
+                                                                    <input type="checkbox" name="guarantee[]" 
+                                                                    <?php
+                                                                    if(in_array($info["gu_id"],$s_guarantee)){echo 'checked="checked"'; }
+                                                                    ?>
+                                                                     id="guarantee{$info.gu_id}" value="{$info.gu_id}" onclick="distributions({$info.gu_id})">
+                                                                    <label for="guarantee{$info.gu_id}">{$info.gu_name}</label>
+                                                                </div>
+                                                            {/foreach}
+                                                            {/if}
+                                                        </div>
+                                                    </div> 
+                                                 
+                                                    <div
+                                                    <?php
+                                                    if(in_array('1',$s_guarantee)){
+                                                    ?>
+                                                     style="display:block"
+                                                    <?php
+                                                     }else{
+                                                       ?>
+                                                     style="display:none"
+                                                    <?php
+                                                     }
+                                                     ?>
+                                                     id="distributions1">
+                                                        <div class="hr-line-dashed"></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">
+                                                                包邮包送
+                                                            </label>
+                                                            <div class="input-group inputrelation" id="by"  style="float:left;margin-left: 15px;max-width: 650px;">
+                                                                <input type="hidden" name="gunames1" id=""  value="包邮包送">
+                                                                <input type="text" name="" id="brand_searchs"  oninput="search()" style="display: block;border-color: #cfdadd;border-radius: 2px;width: 190px;height: 30px;padding: 6px 12px;font-size: 14px;line-height: 1.42857143;color: #555;background-color: #fff;background-image: none;border: 1px solid #cfdadd;box-shadow: none;" autocomplete="off"><br>
+                                                            {foreach name="s_guarantee1" item="s_guarantee1" key='i'}
+                                                            {if condition="$s_guarantee1 neq '' " }
+                                                            <div style="float:left;position: relative;" class="box" >
+
+                                                            <input type="text"  name="guarantees1[]" class ="baoyou" style="margin-top: 5px;text-align: center;width: 55px;margin-right:10px" readonly="readonly" value="{$s_guarantee1}" >
+                                                            <span style="position: absolute;top: -4px;right: 7px;" onclick='yichu(this)'>x</span>
+                                                            </div>
+                                                            {/if}
+                                                            {/foreach}
+                                                            <div class="searchbox" style="z-index: 9999999;">
+                                                                <ul>
+                                                                </ul>
+                                                            </div>
+                                                            </div>
+                                                             <input style="position: absolute;left: 450px;" type="button" id="btn2" class="btn btn-primary" value="添加" />
+                                                        </div>
+                                                    </div>
+                                                    {if condition="isset($gu_valuelist) and !empty($gu_valuelist)"}
+                                                    {foreach name="gu_valuelist" item="info"}
+                                                        
+                                                        <div <?php
+                                                    if(in_array($info["gu_id"],$s_guarantee)){
+                                                    ?>
+                                                    style="display:block"  
+                                                    <?php 
+                                                     }else{
+                                                       ?>
+                                                     style="display:none"  
+                                                    <?php  
+                                                     }
+                                                     ?> class="distributions{$info.gu_id}">
+                                                        <div class="hr-line-dashed"></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">
+                                                                {$info.gu_name}
+                                                            </label>
+                                                            <div class="radio radio-info radio-inline">
+                                                                <input type="hidden" name="gunames{$info.gu_id}" id=""  value="{$info.gu_name}">
+                                                                {if condition="$info.gu_id eq '2'"}
+                                                                <div class="radio radio-info radio-inline">
+                                                                    <input type="radio" id="guarantees2_7" name="{$info.gu_id}" value="7天" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} {if condition="$guarantess[$info['gu_id']]['guarantess'] eq '7天'"}checked="checked"{/if} {/if}>
+                                                                    <label for="guarantees2_7">7天</label>
+                                                                </div>
+                                                                <div class="radio radio-info radio-inline">
+                                                                    <input type="radio" id="guarantees2_15" name="{$info.gu_id}" value="15天" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} {if condition="$guarantess[$info['gu_id']]['guarantess'] eq '15天'"}checked="checked"{/if} {/if}>
+                                                                    <label for="guarantees2_15">15天</label>
+                                                                </div>
+                                                                <div class="radio radio-info radio-inline">
+                                                                    <input type="radio" id="guarantees2_no" name="{$info.gu_id}" value="不限" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} {if condition="$guarantess[$info['gu_id']]['guarantess'] eq '不限'"}checked="checked"{/if} {/if}>
+                                                                    <label for="guarantees2_no">不限</label>
+                                                                </div>
+                                                                <input type="text" name="guarantees{$info.gu_id}" id="" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} value="{$guarantess[$info['gu_id']]['guarantess']}" {/if}  style="display:none;">
+                                                                {elseif condition="$info.gu_id eq '3'"}
+                                                                <div class="radio radio-info radio-inline">
+                                                                    <input type="radio" id="guarantees3_7" name="{$info.gu_id}" value="7天" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} {if condition="$guarantess[$info['gu_id']]['guarantess'] eq '7天'"}checked="checked"{/if} {/if}>
+                                                                    <label for="guarantees3_7">7天</label>
+                                                                </div>
+                                                                <div class="radio radio-info radio-inline">
+                                                                    <input type="radio" id="guarantees3_15" name="{$info.gu_id}" value="15天" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} {if condition="$guarantess[$info['gu_id']]['guarantess'] eq '15天'"}checked="checked"{/if} {/if}>
+                                                                    <label for="guarantees3_15">15天</label>
+                                                                </div>
+                                                                <input type="text" name="guarantees{$info.gu_id}" id="" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} value="{$guarantess[$info['gu_id']]['guarantess']}" {/if}  style="display:none;">
+                                                                {elseif condition="$info.gu_id eq '4'"}
+                                                                <div class="radio radio-info radio-inline">
+                                                                    <input type="radio" id="guarantees4_3" name="{$info.gu_id}" value="3个月" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} {if condition="$guarantess[$info['gu_id']]['guarantess'] eq '3个月'"}checked="checked"{/if} {/if}>
+                                                                    <label for="guarantees4_3">3个月</label>
+                                                                </div>
+                                                                <div class="radio radio-info radio-inline">
+                                                                    <input type="radio" id="guarantees4_6" name="{$info.gu_id}" value="6个月" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} {if condition="$guarantess[$info['gu_id']]['guarantess'] eq '6个月'"}checked="checked"{/if} {/if}>
+                                                                    <label for="guarantees4_6">6个月</label>
+                                                                </div>
+                                                                <div class="radio radio-info radio-inline">
+                                                                    <input type="radio" id="guarantees4_12" name="{$info.gu_id}" value="12个月" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} {if condition="$guarantess[$info['gu_id']]['guarantess'] eq '12个月'"}checked="checked"{/if} {/if}>
+                                                                    <label for="guarantees4_12">12个月</label>
+                                                                </div>
+                                                                <div class="radio radio-info radio-inline">
+                                                                    <input type="radio" id="guarantees4_0" name="{$info.gu_id}" value="0" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} {if condition="($guarantess[$info['gu_id']]['guarantess'] neq '3个月') and ($guarantess[$info['gu_id']]['guarantess'] neq '6个月') and ($guarantess[$info['gu_id']]['guarantess'] neq '12个月')"} checked="checked"{/if} {/if}>
+                                                                    <label for="guarantees4_0">自定义时间</label>
+                                                                </div>
+
+                                                                <input type="text" name="guarantees{$info.gu_id}" id="" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} value="{$guarantess[$info['gu_id']]['guarantess']}"  {if condition="$guarantess[$info['gu_id']]['guarantess'] eq '3个月' or $guarantess[$info['gu_id']]['guarantess'] eq '6个月' or $guarantess[$info['gu_id']]['guarantess'] eq '12个月'"}style="display:none;" {/if}  {/if} >
+
+                                                                {elseif condition="$info.gu_id eq '5'"}
+
+                                                                <input type="text" name="guarantees{$info.gu_id}" id="" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} value="{$guarantess[$info['gu_id']]['guarantess']}" {/if}>
+                                                                {elseif condition="$info.gu_id eq '6'"}
+                                                                <div class="radio radio-info radio-inline">
+                                                                    <input type="radio" id="guarantees6_1" name="{$info.gu_id}" value="厂家发货" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} {if condition="$guarantess[$info['gu_id']]['guarantess'] eq '厂家发货'"}checked="checked"{/if} {/if}>
+                                                                    <label for="guarantees6_1">厂家发货</label>
+                                                                </div>
+                                                                <div class="radio radio-info radio-inline">
+                                                                    <input type="radio" id="guarantees6_2" name="{$info.gu_id}" value="店铺发货" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} {if condition="$guarantess[$info['gu_id']]['guarantess'] eq '店铺发货'"}checked="checked"{/if} {/if}>
+                                                                    <label for="guarantees6_2">店铺发货</label>
+                                                                </div>
+                                                                <input type="text" name="guarantees{$info.gu_id}" id="" {if condition="isset($guarantess[$info['gu_id']]['guids']) and !empty($guarantess[$info['gu_id']]['guids'])"} value="{$guarantess[$info['gu_id']]['guarantess']}" {/if} style="display:none;">
+                                                                {/if}
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                                
+                                                    {/foreach}
+                                                    {/if}
+        
+
+
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            店铺性质
+                                                        </label>
+                                                        <div class="col-sm-10">
+                                                            <div class="radio radio-info radio-inline">
+                                                                <input type="radio" name="nature" {if  $shop_settings.nature eq 1} checked="" {/if} id="nature1" value="1" onclick="distribution(1)">
+                                                                <label for="nature1"> 厂家 </label>
+                                                            </div>
+                                                            <div class="radio radio-info radio-inline" >
+                                                                <input type="radio" name="nature" {if  $shop_settings.nature eq 2} checked="" {/if} id="nature2" value="2" onclick="distribution(2)">
+                                                                <label for="nature2"> 代理 </label>
+                                                            </div>
+                                                            <div class="radio radio-info radio-inline" >
+                                                                <input type="radio" name="nature" {if  $shop_settings.nature eq 3} checked="" {/if} id="nature3" value="3" onclick="distribution(3)">
+                                                                <label for="nature3"> 零售 </label>
+                                                            </div>
+                                                            <div class="radio radio-info radio-inline" >
+                                                                <input type="radio" name="nature" {if  $shop_settings.nature eq 4} checked="" {/if} id="nature4" value="4" onclick="distribution(4)">
+                                                                <label for="nature4"> 其他 </label>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <div {if condition="$shop_settings.nature gt 2 or $shop_settings.nature eq '' " } style="display:none" {/if} id="distribution">
+                                                        <div class="hr-line-dashed"></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">
+                                                                资质上传
+                                                            </label>
+                                                            <div class="col-sm-5 m-b-xs">
+                                                                <input type="hidden" name="qualifications1" value="{$shop_settings.qualifications}" >
+                                                                <input class="form-file" type="file" name="qualifications" id="g_show_img_path" style="display: block;width: 100%; margin-bottom: 10px;"  onchange="ajaxFileUploads()"/>
+                                                                <div style="margin-top:10px" id="views">
+                                                                {if condition="$shop_settings['qualifications'] neq ''"}
+                                                                <img src="__UPLOAD__/{$shop_settings.qualifications}" style="width:25%;"/>
+                                                                {/if}
+                                                                </div>
+                                                            </div>
+                                                           
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            店铺关键字
+                                                        </label>
+                                                        <div class="col-sm-5 inputmarinbottom">
+                                                          {if condition="isset($shop_settings['s_keywords']) and !empty($shop_settings['s_keywords'])"}
+                                                            <input class="form-control" type="text"  name="s_keywords[]" value="{$s_keywords[0]}"/>
+                                                            <br/>
+                                                            <input class="form-control" type="text"  name="s_keywords[]" value="{$s_keywords[1]}" />
+                                                            {else /}
+                                                            <input class="form-control" type="text"  name="s_keywords[]" value=""/>
+                                                            <br/>
+                                                            <input class="form-control" type="text"  name="s_keywords[]" value="" />
+                                                            {/if}
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            发票设置
+                                                        </label>
+                                                        <div class="col-sm-8">
+                                                            {foreach name="invoice" key="k" item="info"}
+
+                                                            <div class="checkbox checkbox-info checkbox-inline">
+                                                                <input type="checkbox" name="invoice[]" class="invoice" id="{$k+1}_invoice" value="{$k+1}" onclick="invoice(this)" {if condition="in_array($k+1,$invoiceArr)" }checked{/if}>
+                                                                <label for="{$k+1}_invoice">{$info}</label>
+                                                            </div>
+                                                            {/foreach}
+                                                            <!--<div class="checkbox checkbox-info checkbox-inline">-->
+                                                                <!--<input type="checkbox" name="invoice[]" class="invoice" id="ele_invoice" value="1" onclick="invoice(this)">-->
+                                                                <!--<label for="ele_invoice">电子发票</label>-->
+                                                            <!--</div>-->
+                                                            <!--<div class="checkbox checkbox-info checkbox-inline">-->
+                                                                <!--<input type="checkbox" name="invoice[]" class="invoice"  id="ord_invoice" value="2" onclick="invoice(this)">-->
+                                                                <!--<label for="ord_invoice">普通发票</label>-->
+                                                            <!--</div>-->
+                                                            <!--<div class="checkbox checkbox-info checkbox-inline">-->
+                                                                <!--<input type="checkbox" name="invoice[]" class="invoice"  id="major_invoice" value="3" onclick="invoice(this)">-->
+                                                                <!--<label for="major_invoice">专业发票</label>-->
+                                                            <!--</div>-->
+                                                            <!--<div class="checkbox checkbox-info checkbox-inline">-->
+                                                                <!--<input type="checkbox" name="invoice[]" class="invoice"  id="no_invoice" value="4" onclick="invoice(this)">-->
+                                                                <!--<label for="no_invoice">暂不发票</label>-->
+                                                            <!--</div>-->
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                           店铺首页图片
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            
+                                                            <input class="form-file" type="file" name="g_show_img_ss_file[]" id="g_show_img_ss_file"  multiple="multiple" onchange="ajaxFileUploadss()" style="display: none;"/>
+                                                            <div style="clear:both;"></div>
+                                                            <div style="margin-top:10px" id="viewss">
+                                                            {if  condition="isset($shop_settings.ss_file)"}
+                                                             {foreach name="ss_file" item = "r"}
+                                                                {if  condition="$r neq ''"}
+                                                                <div class="imgbox">
+                                                                    <input type="hidden" name="ss_file[]" value="{$r}">
+                                                                    <img src="__UPLOAD__/{$r}" style="{if  condition="$shop_settings.ss_file eq ''"}display:none;{/if}"/>
+                                                                    <div class="delbox" onclick="delimgbox(this)">删除</div>
+                                                                </div>
+                                                                {/if}
+                                                             {/foreach}
+                                                            {/if}
+                                                                <div class="viewboxadd" style="position: static;float:left;" onclick="document.getElementById('g_show_img_ss_file').click();">
+                                                                    <img src="/public/seller/img/addimg.png" style="width: 85%;"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                      
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">
+                                                                店铺信息
+                                                            </label>
+                                                            <div class="col-sm-8">
+                                                                <!--<script id="editor" type="text/plain" style="height:400px;" name="s_content" value="">{$shop_settings.s_content}</script>-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <div style="border:1px solid #ccc; position: relative; border-radius: 3px;">
+                                                            <span style="position: absolute; top: -10px; left: 5px; font-size: 16px; background: #fff;    border-radius: 3px;padding: 0 12px;">支付信息</span>
+                                                            <div class="hr-line-dashed"></div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-2 control-label">
+                                                                    支付姓名
+                                                                </label>
+                                                                <div class="col-sm-5">
+                                                                    <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="payee_real_name" value="{$shop_settings.payee_real_name}"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="hr-line-dashed"></div>
+
+                                                            <div class="form-group">
+                                                                <label class="col-sm-2 control-label">
+                                                                    支付宝账号
+                                                                </label>
+                                                                <div class="col-sm-5">
+                                                                    <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="payee_account" value="{$shop_settings.payee_account}"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="hr-line-dashed"></div>
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <div class="form-group">
+                                                        <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                                            <input class="btn btn-primary" type="submit" value="保存内容" />
+                                                            <input class="btn btn-primary" type="button" value="预览" onclick="yulan()"/>
+                                                            <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="form-horizontal">
+                                <div id="tab-2" class="tab-pane" style="display:none">
+                                <div class="panel-body">
+                                    <div class="col-sm-12">
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-content">
+                                                <div class="hr-line-dashed"></div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">
+                                                        注册姓名
+                                                    </label>
+                                                    <div class="col-sm-5">
+                                                        <input class="form-control" type="text" disabled value="{$sr_value.sr_real_name}"/>
+                                                    </div>
+                                                </div>
+                                                <div class="hr-line-dashed"></div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">
+                                                        注册手机号
+                                                    </label>
+                                                    <div class="col-sm-5">
+                                                        <input class="form-control" type="text" disabled value="{$sr_value.sr_mobile}"/>
+                                                    </div>
+                                                </div>
+                                                <div class="hr-line-dashed"></div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">
+                                                        注册邮箱
+                                                    </label>
+                                                    <div class="col-sm-5">
+                                                        <input class="form-control" type="text" disabled value="{$sr_value.sr_email}"/>
+                                                    </div>
+                                                </div>
+                                                <div class="hr-line-dashed"></div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">
+                                                        入住类型
+                                                    </label>
+                                                    <div class="col-sm-5">
+                                                        <input class="form-control" type="text" value="{if condition='$sr_value.sr_type eq 0'}个人{else/}企业{/if}" disabled />
+                                                    </div>
+                                                </div>
+                                                <div class="hr-line-dashed"></div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">
+                                                        法人
+                                                    </label>
+                                                    <div class="col-sm-5">
+                                                        <input class="form-control" type="text" disabled value="{$sr_value.sr_legal_person}"/>
+                                                    </div>
+                                                </div>
+                                                <div class="hr-line-dashed"></div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">
+                                                        法人身份证号
+                                                    </label>
+                                                    <div class="col-sm-5">
+                                                        <input class="form-control" type="text" disabled value="{$sr_value.sr_legal_person_idcard}"/>
+                                                    </div>
+                                                </div>
+                                                <div class="hr-line-dashed"></div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">
+                                                        法人身份证正面
+                                                    </label>
+                                                    <div class="col-sm-5">
+                                                        <img src="__UPLOAD__/{$sr_value.sr_idcard_positive}" style="width:25%;height:100px" onclick='showImg("__UPLOAD__/{$sr_value.sr_idcard_positive}")'>
+                                                    </div>
+                                                </div>
+                                                <div class="hr-line-dashed"></div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">
+                                                        法人身份证反面
+                                                    </label>
+                                                    <div class="col-sm-5">
+                                                        <img src="__UPLOAD__/{$sr_value.sr_idcard_background}" style="width:25%;height:100px" onclick='showImg("__UPLOAD__/{$sr_value.sr_idcard_background}")'>
+                                                    </div>
+                                                </div>
+                                                {eq name="$sr_value.sr_type" value="1"}
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            公司名称
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" disabled value="{$sr_value.sr_company_name}"/>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            营业执照注册号
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" disabled value="{$sr_value.sr_business_license_number}"/>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            营业范围
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" disabled value="{$sr_value.sr_business_scope}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            营业执照  
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <img src="__UPLOAD__/{$sr_value.sr_business_path}" style="width:25%;height:100px" onclick='showImg("__UPLOAD__/{$sr_value.sr_business_path}")'>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            公司经纬度
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" disabled value="{$sr_value.sr_latitude_and_longitude}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div >
+                                                        <div class="hr-line-dashed"></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">
+                                                                公司所在省/市/区
+                                                            </label>
+                                                            <div class="col-sm-2 m-b-xs">
+                                                                <select class="input-sm form-control input-s-sm inline" style="height: 32px;" disabled>
+                                                                    {if condition="isset($r_value) and !empty($r_value)"}
+                                                                        {foreach name="r_value" item = "r"}
+                                                                            <option value="{$r.r_id}" {eq name="$sr_value.sr_company_location_province"  value="$r.r_id"} selected {/eq} >{$r.r_name}</option>
+                                                                        {/foreach}
+                                                                    {/if}
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-2 m-b-xs">
+                                                                <select class="input-sm form-control input-s-sm inline" style="height: 32px;" id="sr_company_location_city" disabled>
+                                                                    
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-2 m-b-xs">
+                                                                <select class="input-sm form-control input-s-sm inline" style="height: 32px;" id="sr_company_location_area" disabled>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="hr-line-dashed"></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">
+                                                                公司所在地详细地址
+                                                            </label>
+                                                            <div class="col-sm-5">
+                                                                <input class="form-control" type="text" value="{$sr_value.sr_company_location_address}" disabled />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            公司电话
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" value="{$sr_value.sr_company_phone}" disabled />
+                                                        </div>
+                                                    </div>
+                                                {else /}
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            店铺经纬度
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" disabled value="{$sr_value.sr_latitude_and_longitude}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div >
+                                                        <div class="hr-line-dashed"></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">
+                                                                店铺所在省/市/区
+                                                            </label>
+                                                            <div class="col-sm-2 m-b-xs">
+                                                                <select class="input-sm form-control input-s-sm inline" style="height: 32px;" disabled id="sr_company_location_province">
+                                                                   
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-2 m-b-xs">
+                                                                <select class="input-sm form-control input-s-sm inline" style="height: 32px;" id="sr_company_location_city" disabled>
+                                                                    
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-2 m-b-xs">
+                                                                <select class="input-sm form-control input-s-sm inline" style="height: 32px;" id="sr_company_location_area" disabled>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="hr-line-dashed"></div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">
+                                                                店铺所在地详细地址
+                                                            </label>
+                                                            <div class="col-sm-5">
+                                                                <input class="form-control" type="text" value="{$sr_value.sr_company_location_address}" disabled />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {/eq}
+
+                                                <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                    <label class="col-sm-2 control-label">
+                                                    其他执照
+                                                    </label>
+                                                    <div class="col-sm-5">
+                                                        <input type="file" class="file" name="sr_other" id="sr_other"  onchange="ajaxFileUploadsOther('sr_other')" style="display: none;" />
+                                                        <div class="sr_other">
+                                                            {foreach name="$sr_value.sr_otherarray" item="vo"}
+                                                            <img src="__UPLOAD__/{$vo}" style="width:25%;height:100px">
+                                                            {/foreach}
+                                                            <img src="/public/seller/img/addimg.png" style="width:25%;" onclick="$('[name=sr_other]').click();"/>
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="form-horizontal">
+                                <div id="tab-3" class="tab-pane" style="display:none">
+                                    <div class="panel-body">
+                                        <div class="col-sm-12">
+                                            <div class="ibox float-e-margins">
+                                                <div class="ibox-content">
+                                                    <div class="hr-line-dashed"></div>
+                                                    {$article.a_content}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <div class="form-horizontal">
+                                <div id="tab-4" class="tab-pane" style="display:none">
+                                     <div class="panel-body">
+                                            <div class="ibox float-e-margins">
+                                                <div class="ibox-title">
+                                                    <h5>活动列表</h5>
+                                                    <div class="ibox-tools" style="margin-right: 15px;">
+                                                    <!-- <a href="{:url('seller/Goods/goodsAdd')}"> -->
+                                                    <a href="{:url('seller/ShopSettings/shopActivityAdd')}"  >
+                                                    <i class="fa fa-plus"></i>
+                                                    添加活动
+                                                    </a>
+                                                    </div>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped">
+
+                                                        <tr>
+                                                            <th>活动类型</th>
+                                                            <th>活动内容</th>
+                                                            <th>时间范围</th>
+                                                            <th>活动描述</th>
+                                                            <th>活动状态</th>
+                                                            <th>操作</th>
+                                                        </tr>
+
+                                                        {foreach name="act_value" item="info"}
+                                                        <tr>
+                                                            <td>{if condition="$info.act_type eq '1'"}限时折扣{/if}{if condition="$info.act_type eq '2'"}全场满减{/if} </td>
+                                                            <td>{if condition="$info.act_type eq '1'"}折扣{/if}{if condition="$info.act_type eq '2'"}满{$info.act_meet}减{$info.act_reduction}{/if}</td>
+                                                            <td>{$info.act_start_time} ~ {$info.act_end_time}</td>
+                                                            <td>{$info.act_describe}</td>
+                                                            <td>{if condition="$info.status eq '1'"}<span style="color:#0e9614;">活动进行中</span>{/if} {if condition="$info.status eq '2'"}<span style="color: #ff8f00;">活动未开始</span>{/if}{if condition="$info.status eq '3'"}<span style="color:#b70f0f;">活动已结束</span>{/if}{if condition="$info.status eq '4'"}<span style="color:#2573a2;">活动已终止</span>{/if}</td>
+                                                            <td><a  href="{:url('seller/ShopSettings/shopActivityShow',array('act_id'=>$info.act_id))}"  class="btn btn-default btn-xs"><i class="fa fa-eye text-navy"></i>&nbsp;{if condition="$info.status eq '4'"}恢复活动{elseif  condition="$info.status eq '3'"} 查看 {else/}终止{/if} </a></td>
+                                                        </tr>
+                                                        {/foreach}
+
+
+
+                                                    </table>
+                                                </div>
+
+
+                                                <!-- 分页 start -->
+                                                {if condition="isset($act_page) and !empty($act_page)"}
+                                                {$act_page}
+                                                {/if}
+                                                <!-- 分页 end -->
+                                            </div>
+
+
+
+                                     </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <!-- 全局js -->
+        <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+        <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+        <!-- 自定义js -->
+        <script src="SELLER_JS/content.js?v=1.0.0"></script>
+        <script src="SELLER_JS/globals.js?v=1.0.0"></script>
+        <script src="SELLER_JS/photoclip/ajaxfileupload.js"></script>
+        <!-- iCheck -->
+        <script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+        <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+        <script>
+
+            //if({$shop_settings.ss_is_shipping} == 0){
+                getRegion('ss_shop_city','{$shop_settings.ss_shop_province}','ss_shop_city','{$shop_settings.ss_shop_city}','{:url("seller/Base/getRegion")}');
+
+                getRegion('ss_shop_area','{$shop_settings.ss_shop_city}','ss_shop_area','{$shop_settings.ss_shop_area}','{:url("seller/Base/getRegion")}');
+            //}
+            getRegion('sr_company_location_province','','',{$sr_value.sr_company_location_province},'{:url("seller/Base/getRegion")}');
+
+            getRegion('sr_company_location_city',{$sr_value.sr_company_location_province},'sr_company_location_city',{$sr_value.sr_company_location_city},'{:url("seller/Base/getRegion")}');
+
+            getRegion('sr_company_location_area',{$sr_value.sr_company_location_city},'sr_company_location_area',{$sr_value.sr_company_location_area},'{:url("seller/Base/getRegion")}');
+
+            function distribution(type){
+                if(type == 1){
+                    $("#distribution").show();
+                }else if(type == 2){
+                    $("#distribution").show();
+                }else{
+                    $("#distribution").css('display','none');
+                }
+            }
+            function zidingyi(type){
+                if(type == 1){
+                    $("#zidingyi").css('display','');
+                }else{
+                    $("#zidingyi").css('display','none');
+                }
+            }
+            $(".checked3 input[type=checkbox]").click(function(){
+                var len = $(".checked3 input[type=checkbox]:checked").length;
+                if(len>3){
+                     return false; //另刚才勾选的取消
+                }
+            })
+            function distributions(type){
+                var len = $(".checked3 input[type=checkbox]:checked").length;
+                if(len>3){
+                    alert('亲，最多只能选三个哟~');
+                    return false; //另刚才勾选的取消
+                }else{
+                    if(type == 1){
+                       if ($('#guarantee1').is(':checked')) {
+                            $("#distributions1").css('display','');
+                        }else{
+                            $("#distributions1").css('display','none');
+                        }
+                    }else {
+                        $(".distributions"+type).toggle();
+                    }
+                }
+            }
+
+
+
+
+            function tab(id) {
+
+                // var urlhref= $(window.parent.document).find("#J_iframe").attr("src");
+                //
+                // if(urlhref.indexOf("shopSettings.html")>0){
+                //     var url = urlhref.replace('shopSettings.html', 'shopSettings/type/1.html');
+                //     // history.pushState({}, "", url);
+                //     $(window.parent.document).find("#J_iframe").attr("src",url);
+                // }else if(id==4 && urlhref.indexOf("?page=")>0){
+                //
+                // }else if(id == 4){
+                //
+                //     if(urlhref.indexOf("shopSettings/type/"+id+".html")<0){
+                //         var urlhrefs = "{:url('seller/ShopSettings/shopSettings')}";
+                //         var type = "{$type}";
+                //         if(id != type){
+                //             var url = urlhrefs.replace('shopSettings.html', 'shopSettings/type/'+id+'.html');
+                //             $(window.parent.document).find("#J_iframe").attr("src",url);
+                //         }
+                //     }
+                // }
+
+                for(var i=1;i<=4;i++){
+                    $("#tab-"+i).removeClass('active');
+                    $("#tab-"+i).css('display','none');
+                }
+                // location.href=id+".html"
+                $(".tabli"+id).addClass("active").siblings().removeClass("active");
+                $("#tab-"+id).addClass('active');
+                $("#tab-"+id).css('display','');
+            }
+
+        </script>
+        <script>
+            $(document).ready(function () {
+                imgboxhover();
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+                tab({$type});
+
+                var ue = UE.getEditor('editor', {
+
+                    autoHeightEnabled: true,
+                    autoFloatEnabled: true,
+                });
+                //事件
+                ue.addListener("ready",function(){
+                    // ue.setDisabled('insertimage');
+                });
+
+                editpageurl();
+
+
+
+
+
+
+
+            });
+
+
+            function editpageurl(){
+                $(".pagination a").each(function(key,element){
+                    var ehref= $(element).attr("href");
+                    var nhref = ehref.replace("ShopSettings/shopSettings.html","ShopSettings/shopSettings/type/4.html")
+                    $(element).attr("href",nhref);
+
+                });
+            }
+
+
+
+            $("#btn2").click(function(){
+                var r_name =  $("#brand_searchs").val();
+                var isclick =  $("#brand_searchs").attr('isclick');
+                if(r_name==""){
+                    swal({
+                        title: "通讯提示!",
+                        text: "请填写包邮包送省!"
+                    });
+                    return false;
+                }
+
+                if(isclick!="1"){
+                    swal({
+                        title: "通讯提示!",
+                        text: "请在下拉框中选择省!"
+                    });
+                    return false;
+                }
+
+                $flag = false;
+                $(".baoyou").each(function(key,element){
+
+                    if(r_name == $(this).val()){
+                        $flag = true;
+                    }
+                });
+
+                if($flag){
+                    swal({
+                        title: "通讯提示!",
+                        text: "省份不能重复添加!"
+                    });
+                    return false;
+                }
+
+
+                $("#by").append(' <div style="float:left;position: relative;" class="box" "><input type="text"  name="guaranteadds[]" class ="baoyou" style="margin-top: 5px;text-align: center;width: 55px;margin-right:10px" readonly="readonly" value="'+r_name+'" ><span style="position: absolute;top: -4px;right: 7px;" onclick="yichu(this)">x</span></div>');
+
+            });
+            function yichu(element) {
+                // $("#dizhi"+i).remove();
+                $(element).parent(".box").remove();
+             
+            }
+            
+            function search() {
+
+                var brand_search = $("#brand_searchs").val();
+                if(brand_search == ""){
+                    $(".searchbox").hide();
+                }
+                $.ajax({
+                    url:'{:url("seller/ShopSettings/ajaxBrandSearch")}',
+                    type:"post",
+                    data:{brand_search:brand_search},
+                    dataType:"json",
+                    success:function (info) {
+                        if (info.code == 200) {
+                            $("#brand_searchs").attr("isclick","0");
+                            var opt = "";
+                            var searchbox = "";
+                            var data = JSON.parse(info.data);
+                            $.each(data, function(i, n) {
+                                opt += "<option value='" + n.r_id + "'>" + n.r_name + "</option>";
+                                searchbox += "<li data-index='" + n.r_name + "'>" + n.r_name.replace(brand_search,"<span style='color:red'>"+brand_search+"</span>") + "</li>";
+                            })
+                            $(".searchbox ul").html(searchbox);
+                            $(".searchbox").show();
+                        } else {
+                            if(brand_search!=""){
+                                $(".searchbox").show();
+                                $(".searchbox ul").html("<li>无相关省</li>");
+                            }
+
+                        }
+
+                        searchclick();
+
+                    },
+                    error:function () {
+                        swal({
+                            title: "通讯出错!",
+                            text: "请联系开发人员或管理员!"
+                        });
+                    }
+                })
+            }
+
+            function searchclick(){
+                $(".searchbox ul li").click(function(){
+                    var r_id = $(this).attr("data-index");
+                    $(".searchbox").hide();
+                    $("#brand_searchs").val(r_id);
+                    $("#brand_searchs").attr("isclick","1");
+                });
+            }
+
+            function invoice(element){
+                var type=$(element).val();
+                if($(".invoice[value="+type+"]").prop("checked")){
+                    switch (type){
+                        case "1":
+                        case "2":
+                        case "3":
+                            $(".invoice[value=4]:checked").removeAttr('checked');
+                            break;
+                        case "4":
+                            $(".invoice[value=1]:checked,.invoice[value=2]:checked,.invoice[value=3]:checked").removeAttr('checked');
+                            break;
+                    }
+                }
+
+            }
+
+            $(".radio input[type=radio]").click(function(){
+                if($(this).attr("name")==4 && $(this).val() == 0){
+                    $("input[name=guarantees"+$(this).attr("name")+"]").show().val("");
+                }else{
+
+                    $("input[name=guarantees"+$(this).attr("name")+"]").hide().val($(this).val());
+                }
+            });
+
+
+            function shopsetting(){
+                $flag=false;
+
+                if($("input[name=ss_name]").val() == ""){
+
+                    swal({
+                        title: "通讯提示!",
+                        text: "店铺名称不能为空!"
+                    });
+                    return false;
+                }
+
+                // if($("input[name=ss_logo_img]").val() == ""){
+                //     alert("店铺Logo不能为空");
+                //     return false;
+                // }
+
+                if($("input[name=ss_shop_province]").val() == "" || $("input[name=ss_shop_city]").val() == "" || $("input[name=ss_shop_area]").val() == ""){
+
+                    swal({
+                        title: "通讯提示!",
+                        text: "店铺地址不能为空!"
+                    });
+                    return false;
+                }
+
+                $(".checked3 input[type=checkbox]:checked").each(function(key,element){
+                    if($(element).val() == 5){
+                        var re = /[\u4E00-\u9FA5]/g;
+                        if($("input[name=guarantees5]").val().match(re).length > 10){
+
+                            swal({
+                                title: "通讯提示!",
+                                text: "售后不能超过十个字!"
+                            });
+                            $flag=true;
+                        }
+                    }
+                    if($("input[name=guarantees"+$(element).val()+"]").val()==""){
+
+                        swal({
+                            title: "通讯提示!",
+                            text: "卖家保证有数据为空!"
+                        });
+                        $flag=true;
+                    }
+                });
+
+                if($(".invoice:checked").val() == undefined){
+
+                    swal({
+                        title: "通讯提示!",
+                        text: "请选择发票设置!"
+                    });
+                    return false;
+                }
+
+                if($("input[name=nature]:checked").val()==1 || $("input[name=nature]:checked").val()==2){
+
+                    if($("input[name=qualifications]").val() == "" && $("input[name=qualifications1]").val() == ""){
+
+                        swal({
+                            title: "通讯提示!",
+                            text: "请上传商家资质!"
+                        });
+                        return false;
+                    }
+                }
+
+
+                if($flag){
+                    return false;
+                }
+
+            }
+
+
+        </script>
+        <script>
+        function yulan(){
+            var ss_name = $("input[name=ss_name]").val();
+            var nature = $("input[name=nature]:checked").val();
+            var qualificationssrc = $("input[name=qualifications]").siblings("div").children("img").length;
+            if(ss_name == ""){
+                swal({
+                    title: "通讯提示!",
+                    text: "店铺名称不能为空!"
+                });
+                return false;
+            }
+
+
+
+            if((nature==1 || nature==2) && (qualificationssrc<=0 && $("input[name=qualifications]").val()=="")){
+                swal({
+                    title: "通讯提示!",
+                    text: "请上传资质!"
+                });
+                return false;
+            }
+
+            var editortext = UE.getEditor('editor').getContent();
+            if(editortext == ""){
+                swal({
+                    title: "通讯提示!",
+                    text: "请填写店铺详情!"
+                });
+                return false;
+            }
+            $(".yulan").click();
+            $(".headline li").text(ss_name);
+
+            $("#ucontent").html(editortext);
+
+
+            if(nature==1 || nature==2){
+                $(".nature").show();
+                $(".zzimg.nature").find("img").attr("src",$("#views img").attr("src"));
+            }else{
+                $(".nature").hide();
+            }
+
+
+        }
+
+
+        function ajaxFileUploadss(){
+            $.ajaxFileUpload
+            (
+                {
+
+                    url: '{:url("seller/Goods/goodsImgupdates")}', //用于文件上传的服务器端请求地址
+                    secureuri: false, //是否需要安全协议，一般设置为false
+                    data: { img:$("#g_show_img_ss_file").val() },
+                    fileElementId: ['g_show_img_ss_file'], //文件上传域的ID
+                    dataType: 'json', //返回值类型 一般设置为json
+                    success: function (data, status)  //服务器成功响应处理函数
+                    {
+
+                        var str = "";
+
+                        for(var i in data["pic_cover"]){
+                            str +="<div class='imgbox'><input type='hidden' name='ss_file[]' value='"+data["pic_cover"][i]+"'><img src='/public/upload/"+data["pic_cover"][i]+"' style=''><div class='delbox' onclick='delimgbox(this)'>删除</div></div>";
+                        }
+                        //var str ="<div class='imgbox'><input type='hidden' name='ss_file[]' value='"+data["pic_cover"]+"'><img src='/public/upload/"+data["pic_cover"]+"' style=''><div class='delbox' onclick='delimgbox(this)'>删除</div></div>";
+
+                        $("#viewss .viewboxadd").before(str);
+                        imgboxhover();
+                    },
+                    error: function (data, status, e)//服务器响应失败处理函数
+                    {
+                        console.log(data);
+                    }
+                }
+            )
+            return false;
+        }
+
+        function imgboxhover(){
+            $(".imgbox").hover(function(){
+                $(this).find(".delbox").animate({"bottom":"0"},500);
+            },function(){
+                $(this).find(".delbox").animate({"bottom":"-35px"},500);
+            });
+        }
+
+        function delimgbox(element){
+            $(element).parents(".imgbox").remove();
+        }
+        </script>
+        <style>
+            .imgbox{
+                width: 25%;margin: 10px;
+                float:left;
+                position: relative;
+                overflow: hidden;
+                cursor: pointer;
+                height: 90px;
+            }
+            .delbox{ position: absolute; bottom: -35px; left: 0; width: 100%;    color: #fff; text-align: center; height: 30px; background: rgba(0,0,0,0.8); line-height: 35px;}
+            .imgbox:hover{ bottom: 0;}
+            .imgbox img{ width: 100%;}
+            .dpimg#ucontent{ float:left;padding: 10px;}
+        </style>
+    </body>
+</html>

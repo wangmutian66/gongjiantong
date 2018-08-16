@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>支付插件列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>支付插件列表</h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a class="close-link" href="{:url('manage/index/welcome')}">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width:3%"> </th>
+                                        <th>支付方式名称</th>
+                                        <th>支付方式描述</th>
+                                        <th>费用</th>
+                                        <th>场景</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}
+                                        <tr id="p_{$info.p_id}">
+                                            <td>
+                                                <input type="hidden" class="ac_{$info.p_id}" floor="1" >
+                                            </td>
+                                            <td>
+                                                {$info.p_name}
+                                            </td>
+                                            <td>
+                                                {$info.p_desc}
+                                            </td>
+                                            <td>
+                                                {$info.p_fee}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.scene eq '0'"}
+                                                    PC端
+                                                {elseif condition="$info.scene eq '1'"/}
+                                                    手机端
+                                                {elseif condition="$info.scene eq '2'"/}
+                                                    app端
+                                                {elseif condition="$info.scene eq '3'"/}
+                                                    PC+手机端
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                <a href="{:url('manage/plugin/paymentEdit',array('id'=>$info.p_id))}"><i class="fa fa-wrench text-navy"></i> </a>&nbsp;&nbsp;
+                                                <a href="{:url('manage/plugin/paymentEdit',array('id'=>$info.p_id))}"><i class="fa fa-close text-navy"></i> </a>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title">文章分类详情</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span>分类名称: </span>
+                        <span id="ac_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>父类: </span>
+                        <span id="ac_parent"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>是否在导航条展示: </span>
+                        <span id="ac_show_in_nav"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>排序: </span>
+                        <span id="ac_sort_order"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>关键字: </span>
+                        <span id="ac_keywords"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>描述: </span>
+                        <span id="ac_desc"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="MANAGE_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="MANAGE_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/demo/peity-demo.js"></script>
+    <script src="MANAGE_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+    </script>
+</body>
+</html>

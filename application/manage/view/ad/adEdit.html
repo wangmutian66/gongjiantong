@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            添加广告
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/animate.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/datapicker/datepicker3.css" rel="stylesheet">
+        <link href="MANAGE_CSS/plugins/clockpicker/clockpicker.css" rel="stylesheet">
+        <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/ueditor.config.js"></script>
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/ueditor.all.min.js"> </script>
+    </head>
+    <body class="gray-bg">
+        <button  id="modals" data-toggle="modal" data-target="#myModal" style="display: none;">弹框</button>
+        <!-- 模态框（Modal） -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">手机预览</h4>
+                    </div>
+                    <div class="modal-body" style="padding: 0;">
+                        <div id="iframe-wrap" class="mobile-width-2">
+                            <div class="modelbg model-ad7">
+                                <div class="adimg"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary">提交更改</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>添加广告</h5>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a class="close-link" href="{:url('manage/index/welcome')}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a href="{:url('manage/Ad/adList')}">
+                                    <i class="fa fa-bars"></i>
+                                    广告列表
+                                </a>
+                            </div>
+                        </div>  
+                        <div class="ibox-content">
+                            <form class="form-horizontal" method="POST" action="{:url('manage/Ad/adEdit',array("id" => $info.ma_id))}" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        广告定位
+                                    </label>
+                                    <div class="col-sm-5 m-b-xs">
+                                        <select class="input-sm form-control input-s-sm inline" name="map_id" style="height: 32px;">
+                                            {if condition="isset($list)"}
+                                                {foreach name="list" item="val"}
+                                                    <option value="{$val.map_id}" {if condition="$info.map_id eq $val.map_id"}selected{/if}>{$val.map_name}</option>
+                                                {/foreach}
+                                            {/if}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                 <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        类型
+                                    </label>
+                                    <div class="col-sm-5 m-b-xs">
+                                        <select class="input-sm form-control input-s-sm inline" name="map_type" style="height: 32px;">
+                                            <option value="1" {if condition="$info.map_type eq 1"}selected{/if}>图片</option>
+                                            <option value="2" {if condition="$info.map_type eq 2"}selected{/if}>flash</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        广告标题
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="ma_title" value="{$info.ma_title}"  id="ma_title" onblur="verifyInput('ma_title','ch','ma_title_show')" />
+                                    </div>
+                                    <code id="ma_title_show">请输入中文!</code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        广告链接
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="ma_link" value="{$info.ma_link}"  id="ma_link" onblur="verifyInput('ma_link','url','ma_link_show')" />
+                                    </div>
+                                    <code id="ma_link_show">链接要以"http://"或者"https://"开头</code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        上传图片
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="file" aria-required="true" aria-invalid="true" id="ma_image" name="ma_image" value="{$info.ma_image}" onchange="ajaxFileUploads()"  />
+                                        <div class="col-img" style="margin-top: 10px;">
+                                        <img src="__UPLOAD__/{$info.ma_image}" alt="" style="width:200px">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="data_5">
+                                    <label class="col-sm-2 control-label">展示时间范围</label>
+                                    <div class="col-sm-5">
+                                        <div class="input-daterange input-group" id="datepicker">
+                                            <input type="text" class="input-sm form-control" name="ma_start_time" value="{if condition="$info.ma_start_time neq '0'"}{$info.ma_start_time|date='Y-m-d',###}{/if}" />
+                                            <span class="input-group-addon">到</span>
+                                            <input type="text" class="input-sm form-control" name="ma_end_time" value="{if condition="$info.ma_end_time neq '0'"}{$info.ma_end_time|date='Y-m-d',###}{/if}" />
+                                        </div>
+                                    </div>
+                                    <code>*如果不填写为永久有效!</code>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        状态
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" id="ma_status0" value="1" name="ma_status" {if condition="$info.ma_status eq '1'"}checked{/if}/>
+                                            <label for="ma_status0"> 开启 </label>
+                                        </div>
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" id="ma_status1" value="0" name="ma_status" {if condition="$info.ma_status eq '0'"}checked{/if}/>
+                                            <label for="ma_status1"> 关闭 </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        链接类型
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <!--<input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="ma_link" id="ma_link" onblur="verifyInput('ma_link','url','ma_link_show')" />-->
+                                        <select class="form-control" style="height: auto;" name="ma_link_type" onchange="adlink(this)">
+                                            <option value="0" {if condition="$info.ma_link_type eq '0'"}selected{/if}>不跳页</option>
+                                            <option value="1" {if condition="$info.ma_link_type eq '1'"}selected{/if}>跳转到店铺</option>
+                                            <option value="2" {if condition="$info.ma_link_type eq '2'"}selected{/if}>活动页</option>
+                                            <option value="3" {if condition="$info.ma_link_type eq '3'"}selected{/if}>弹框</option>
+                                            <option value="4" {if condition="$info.ma_link_type eq '4'"}selected{/if}>外联</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed adhide adlink1" style="display: block"></div>
+                                <div class="form-group adhide adlink1" style="display: block">
+                                    <label class="col-sm-2 control-label">
+                                        店铺
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <select class="form-control" style="height: auto;" name="ma_ss_id" >
+                                            {foreach name="sshop" item="infos"}
+                                            <option value="{$infos.ss_id}" {if condition="$info.ma_ss_id eq $infos.ss_id"}selected{/if}>{$infos.ss_name}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="hr-line-dashed adhide adlink4"></div>
+                                <div class="form-group adhide adlink4">
+                                    <label class="col-sm-2 control-label">
+                                        外链
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="ma_link" id="ma_link" onblur="verifyInput('ma_link','url','ma_link_show')" value="{$info.ma_link}" />
+                                    </div>
+                                    <code id="ma_link_show">链接要以"http://"或者"https://"开头</code>
+                                </div>
+
+
+
+                                <div class="hr-line-dashed adhide adlink2 adlink3"></div>
+                                <div class="form-group adhide adlink2 adlink3">
+                                    <label class="col-sm-2 control-label">
+                                        广告内容
+                                    </label>
+                                    <div class="col-sm-5" style="width: 70%;">
+                                        <script id="editor" type="text/plain" style="height:500px;" name="ma_content">{$info.ma_content}</script>
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="button" id="yulan1" onclick="yulan()" value="预览"/>
+                                        <input class="btn btn-primary" type="submit" value="保存内容" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <!-- 全局js -->
+        <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+        <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+        <!-- 自定义js -->
+        <script src="MANAGE_JS/content.js?v=1.0.0"></script>
+        <!-- iCheck -->
+        <script src="MANAGE_JS/plugins/iCheck/icheck.min.js"></script>
+        <!-- Data picker -->
+        <script src="MANAGE_JS/plugins/datapicker/bootstrap-datepicker.js"></script>
+        <script src="SELLER_JS/photoclip/ajaxfileupload.js"></script>
+        <!-- Color picker -->
+        <script src="MANAGE_JS/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+
+        <!-- Clock picker -->
+        <script src="MANAGE_JS/plugins/clockpicker/clockpicker.js"></script>
+        <!-- Image cropper -->
+        <script src="MANAGE_JS/plugins/cropper/cropper.min.js"></script>
+
+        <script>
+            var ue = UE.getEditor('editor');
+            $(document).ready(function () {
+                console.log({$info.ma_link_type});
+                adlinknum({$info.ma_link_type});
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+            getRegion("r_id",1,'',{$info.r_id});
+
+
+            function ajaxFileUploads(){
+                if($("input[name=ma_image]").val()==""){
+
+                    return false;
+                }
+                $.ajaxFileUpload
+                (
+                    {
+
+                        url: '{:url("manage/Ad/goodsImgupdate")}', //用于文件上传的服务器端请求地址
+                        secureuri: false, //是否需要安全协议，一般设置为false
+                        data: { img:$("input[name=ma_image]").val() },
+                        fileElementId: ['ma_image'], //文件上传域的ID
+                        dataType: 'json', //返回值类型 一般设置为json
+                        success: function (data, status)  //服务器成功响应处理函数
+                        {
+
+                            $(".col-img").html("<img src='/public/upload/"+data["pic_cover"]+"' width='200'>");
+
+                        },
+                        error: function (data, status, e)//服务器响应失败处理函数
+                        {
+                            console.log(data.responseText);
+                        }
+                    }
+                )
+                return false;
+            }
+
+
+            function yulan(){
+                // if($("#ma_image").val() == ""){
+                //     swal({
+                //         title: "通讯提示!",
+                //         text: "请上传图片!"
+                //     });
+                //     return false;
+                // }
+                $("#modals").click();
+                $(".adimg").html("<img src='"+$(".col-img img").attr("src")+"'>");
+            }
+
+            function mapids(element){
+                var mapval = $(element).val();
+                var arrayList = ["1","2","6","7"];
+
+                if(arrayList .indexOf(mapval)>=0){
+                    $("#yulan1").show();
+                    $(".modelbg").removeClass();
+                    $(".mobile-width-2 > div").addClass("modelbg model-ad"+mapval);
+                }else{
+                    $("#yulan1").hide();
+                }
+            }
+
+            function adlink(element){
+                var mentval = $(element).val();
+                adlinknum(mentval);
+            }
+
+
+            function adlinknum(mentval){
+                $(".adhide").hide();
+                $(".adlink"+mentval).show();
+            }
+
+
+        </script>
+
+        <script src="MANAGE_JS/demo/form-advanced-demo.js"></script>
+        <!-- Peity -->
+        <script src="MANAGE_JS/demo/peity-demo.js"></script>
+        <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+        <script src="MANAGE_JS/globals.js"></script>
+    </body>
+</html>

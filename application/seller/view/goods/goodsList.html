@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="SELLER_CSS/preview/style.css" rel="stylesheet">
+</head>
+<style>
+    img {  
+ max-width: 100%; /*图片自适应宽度*/  
+}
+
+</style>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 style="width: 50%;">商品列表 <span style="margin:0% 5%;color:red">上传商品建议先添加品牌、商品系列以及物流管理</span></h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <!-- <a href="{:url('seller/Goods/goodsAdd')}"> -->
+                            {if condition="$logCount eq '0'"}
+                            <button  onclick="window.location.href='{:url('seller/Plugin/logList')}'"  class="shoplistitle">
+                                <i class="fa fa-plus"></i>
+                                添加物流
+                            </button>
+                            {/if}
+                            <button {if condition="$logCount eq '0'"} onclick="shopaddtitle()" {else/} data-toggle="modal" data-target="#myModal23"{/if}>
+                                <i class="fa fa-plus"></i>
+                                商品添加
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <form action="" method="get">
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="请输入商品名称" class="input-sm form-control" name="g_name" value="{if condition="isset($data.g_name)"}{$data.g_name}{/if}">
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="请输入商品号" class="input-sm form-control" name="g_sn" value="{if condition="isset($data.g_sn)"}{$data.g_sn}{/if}">
+                                    </div>
+                                </div>
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-sm btn-primary" style="border-radius: 3px;"> 搜索</button>
+                                </span>
+                            </form>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <!-- <th style="width:3%"> </th> -->
+                                        <th>商品号</th>
+                                        <!-- <th>ID</th> -->
+                                        <th>商品名称</th> 
+                                        <tH>商品图片</tH> 
+                                        <!-- <th>总后台商品分类</th> -->
+                                        <th>商品分类</th>
+                                        <th>商品系列</th>
+                                        <th>售价</th>
+                                        <!-- <th>成本价</th> -->
+                                        <th>是否上架</th>
+                                        <th>审核状态</th>   
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}
+                                    
+                                        <tr id="g_{$info.g_id}">
+                                            <!-- <td>
+                                                <input type="checkbox" class="i-checks" name="g_id[]" value="{$info.g_id}">
+                                            </td> -->
+                                            <td>
+                                                <!-- {$info.g_id} -->
+                                                 {$info.g_sn}
+                                            </td>
+                                            
+                                            <td>
+                                                {$info.g_name}
+                                            </td>
+                                            <td>
+                                                <img src="__UPLOAD__/{$info.g_show_img_path}" id="g_show_img_path" width="50" onclick="showImg('__UPLOAD__/{$info.g_show_img_path}')" >
+                                            </td>
+                                           <!--  <td>
+                                                {$info.g_sn}
+                                            </td> -->
+                                            <!-- <td>
+                                                
+                                            </td> -->
+                                            <td>
+
+                                              {$info.mgc_nameone} - {$info.sgc_name} - {$info.mgc_name}
+                                            
+                                            </td>
+
+                                            <!-- <td>
+                                                {$info.g_original_price}
+                                            </td> -->
+                                             <td>
+                                                {$info.sgt_name}
+                                            </td>
+                                            <td>
+
+                                                {$info['guiges']}元
+
+                                            </td>
+                                           
+                                            <td>
+                                                <button class="btn {if condition="$info.s_is_show eq '0'"}btn-success{else /}btn-danger{/if} btn-circle" type="button" onclick="check_goods_info({$info.g_id},this,{if condition="$info.s_is_show eq '0'"}1{else/}0{/if})" id="is_show">
+                                                    <i class="fa {if condition="$info.s_is_show eq '0'"}fa-check{else /}fa-close{/if}" id="is_show1"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                {if condition="$info.g_goods_verify eq 0"}
+                                                    <span style="color:#FF9900">审核中</span>
+                                                {/if}
+                                                {if condition="$info.g_goods_verify eq 1"}
+                                                    <span style="color:#2FBC5E">审核已通过</span>
+                                                {/if}
+                                                {if condition="$info.g_goods_verify eq 2"}
+                                                    <span style="color:red">未通过</span>
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                <a  data-toggle="modal" data-target="#myModal3"  onclick="g_show_modile({$info.g_id})" class="btn btn-default btn-xs"><i class="fa fa-eye text-navy"></i>&nbsp;手机预览 </a>
+
+                                                <!--<a  data-toggle="modal" data-target="#myModal2"  onclick="g_show({$info.g_id})" class="btn btn-default btn-xs"><i class="fa fa-eye text-navy"></i>&nbsp;查看 </a>&nbsp;&nbsp;-->
+
+                                                <a href="{:url('seller/Goods/goodsEdit',array('id'=>$info.g_id))}" class="btn btn-default btn-xs"><i class="fa fa-wrench text-navy"></i>&nbsp;修改</a>&nbsp;&nbsp;
+
+                                                <a onclick="del('g_{$info.g_id}',{$info.g_id},'{:url(\"seller/Goods/goodsDel\")}')" class="btn btn-default btn-xs"><i class="fa fa-close text-navy"></i>&nbsp;删除</a>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal inmodal" id="myModal23" tabindex="-1" role="dialog" aria-hidden="true">
+           <form action="{:url('seller/Goods/goodsAdd')}" method="post" id="goodsAdd" enctype="multipart/form-data" onsubmit="return goodaddsubmit()">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">商品添加</h4>
+                </div>
+                <div style="padding: 0px 30px 30px 30px;">
+                    <div class="form-group">
+                       <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="control-label">
+                                商品一级分类
+                            </label>
+                            <div class="m-b-xs">
+                                <select class="input-sm form-control input-s-sm inline" name="sgc1_id" style=" height: 32px;" onchange="getCategory(this.value,2)" required="" aria-required="true" aria-invalid="true">
+                                    <option value="">请选择商品分类</option>
+                                    {if condition="isset($mgc_value) and !empty($mgc_value)"}
+                                        {foreach name="mgc_value" item = "mgc"}
+                                            <option value="{$mgc.mgc_id}">{$mgc.mgc_name}</option>
+                                        {/foreach}
+                                    {/if}
+                                </select>
+                            </div>
+                        </div>
+                        <div style="clear:both"></div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="control-label">
+                                商品二级分类
+                            </label>
+                            <div class="m-b-xs">
+                                <select class="input-sm form-control input-s-sm inline" name="sgc_id" style="height: 32px;" onchange="getCategory(this.value,3)" id='gl_parent_id_2' required="" aria-required="true" aria-invalid="true">
+                                    <option value="">请选择商品分类</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="clear:both"></div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="control-label">
+                                商品三级分类
+                            </label>
+                            <div class="m-b-xs">
+                                <select class="input-sm form-control input-s-sm inline" name="mgc_id" style="height: 32px;"  id='gl_parent_id_3' required="" aria-required="true" aria-invalid="true">
+                                    <option value="">请选择商品分类</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="clear:both"></div>
+                        <div class="form-group">
+                            <a onclick="add()" style="float:right;">添加新品牌</a>
+                            <label class="control-label">
+                                商品品牌
+                            </label>
+                            <div class="m-b-xs">
+                                <select class="input-sm form-control input-s-sm inline" name="mgb_id" style="width:60%;height: 32px; float:left;">
+                                    <option value="">请选择商品品牌</option>
+                                    {if condition="isset($mgb_value) and !empty($mgb_value)"}
+                                        {foreach name="mgb_value" item = "mgb"}
+                                            <option value="{$mgb.mgb_id}">{$mgb.mgb_name}</option>
+                                        {/foreach}
+                                    {/if}
+                                </select>
+                                <div class="input-group inputrelation" style="width:38%; margin-left: 2%; float:left;">
+                                    <input type="text" class="form-control" id="brand_searchs" oninput="search()" autocomplete="off"> <span class="input-group-btn" > <button type="button" class="btn btn-primary" onclick="search()">搜索
+                                    </button> </span>
+                                    <div class="searchbox">
+                                        <ul>
+
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div style="display:none" id="tian">
+
+                            <div style="clear:both;margin-top:10px"></div>
+                            <div class="form-group">
+                                <label class="control-label">
+                                    品牌名称
+                                </label>
+                                <div class="m-b-xs">
+                                    <input class="form-control" type="text"  name="sba_name" />
+                                </div>
+                            </div>
+                            <div style="clear:both;"></div>
+                            <div class="form-group">
+                                <label class="control-label">
+                                    品牌英文名
+                                </label>
+                                <div class="m-b-xs">
+                                     <input class="form-control" type="text"  name="sba_english_name" />
+                                </div>
+                            </div>
+                            <div style="clear:both;"></div>
+                            <div class="form-group">
+                                <label class="control-label">
+                                     品牌logo
+                                </label>
+                                <div class="m-b-xs">
+                                    <input type="file"  name="sba_logo_path" />
+                                </div>
+                            </div>
+                            <div style="clear:both;"></div>
+                            <div class="form-group">
+                                <label class="control-label">
+                                     品牌描述
+                                </label>
+                                <div class="m-b-xs">
+                                   <textarea class="form-control" name="sba_desc" cols="10"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-sm btn-primary"> 确定</button>
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">商品详情</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span>商品名称: </span>
+                        <span id="g_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>商品号: </span>
+                        <span id="g_sn"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>商品分类: </span>
+                        <span id="mgc_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>商品品牌: </span>
+                        <span id="mgb_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>商品系列: </span>
+                        <span id="sgt_name"></span>
+                    </div> 
+                    <div class="form-group">
+                        <span>库存: </span>
+                        <span id="g_inventory"></span>
+                    </div>
+                 <!--    <div class="form-group">
+                        <span>警告库存: </span>
+                        <span id="g_warning_inventory"></span>
+                    </div> -->
+                  <!--   <div class="form-group">
+                        <span>市场售价: </span>
+                        <span id="g_original_price"></span>
+                    </div> -->
+                    <div class="form-group">
+                        <span>售价: </span>
+                        <span id="g_current_price"></span>
+                    </div>
+                   <!--  <div class="form-group">
+                        <span>成本价: </span>
+                        <span id="g_cost_price"></span>
+                    </div> -->
+                    <div class="form-group">
+                        <span>单位名称: </span>
+                        <span id="g_unit_name"></span>
+                    </div>
+                    <!-- <div class="form-group">
+                        <span>单位值: </span>
+                        <span id="g_unit_value"></span>
+                    </div> -->
+                    <div class="form-group">
+                        <span>商品关键字: </span>
+                        <span id="g_keywords"></span>
+                    </div>
+                   
+                    <div class="form-group">
+                        <span>是否上架: </span>
+                        <span id="s_is_show"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>是否包邮: </span>
+                        <span id="is_free_shipping"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>添加时间: </span>
+                        <span id="g_add_time"></span>
+                    </div>
+                    <!-- <div class="form-group">
+                        <span>上架时间: </span>
+                        <span id="g_show_start_time"></span>
+                    </div> -->
+                    <div class="form-group">
+                        <span>商品主图: </span>
+                        <span id="g_zhutu"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>商品轮播图: </span>
+                        <div style="clear:both"></div>
+                        <span id="g_zutu"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>商品详情图: </span>
+                        <span id="g_lunbo"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>最后更新时间: </span>
+                        <span id="g_edit_time"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal " id="myModal3" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">商品详情</h4>
+                </div>
+                <div class="modal-body">
+
+
+
+
+                    <!--手机预览html开始-->
+                    <div class="demo " id="outer">
+                        <div class="ztl-line"></div>
+
+                        <div class="headline">
+                            <img src="SELLER_IMG/preview/fanhui_07.jpg" />
+                            <ul>
+                                <li class="action">商品</li>
+                                <li>详情/规格</li>
+                                <li>评价</li>
+                            </ul>
+                            <img src="SELLER_IMG/preview/fanhui_04.jpg" />
+                        </div>
+                        <div class="scrollwindow">
+                            <div class="swiper-container">
+                                <div class="swiper-wrapper" id="inner">
+                                <div class="indeximg iimg">
+                                    <img src="SELLER_IMG/preview/zst_03.jpg">
+                                </div>
+
+                                <div class="titleline">
+                                    <span>
+                                        <div class="scimg"><img src="SELLER_IMG/preview/shoucang_04.jpg"></div>
+                                        <div class="sctitle">收藏</div>
+                                    </span>
+                                    <div class="tline">
+                                        <img src="SELLER_IMG/preview/chang_07.jpg">
+                                        <div class="title">禹王专业防水禹王专业防水禹王专业防水禹王专业防水禹王专业防水</div>
+                                    </div>
+                                </div>
+
+                                <div class="jiagebox">
+                                    <span>销量 <span class="g_sales">1000</span></span>
+                                    <div class="jg"><strong>￥</strong><em class="xdbefore">50000.</em><b class="xdafter">00</b></div>
+                                </div>
+
+                                <div class="maijiabaozheng more">
+                                    <b><img src="SELLER_IMG/preview/deng.png"></b>
+                                    <span>破损补寄</span>
+                                    <span>买家保障</span>
+                                    <span>15天退款</span>
+                                </div>
+
+                                <div class="a-demo">
+                                    <div class="a-title">商品活动</div>
+                                    <div class="a-img"><img src="SELLER_IMG/preview/qi.jpg"></div>
+                                    <div class="a-content acttitle">活动主题活动主题活动主题</div>
+                                </div>
+
+
+
+                                <div class="a-demo border-top more">
+                                    <b><img src="SELLER_IMG/preview/deng.png"></b>
+                                    <div class="a-title">选择规格</div>
+                                    <div class="a-content actguige">已选规格已选规格</div>
+                                </div>
+                                <div class="a-demo border-top demo-img">
+                                    <img src="SELLER_IMG/preview/spxiangqing.jpg">
+                                </div>
+
+                                <div class="indeximg ylimgs">
+                                    <img src="SELLER_IMG/preview/zst_03.jpg">
+                                    <img src="SELLER_IMG/preview/zst_03.jpg">
+                                    <img src="SELLER_IMG/preview/zst_03.jpg">
+                                    <img src="SELLER_IMG/preview/zst_03.jpg">
+                                </div>
+
+                                <div class="a-demo border-top demo-img">
+                                    <img src="SELLER_IMG/preview/spxiangqing.jpg">
+                                </div>
+
+                                <div class="indeximg g_content">
+                                    <img src="SELLER_IMG/preview/zst_03.jpg">
+                                    <img src="SELLER_IMG/preview/zst_03.jpg">
+                                    <img src="SELLER_IMG/preview/zst_03.jpg">
+                                    <img src="SELLER_IMG/preview/zst_03.jpg">
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="dibu dibuimg">
+                            <img src="SELLER_IMG/preview/dibu_02.jpg">
+                        </div>
+
+                    </div>
+                    <!--手机预览html结束-->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- 全局js -->
+    <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="SELLER_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/demo/peity-demo.js"></script>
+    <script src="SELLER_JS/plugins/layer/layer.min.js"></script>
+    <script src="SELLER_JS/globals.js"></script>
+    <script src="SELLER_JS/preview/swiper.min.js"></script>
+
+
+
+
+
+    <script>
+        // var swiper = new Swiper('.swiper-container', {
+        //     direction: 'vertical',
+        //     slidesPerView: 'auto',
+        //     freeMode: true,
+        //     scrollbar: {
+        //         el: '.swiper-scrollbar',
+        //     },
+        //     mousewheel: true,
+        // });
+
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            var seletvalue = $("select[name=sgc1_id]").val();
+
+            if(seletvalue !=""){
+                $("select[name=sgc1_id]").find("option").eq(0).attr("selected",true);
+                $("#gl_parent_id_2,#gl_parent_id_3").html("<option value=''>请选择商品分类</option>");
+            }
+        });
+
+        function goodaddsubmit(){
+            if($("input[name=sba_logo_path]").val() == "" && $("#tian").is(":visible")){
+                swal({
+                    title: "通讯出错!",
+                    text: "请上传图片"
+                });
+                return false;
+            }
+
+            if($("select[name=mgb_id]").val() == "" && !$("#tian").is(":visible")){
+                swal({
+                    title: "通讯出错!",
+                    text: "请选择商品品牌"
+                });
+                return false;
+            }
+
+
+
+
+        }
+
+
+        function getCategory(id,add) {
+            if (id > 0) {
+                $.ajax({
+                    url:"{:url('seller/Goods/getGoodCategory')}",
+                    type:"post",
+                    data:{id:id,add:add},
+                    dataType:"json",
+                    success:function(info){
+                        $("#gl_parent_id_"+add).empty();
+                        if (info.code == 200) {
+                            var opt = "<option value=''>请选择商品分类</option>";
+                            var data = JSON.parse(info.data);
+                            $.each(data,function(i,n){
+                                opt += "<option value='" + n.mgc_id + "'>" + n.mgc_name + "</option>";
+                            })
+                            $("#gl_parent_id_"+add).append(opt);
+                        }else{
+                            var opt = "<option value=''>请选择商品分类</option>";
+                            $("#gl_parent_id_"+add).append(opt);
+                        }
+                    },
+                    error:function(){
+                        swal({
+                            title: "通讯出错!",
+                            text: "请联系开发人员或管理员!"
+                        });
+                    }
+                })
+            }
+        }
+        function add() {
+            $("#tian").toggle();
+        }
+        function search() {
+                var brand_search = $("#brand_searchs").val();
+                if(brand_search == ""){
+                    $(".searchbox").hide();
+                }
+                $.ajax({
+                    url:'{:url("seller/Goods/ajaxBrandSearch")}',
+                    type:"post",
+                    data:{brand_search:brand_search},
+                    dataType:"json",
+                    success:function (info) {
+                        if (info.code == 200) {
+                            //$("select[name='mgb_id']").empty();
+                            var opt = "";
+                            var searchbox = "";
+                            var data = JSON.parse(info.data);
+                            $.each(data, function(i, n) {
+                                opt += "<option value='" + n.mgb_id + "'>" + n.mgb_name + "</option>";
+                                searchbox += "<li data-index='" + n.mgb_id + "'>" + n.mgb_name.replace(brand_search,"<span style='color:red'>"+brand_search+"</span>") + "</li>";
+                            })
+                            //$("select[name='mgb_id']").attr("id","mgb_id_id").append(opt);
+                            $(".searchbox ul").html(searchbox);
+                            $(".searchbox").show();
+                        } else {
+                            // swal({
+                            //     title: "出错啦!",
+                            //     text: info.msg,
+                            // });
+                            if(brand_search!=""){
+                                $(".searchbox").show();
+                                $(".searchbox ul").html("<li>无相关品牌</li>");
+                            }
+
+                        }
+
+                        searchclick();
+
+                    },
+                    error:function () {
+                        swal({
+                            title: "通讯出错!",
+                            text: "请联系开发人员或管理员!"
+                        });
+                    }
+                })
+            }
+
+        function searchclick(){
+            $(".searchbox ul li").click(function(){
+                $("select[name='mgb_id']").find("option[value="+$(this).attr("data-index")+"]").prop("selected",true);
+                $(".searchbox").hide();
+                $("#brand_searchs").val("");
+            });
+        }
+
+
+
+        function g_show(id) {
+            $.ajax({
+                url:'{:url("seller/Goods/goodsShow")}',
+                type:"post",
+                data:{id:parseInt(id)},
+                dataType:"json",
+                success:function (info) {
+                    if (info.code != '1') {
+                        swal({
+                            title: "数据请求失败,请稍候再试!~",
+                            text: info.msg
+                        });
+                    }else{
+                        var param = JSON.parse(info.data);
+                        // console.log(param);
+                        // console.log(param.g_show_img_path);
+                        $("#g_name").html(param.g_name);
+                        $("#g_sn").html(param.g_sn);
+                        $("#mgc_name").html(param.mgc_nameone +" - "+ param.sgc_name +" - "+ param.mgc_name);
+                        $("#mgb_name").html(param.mgb_name);
+                        $("#sgc_name").html(param.sgc_name);
+                        $("#sgt_name").html(param.sgt_name);
+                        $("#g_inventory").html(param.g_inventory);
+                        $("#g_warning_inventory").html(param.g_warning_inventory);
+                        $("#g_original_price").html(param.g_original_price);
+                        $("#g_current_price").html(param.g_current_price);
+                        $("#g_cost_price").html(param.g_cost_price);
+                        $("#g_unit_name").html(param.g_unit_name);
+                        $("#g_unit_value").html(param.g_unit_value);
+                        $("#g_keywords").html(param.g_keywords);
+                        $("#s_is_show").html(param.s_is_show);
+                        $("#is_free_shipping").html(param.is_free_shipping);
+                        $("#g_add_time").html(param.g_add_time);
+                        $("#g_show_start_time").html(param.g_show_start_time);
+                        $("#g_edit_time").html(param.g_edit_time);
+                        $("#g_zhutu").html('<img src="/public/upload/'+param.g_show_img_path+'"/>');
+                        g_zutu='';
+                        $.each(param.gzutu, function( key, val ) {
+                            g_zutu += '<img src="/public/upload/'+val.gp_picture_path+'"/>';
+                        } );
+
+                        $("#g_zutu").html(g_zutu);
+                        $("#g_lunbo").html(param.g_content);
+                    }
+                },
+                error:function () {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            })
+        }
+
+
+        function g_show_modile(id) {
+            $.ajax({
+                url:'{:url("api/Goods/goodsInfo")}',
+                type:"post",
+                data:{g_id:parseInt(id)},
+                dataType:"json",
+                success:function (info) {
+                    if (info.code != 200) {
+                        swal({
+                            title: "数据请求失败,请稍候再试!~",
+                            text: info.msg
+                        });
+                    }else{
+                        var param = JSON.parse(info.data);
+
+                        $("#myModal3 .title").html(param.goods_info.g_name);
+                        $("#myModal3 .iimg img").attr("src",param.goods_info.g_show_img_path);
+
+                        $("#myModal3 .g_sales").html(param.goods_info.g_sales);
+                        var currentprice = "0.00";
+                        if(param.goods_and_specifications[0].activity.act_id == 0){
+                            currentprice = param.goods_and_specifications[0]["guige"].gsp_price.split(".");
+                        }else{
+                            currentprice = param.goods_and_specifications[0].activity.g_discount_price.split(".");
+                        }
+
+                        /*判断折扣价或者满减*/
+                        if(param.goods_and_specifications[0].activity.act_type == 1){
+                            $(".acttitle").html("限时折扣");
+                        }else if(param.goods_and_specifications[0].activity.act_type == 2){
+                            $(".acttitle").html("满"+param.goods_and_specifications[0].activity.act_meet+"减"+param.goods_and_specifications[0].activity.act_reduction);
+                        }
+
+                        $(".actguige").html(param.goods_and_specifications[0].sp_name);
+                        /*价格*/
+                        $(".xdbefore").html(currentprice[0]+".");
+                        $(".xdafter").html(currentprice[1]);
+
+                        /*卖家保证*/
+                        var guarante='';
+                        $.each(param.shop_info.guarantes,function (key , val) {
+                            guarante += ' <span>'+val.guname+'</span>';
+                        });
+
+                        $(".maijiabaozheng span").remove();
+                        $(".maijiabaozheng").append(guarante);
+
+                        var g_zutus='';
+                        $.each(param.img_banner, function( key, val ) {
+                            g_zutus += '<img src="'+val.gp_picture_path+'"/>';
+                        });
+
+                        $(".ylimgs").html(g_zutus);
+                        $(".g_content").html(param.goods_info.g_content);
+                    }
+                },
+                error:function () {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            })
+        }
+
+
+
+
+        function check_goods_info(id,element,val) {
+            $.ajax({
+                url:"{:url('seller/Goods/changeGoodsInfo')}",
+                type:"post",
+                data:{id:id,val:val},
+                dataType:"json",
+                success:function(info){
+                    if (info.code == 1) {
+                        var data = JSON.parse(info.data);
+                        if(data.val == 1){
+                            var val = 0;
+                        }else{
+                            var val = 1;
+                        }
+                        if (data.val == 1) {
+                            $(element).removeClass("btn-success").addClass("btn-danger").attr("onclick","check_goods_info("+id+",this,"+val+")");
+                            $($(element).children(".fa")).removeClass("fa-check").addClass("fa-close");
+                        } else if (data.val == 0) {
+                            $(element).removeClass("btn-danger").addClass("btn-success").attr("onclick","check_goods_info("+id+",this,"+val+")");
+                            $($(element).children(".fa")).removeClass("fa-close").addClass("fa-check");
+                        }
+                    } else {
+                        swal({
+                            title: "修改失败!",
+                            text: info.msg
+                        });
+                    }
+                },
+                error:function(){
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            })
+        }
+
+        function shopaddtitle(){
+            $(".shoplistitle").fadeOut(90).fadeIn(90).fadeOut(90).fadeIn(90).fadeOut(90).fadeIn(90);
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品订单</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <style type="text/css">
+        .pjneirong img{
+            width:150px;
+            height: 150px;
+        }
+        .pjneirong{
+            border: 1px solid #d7d7d7;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>商品订单</h5>
+                    <div class="ibox-tools" style="margin-right: 15px;">
+                        <a class="close-link" href="{:url('seller/index/welcome')}">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="ibox-content">
+                    <div class="ncap-order-style">
+
+                        {if condition="$oRow.o_shipping_status neq '2'"}
+                        <a href="{:url('seller/Ordermanage/editorder',array('order_id'=>$order_id))}" class="ncap-btn-big ncap-btn-green"><i class="fa fa-search"></i>修改订单</a>
+                        {/if}
+                        <div class="ncap-order-details">
+
+                                <div class="tabs-panels">
+                                    <div class="misc-info">
+                                        <h3>基本信息</h3>
+                                        
+                                       
+                                        <dl>
+                                            <dt>订单编号：</dt>
+                                            <dd>
+                                               
+                                                {$oRow['o_sn']}
+                                                
+                                            </dd>
+                                            <dt>订单状态：</dt>
+                                            <dd>
+                                                {if condition="$oRow.o_status eq '0'"}
+                                                未确认
+                                                {elseif condition="$oRow.o_status eq '1'"}
+                                                已确认
+                                                {elseif condition="$oRow.o_status eq '2'"}
+                                                已取消
+                                                {elseif condition="$oRow.o_status eq '3'"}
+                                                待评价
+                                                {elseif condition="$oRow.o_status eq '4'"}
+                                                已评论
+                                                {elseif condition="$oRow.o_status eq '5'"}
+                                                已成功
+                                                {elseif condition="$oRow.o_status eq '6'"}
+                                                退货
+                                                {/if}/
+                                                {if condition="$oRow.o_pay_status eq '0'"}
+                                                未支付
+                                                {elseif condition="$oRow.o_pay_status eq '1'"}
+                                                已支付
+                                                {elseif condition="$oRow.o_pay_status eq '2'"}
+                                                待支付
+                                                {/if}/
+                                                {if condition="$oRow.o_shipping_status eq '0'"}
+                                                未发货
+                                                {elseif condition="$oRow.o_shipping_status eq '1'"}
+                                                发货中
+                                                {elseif condition="$oRow.o_shipping_status eq '2'"}
+                                                已发货
+                                                {/if}</dd>
+                                            <dt>下单时间：</dt>
+                                            <dd>{$oRow['o_add_time']|date="Y-m-d H:i",###}</dd>
+                                            
+                                        </dl>
+                                        <dl>
+                                            <dt>支付时间：</dt>
+                                            <dd>
+                                                {if condition="$oRow.o_pay_time neq '0'"}
+                                                {$oRow['o_pay_time']|date="Y-m-d H:i",###}
+                                                {else/}
+                                                N
+                                                {/if}
+                                            </dd>
+                                            <dt>支付方式：</dt>
+                                            <dd>{$oRow.o_pay_name}</dd>
+                                            <dt>发票抬头：</dt>
+                                            <dd>
+                                                {$oRow.o_invoice_title}
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>物流公司：</dt>
+                                            <dd>
+                                                {$oRow.o_shipping_name}
+                                            </dd>
+                                            <dt>物流编号：</dt>
+                                            <dd>{$oRow.o_shipping_code}</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="addr-note">
+                                        <h4>收货信息</h4>
+                                        <dl>
+                                            <dt>收货人：</dt>
+                                            <dd>{$usainfo.usa_user_name}</dd>
+                                            <dt>联系方式：</dt>
+                                            <dd>{$usainfo.usa_mobile}</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>收货地址：</dt>
+                                            <dd>{$reginone[0]},{$reginone[1]},{if condition="isset($reginone[2])"}{$reginone[2]},{/if}{$usainfo.usa_address}</dd>
+                                        </dl>
+
+                                        <dl>
+                                            <dt>配送方式：</dt>
+                                            <dd>{$oRow.o_shipping_name}</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>留言：</dt>
+                                            <dd>{$oRow.o_user_note}</dd>
+                                        </dl>
+                                    </div>
+
+
+                                    <div class="goods-info">
+                                        <h4>商品信息</h4>
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th>商品编号</th>
+                                                <th colspan="2">商品</th>
+                                                <th>规格属性</th>
+                                                <th>数量</th>
+                                                <th>单品价格</th>
+                                                <th>活动</th>
+                                                <th>折扣价</th>
+                                                <th>单品小计</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {if condition="isset($gsplist) and !empty($gsplist)"}
+                                            {foreach name="gsplist" item="info"}
+                                            <tr>
+                                                <td class="w60">{$info.goods_sn}</td>
+                                                <td class="w30"><div class="goods-thumb"><img alt="" src="/public/upload/{$info.g_show_img_path}" width="50"></div></td>
+                                                <td style="text-align: left;">{$info.goods_name}<br></td>
+                                                <td class="w80">{$info.sp_name}</td>
+                                                <td class="w60">{$info.goods_buy_num}</td>
+                                                <td class="w100">{$info.gsp_price}</td>
+                                                <td><div>{if condition="$info.act_type eq '1'"}<span style="color:red;">折扣</span>{elseif condition="$info.act_type eq '2'"}<span style="color:red;">满{$info.act_meet}减{$info.act_reduction}</span>{else/}{/if}</div></td>
+                                                <td class="w60">{$info.g_discount_price} </td>
+                                                <td class="w80">{$info.xiaoji}</td>
+                                            </tr>
+                                            {/foreach}
+                                            {/if}
+                                            </tbody></table>
+                                    </div>
+
+                                </div>
+
+
+
+
+                               
+
+
+
+
+                            </form>
+                        </div>
+
+                </div>
+            </div>
+
+        </div>
+            <div class="ibox float-e-margins">
+
+                <div class="ibox-title">
+                    <h5>评价</h5>
+
+                </div>
+                <div class="ibox-content">
+                    <div class="ncap-order-style">
+                        <div class="ncap-order-details">
+                            <div class="tabs-panels">
+                                <div class="">
+                                    <div class="goods-info" style="font-size:14px">
+                                        商品评价
+                                        <span style="margin-left: 30px;">
+                                        {if condition="$oeevaluationse['0']['oe_quality_star'] eq '1'"}
+                                        <span ><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/></span>
+                                        {elseif condition="$oeevaluationse['0']['oe_quality_star'] eq '2'"}
+                                        <span><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/></span>
+                                        {elseif condition="$oeevaluationse['0']['oe_quality_star'] eq '3'"}
+                                        <span><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/></span>
+                                        {elseif condition="$oeevaluationse['0']['oe_quality_star'] eq '4'"}
+                                        <span><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/></span>
+                                        {elseif condition="$oeevaluationse['0']['oe_quality_star'] eq '5'"}
+                                        <span><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/></span>
+                                        {/if}
+                                        </span>
+                                    </div>
+
+                                    <div class="goods-info" style="font-size:14px">
+                                        物流星级
+                                        <span style="margin-left: 30px;">
+                                        {if condition="$oeevaluationse['0']['oe_logistics_star'] eq '1'"}
+                                        <span ><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/></span>
+                                        {elseif condition="$oeevaluationse['0']['oe_logistics_star'] eq '2'"}
+                                        <span><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/></span>
+                                        {elseif condition="$oeevaluationse['0']['oe_logistics_star'] eq '3'"}
+                                        <span><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/></span>
+                                        {elseif condition="$oeevaluationse['0']['oe_logistics_star'] eq '4'"}
+                                        <span><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/></span>
+                                        {elseif condition="$oeevaluationse['0']['oe_logistics_star'] eq '5'"}
+                                        <span><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/></span>
+                                        {/if}
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="goods-info" style="font-size:14px">
+                                        服务星级
+                                        <span style="margin-left: 30px;">
+                                        {if condition="$oeevaluationse['0']['oe_service_star'] eq '1'"}
+                                        <span ><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/></span>
+                                        {elseif condition="$oeevaluationse['0']['oe_service_star'] eq '2'"}
+                                        <span><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/></span>
+                                        {elseif condition="$oeevaluationse['0']['oe_service_star'] eq '3'"}
+                                        <span><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/></span>
+                                        {elseif condition="$oeevaluationse['0']['oe_service_star'] eq '4'"}
+                                        <span><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/star.png" width="15"/></span>
+                                        {elseif condition="$oeevaluationse['0']['oe_service_star'] eq '5'"}
+                                        <span><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/><img src="SELLER_IMG/stars.png" width="15"/></span>
+                                        {/if}
+<<<<<<< .mine
+                                        </span>
+=======
+                                        {if condition="!empty($oeevaluationse['0']['oe_img'][5]['dat']) && $oeevaluationse['0']['oe_img'][0]['dat'] neq ''"}
+                                            <img src="__UPLOAD__/{$oeevaluationse['0']['oe_img'][5]['dat']}" width="150px">
+                                        {/if}
+>>>>>>> .r682
+
+                                    </div>
+
+
+
+
+
+
+
+<<<<<<< .mine
+=======
+                                    <div class="s" style="width:584px">
+                                        
+                                           <textarea rows="10" cols="80" id="ping"></textarea>
+                                        <div style="display: block;float:right"><a href="JavaScript:void(0);" onclick="checkSubmit1({$oeevaluationse['0']['oe_id']})" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认回复</a></div>
+                                    <div style="clear:both"></div>
+                                </div>
+                                {/if}
+                                <div class="spplcontent"  style="margin-left: 10px;margin-top:10px">
+                                 {if condition="!empty($oeevaluationse['0']['zhuijia']['oe_content'])"}
+                                    
+                                <div style="color: #FF7F00;border: solid 1px #FF7F00;width:30px;text-align:center">追评</div>
+>>>>>>> .r682
+                               
+<<<<<<< .mine
+=======
+                                    {$oeevaluationse['0']['zhuijia']['oe_content']}
+                                {/if}
+                                    <div class="spplimg" style="margin-left:15px">
+                                        {if condition="!empty($oeevaluationse['0']['zhuijia']['oe_img'][0]['dat']) && $oeevaluationse['0']['zhuijia']['oe_img'][0]['dat'] neq ''"}
+                                            <img src="__UPLOAD__/{$oeevaluationse['0']['zhuijia']['oe_img'][0]['dat']}" width="150px">
+                                        {/if}
+>>>>>>> .r682
+
+
+                                    <div class="spplcontent"  style="margin: 0px;">
+
+<<<<<<< .mine
+                                        <h4>评论内容</h4>
+                                        <div  class="pjneirong">
+                                            <div class="oecontent">{$oeevaluationse['0']['oe_content']}</div>
+                                            <div class="spplimg" style="margin-top:15px">
+                                            {if condition="!empty($oeevaluationse['0']['oe_img'][0]['dat']) && $oeevaluationse['0']['oe_img'][0]['dat'] neq ''"}
+                                            <img src="http://192.168.2.190__UPLOAD__/{$oeevaluationse['0']['oe_img'][0]['dat']}" width="150px">
+                                            {/if}
+=======
+                                        {if condition="!empty($oeevaluationse['0']['zhuijia']['oe_img'][4]['dat']) && $oeevaluationse['0']['zhuijia']['oe_img'][0]['dat'] neq ''"}
+                                            <img src="__UPLOAD__/{$oeevaluationse['0']['zhuijia']['oe_img'][4]['dat']}" width="150px">
+                                        {/if}
+                                        {if condition="!empty($oeevaluationse['0']['zhuijia']['oe_img'][5]['dat']) && $oeevaluationse['0']['zhuijia']['oe_img'][0]['dat'] neq ''"}
+                                            <img src="__UPLOAD__/{$oeevaluationse['0']['zhuijia']['oe_img'][5]['dat']}" width="150px">
+                                        {/if}
+>>>>>>> .r682
+
+                                            {if condition="!empty($oeevaluationse['0']['oe_img'][1]['dat']) && $oeevaluationse['0']['oe_img'][1]['dat'] neq ''"}
+                                            <img src="http://192.168.2.190__UPLOAD__/{$oeevaluationse['0']['oe_img'][1]['dat']}" width="150px">
+                                            {/if}
+                                            {if condition="!empty($oeevaluationse['0']['oe_img'][2]['dat']) &&  $oeevaluationse['0']['oe_img'][2]['dat'] neq ''"}
+                                            <img src="http://192.168.2.190__UPLOAD__/{$oeevaluationse['0']['oe_img'][2]['dat']}" width="150px">
+                                            {/if}
+
+                                            {if condition="!empty($oeevaluationse['0']['oe_img'][3]['dat']) && $oeevaluationse['0']['oe_img'][3]['dat'] neq ''"}
+                                            <img src="http://192.168.2.190__UPLOAD__/{$oeevaluationse['0']['oe_img'][3]['dat']}" width="150px">
+                                            {/if}
+
+                                            {if condition="!empty($oeevaluationse['0']['oe_img'][4]['dat']) && $oeevaluationse['0']['oe_img'][0]['dat'] neq ''"}
+                                            <img src="http://192.168.2.190__UPLOAD__/{$oeevaluationse['0']['oe_img'][4]['dat']}" width="150px">
+                                            {/if}
+                                            {if condition="!empty($oeevaluationse['0']['oe_img'][5]['dat']) && $oeevaluationse['0']['oe_img'][0]['dat'] neq ''"}
+                                            <img src="http://192.168.2.190__UPLOAD__/{$oeevaluationse['0']['oe_img'][4]['dat']}" width="150px">
+                                            {/if}
+
+<<<<<<< .mine
+                                        </div>
+=======
+                                </div>
+                                {if condition="!empty($oeevaluationse['0']['zhuijia']['s_content']) && $oeevaluationse['0']['zhuijia']['s_content'] neq ''"}
+                                <div class="spplbox" style="margin-left: 30px;">
+>>>>>>> .r682
+
+
+                                            {if condition="$oeevaluationse['0']['s_content'] neq ''"}
+                                            <div class="spplbox" style=" padding: 0;">
+
+                                                <div class="sppltitle">
+                                                    商家回复:
+                                                </div>
+
+                                                <div class="s ">
+
+                                                    {$oeevaluationse['0']['s_content']}
+
+                                                </div>
+                                            </div>
+                                            {/if}
+                                        </div>
+                                    </div>
+
+
+
+                                    {if condition="$oeevaluationse['0']['s_content'] eq ''"}
+                                    <div class="spplbox" style="margin-left: 30px;">
+
+                                        <div class="sppltitle">
+                                            商家回复
+                                        </div>
+
+                                        <div class="s" style="width:584px">
+
+                                            <textarea rows="10" cols="80" id="ping"></textarea>
+                                            <div style="display: block;float:right"><a href="JavaScript:void(0);" onclick="checkSubmit1({$oeevaluationse['0']['oe_id']})" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a></div>
+                                            <div style="clear:both"></div>
+                                        </div>
+                                    </div>
+<<<<<<< .mine
+                                    {/if}
+                                    <div class="spplcontent"  style="margin:0;margin-top:10px">
+                                        <div style="color: #FF7F00;border: solid 1px #FF7F00;width:30px;text-align:center; margin-bottom: 10px;">追评</div>
+                                        <div class="pjneirong">
+                                            {$oeevaluationse['0']['zhuijia']['oe_content']}
+                                            <div class="spplimg" style="margin-top:15px">
+                                                {if condition="!empty($oeevaluationse['0']['zhuijia']['oe_img'][0]['dat']) && $oeevaluationse['0']['zhuijia']['oe_img'][0]['dat'] neq ''"}
+                                                <img src="http://192.168.2.190__UPLOAD__/{$oeevaluationse['0']['zhuijia']['oe_img'][0]['dat']}" width="150px">
+                                                {/if}
+=======
+                                </div>
+                                {elseif condition="!empty($oeevaluationse['0']['zhuijia']['s_content']) && $oeevaluationse['0']['zhuijia']['s_content'] eq ''"}
+                                <div class="spplbox" style="margin-left: 30px;">
+>>>>>>> .r682
+
+                                                {if condition="!empty($oeevaluationse['0']['zhuijia']['oe_img'][1]['dat']) && $oeevaluationse['0']['zhuijia']['oe_img'][1]['dat'] neq ''"}
+                                                <img src="http://192.168.2.190__UPLOAD__/{$oeevaluationse['0']['zhuijia']['oe_img'][1]['dat']}" width="150px">
+                                                {/if}
+                                                {if condition="!empty($oeevaluationse['0']['zhuijia']['oe_img'][2]['dat']) &&  $oeevaluationse['0']['zhuijia']['oe_img'][2]['dat'] neq ''"}
+                                                <img src="http://192.168.2.190__UPLOAD__/{$oeevaluationse['0']['zhuijia']['oe_img'][2]['dat']}" width="150px">
+                                                {/if}
+
+                                                {if condition="!empty($oeevaluationse['0']['zhuijia']['oe_img'][3]['dat']) && $oeevaluationse['0']['zhuijia']['oe_img'][3]['dat'] neq ''"}
+                                                <img src="http://192.168.2.190__UPLOAD__/{$oeevaluationse['0']['zhuijia']['oe_img'][3]['dat']}" width="150px">
+                                                {/if}
+
+                                                {if condition="!empty($oeevaluationse['0']['zhuijia']['oe_img'][4]['dat']) && $oeevaluationse['0']['zhuijia']['oe_img'][0]['dat'] neq ''"}
+                                                <img src="http://192.168.2.190__UPLOAD__/{$oeevaluationse['0']['zhuijia']['oe_img'][4]['dat']}" width="150px">
+                                                {/if}
+                                                {if condition="!empty($oeevaluationse['0']['zhuijia']['oe_img'][5]['dat']) && $oeevaluationse['0']['zhuijia']['oe_img'][0]['dat'] neq ''"}
+                                                <img src="http://192.168.2.190__UPLOAD__/{$oeevaluationse['0']['zhuijia']['oe_img'][4]['dat']}" width="150px">
+                                                {/if}
+                                            </div>
+
+                                            {if condition="$oeevaluationse['0']['zhuijia']['s_content'] neq ''"}
+                                            <div class="spplbox" style="padding:0;">
+
+                                                <div class="sppltitle">
+                                                    商家回复:
+                                                </div>
+
+                                                <div class="s">
+
+                                                    {$oeevaluationse['0']['zhuijia']['s_content']}
+
+                                                </div>
+                                            </div>
+                                            {/if}
+
+
+                                        </div>
+
+
+                                    </div>
+
+<<<<<<< .mine
+                                    {if condition="$oeevaluationse['0']['zhuijia']['s_content'] eq ''"}
+                                    <div class="spplbox" style="padding:0;margin-top: 30px;">
+=======
+                                    <div class="s" style="width:584px">
+                                        
+                                           <textarea rows="10" cols="80" id="zhui"></textarea>
+                                        <div style="display: block;float:right"><a href="JavaScript:void(0);" onclick="checkSubmit2({$oeevaluationse['0']['zhuijia']['oe_id']})" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认回复</a></div>
+                                    <div style="clear:both"></div>
+>>>>>>> .r682
+
+                                        <div class="sppltitle">
+                                            商家回复
+                                        </div>
+
+                                        <div class="s" style="width:584px">
+
+                                            <textarea rows="10" cols="150" id="zhui"></textarea>
+                                            <div style="display: block;float:right"><a href="JavaScript:void(0);" onclick="checkSubmit2({$oeevaluationse['0']['zhuijia']['oe_id']})" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a></div>
+                                            <div style="clear:both"></div>
+
+                                        </div>
+                                    </div>
+                                    {/if}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+
+    <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+   <script>
+        //seletfrom
+        function checkSubmit1(oeid){
+            var content = $('#ping').val();
+            $.ajax({
+                url:"{:url('seller/Ordermanage/commentback')}",
+                type:"POST",
+                data:{oe_id:oeid,content:content},
+                dataType:"json",
+                success:function(list){
+                    window.location.reload();
+                }
+
+            });
+        }
+        function checkSubmit2(oeid){
+            var content = $('#zhui').val();
+            $.ajax({
+                url:"{:url('seller/Ordermanage/commentback')}",
+                type:"POST",
+                data:{oe_id:oeid,content:content},
+                dataType:"json",
+                success:function(list){
+                  window.location.reload();
+                }
+
+            });
+        }
+    </script>
+</body>
+</html>

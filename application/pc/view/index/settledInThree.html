@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>
+            {$title}
+        </title>
+        <link href="PC_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet"/>
+
+        <link href="PC_CSS/SettledIn.css" rel="stylesheet"/>
+        <link href="PC_CSS/rili.css" rel="stylesheet"/>
+        <script src="PC_JS/jquery.min.js?v=2.1.4"></script>
+        <script src="https://webapi.amap.com/maps?v=1.4.0&key=34757d6f3a85d3ad5fac697a62f0204f&plugin=AMap.Geocoder" type="text/javascript"></script>
+        <script src="https://webapi.amap.com/ui/1.0/main.js?v=1.0.10"></script>
+        <script src="https://webapi.amap.com/demos/js/liteToolbar.js" type="text/javascript"></script>
+        <script src="PC_JS/jquery.date_input.pack.js"></script>
+        <script src="SELLER_JS/globals.js"></script>
+        <script src="PC_JS/plugins/sweetalert/sweetalert.min.js"></script>
+        <script src="SELLER_JS/photoclip/ajaxfileupload.js"></script>
+        <style type="text/css">
+            .header {
+                width: 100%;
+                height: 35px;
+                background-color: #f9f9f9;
+                border-bottom: 1px solid #ececec;
+            }
+            .wrap {
+                width: 80%;
+                height: 100%;
+                margin: 0 auto;
+                position: relative;
+            }
+            .header-right {
+                margin-right: 10%;
+            }
+
+            .fr {
+                float: right;
+            }
+            .header a {
+                text-decoration: none;
+                line-height: 36px;
+                color:#ec5151
+            }
+            .line {
+                height: 16px;
+                border-left: 1px solid #ec5151;
+                vertical-align: middle;
+                margin: 0 8px 0 5px;
+            }
+            .panel-body .item.itemcss{
+                margin-left: 189px;
+                width: calc(100% - 189px);
+            }
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+              -webkit-appearance: none;
+            }
+            .sr_other img{
+                margin-right: 10px;
+                margin-bottom: 10px;
+            }
+        </style>
+    </head>
+    <script>
+        if (window.top !== window.self) {
+            window.top.location = window.location;
+        }
+        $(function(){
+            $('.date_picker').date_input();
+        })
+
+
+        function ajaxFileUploads(str_id){
+
+            if($("#"+str_id).val()==""){
+
+                return false;
+            }
+            $.ajaxFileUpload
+            (
+                {
+
+                    url: '{:url("pc/Index/goodsImgupdate")}', //用于文件上传的服务器端请求地址
+                    secureuri: false, //是否需要安全协议，一般设置为false
+                    data: { img:$("#"+str_id).val() },
+                    fileElementId: [str_id], //文件上传域的ID
+                    dataType: 'json', //返回值类型 一般设置为json
+                    success: function (data, status)  //服务器成功响应处理函数
+                    {
+                        if(str_id == "sr_other"){
+                            var pic_cover = $("[name="+str_id+"_text]").val();
+                            if(pic_cover != ""){
+                                pic_cover += ","+data["pic_cover"];
+                            }else{
+                                pic_cover = data["pic_cover"];
+                            }
+
+                            $("[name="+str_id+"_text]").val(pic_cover);
+                            $("."+str_id).append("<img src='/public/upload/"+data["pic_cover"]+"'  width='200'/>");
+                        }else{
+                            $("."+str_id).html("<img src='/public/upload/"+data["pic_cover"]+"'  width='200'/>");
+                            $("[name="+str_id+"_text]").val(data["pic_cover"]);
+                        }
+
+                        // console.log(data.pic_cover);
+                        //$("#g_show_img_path1").val(data["pic_cover"]);
+                        //$("#views").html("<img src='/public/upload/"+data["pic_cover"]+"' width='200'>");
+                    },
+                    error: function (data, status, e)//服务器响应失败处理函数
+                    {
+                        console.log(data);
+                    }
+                }
+            )
+            return false;
+        }
+
+
+
+
+
+
+
+    </script>
+    <body>
+        <div class="header">
+            <div class="wrap">
+                <div class="header-right fr">
+                    <!-- <a href="{:url('pc/Login/Index')}" style="color:#ec5151;width: 25px;padding-left: 20px;">登录</a> -->
+                    {$mobile}
+                    <span class="line" ></span>
+                    <a href="{:url('seller/Login/index')}" >退出</a>
+                </div>
+            </div>
+        </div>
+        <div class="settled-container bg-ligtGary">
+            <div class="w w1200">
+                <div class="sett-process-warp clearfix">
+                    <div class="s-p-steps">
+                    <ul>
+                        <li class="cur">
+                            <span>
+                                1. 入驻须知
+                            </span>
+                            <i class="iconfont icon-arrow-right-alt">
+                            </i>
+                        </li>
+                        <li class="cur">
+                            <span>
+                                2. 基本信息填写
+                            </span>
+                            <i class="iconfont icon-arrow-right-alt">
+                            </i>
+                        </li>
+                        <li class="curr">
+                            <span>
+                                3. 入驻信息认证
+                            </span>
+                            <i class="iconfont icon-arrow-right-alt">
+                            </i>
+                        </li>
+                         <!--<li>-->
+                            <!--<span>-->
+                                <!--4. 店铺信息认证-->
+                            <!--</span>-->
+                            <!--<i class="iconfont icon-arrow-right-alt">-->
+                            <!--</i>-->
+                        <!--</li>-->
+                        <li class="last ">
+                            <span>
+                                4. 等待审核
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                    <div class="panel">
+                        <div class="panel-content">
+                            <div class="bg-warp">
+                                <div class="title">
+                                    <span>
+                                        入驻信息认证
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="panel-tit">
+                                        <span>
+                                            卖家入驻联系人信息
+                                        </span>
+                                    </div>
+                                    <div class="cue">
+                                        用于入驻过程中接收工建通反馈的入驻通知，请务必正确填写。
+                                    </div>
+                                    <div class="list">
+                                        {if condition="$list['type'] eq 0"}
+                                            <form action="{:url('Index/settledInThreeDealWith')}" enctype="multipart/form-data" id="stepForm" method="post" name="stepForm" onsubmit="return validates();">
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            个人经纬度：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value" >
+                                                        <div class="pickerBox">
+                                                            <input class="pickerInput" id="pickerInput" placeholder="输入关键字选取地点" onblur="_picker()"/>
+                                                            <div class="poiInfo" id="poiInfo">
+                                                            </div>
+                                                            <div class="verify" id="error_contactLongitude" style="margin-left: 337px;margin-top: -29px;"></div>
+                                                        </div>
+                                                        <div class="map container" id="container" tabindex="0"></div>
+                                                        <input class="text" name="sr_latitude_and_longitude" size="20" type="text" {if condition='isset($settledInThree.sr_latitude_and_longitude)' }  value="{$settledInThree.sr_latitude_and_longitude}" {/if} id="coordinate" style="display: none"/>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            身份证姓名：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="text" id="contactPerson" name="sr_legal_person" onblur="_contactPerson()" size="20" type="text" {if condition='isset($settledInThree.sr_legal_person)' }  value="{$settledInThree.sr_legal_person}" {/if}>
+                                                            <div class="org">
+                                                            </div>
+                                                            <div class="verify" id="error_contactPerson"></div>
+                                                        </input>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            身份证号码：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="text" id="contactIdcard" name="sr_legal_person_idcard" onblur="_contactIdcard()" size="20" type="text" {if condition='isset($settledInThree.sr_legal_person_idcard)' }  value="{$settledInThree.sr_legal_person_idcard}" {/if}>
+                                                            <div class="org">
+                                                            </div>
+                                                            <div class="verify" id="error_contactIdcard"></div>
+                                                        </input>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            身份证正面：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="file" name="sr_idcard_positive" size="20" type="file"/>
+                                                        <div class="org">
+                                                        </div>
+                                                        <div class="verify"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            身份证反面：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="file" name="sr_idcard_background" size="20" type="file" value="">
+                                                        </input>
+                                                        <div class="verify"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            个人银行账号：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="text" id="contactAccount" name="scb_bank_account" onblur="_contactAccount()" size="20" type="text" {if condition='isset($scb_value.scb_bank_account)' }  value="{$scb_value.scb_bank_account}" {/if}>
+                                                            <div class="org">
+                                                            </div>
+                                                            <div class="verify" id="error_contactAccount"></div>
+                                                        </input>
+                                                    </div>
+                                                </div>
+
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            开户行名称：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="text" id="contactBackName" name="scb_bank_name" onblur="_contactBackName()" size="20" type="text" {if condition='isset($scb_value.scb_bank_name)' }  value="{$scb_value.scb_bank_name}" {/if}>
+                                                            <div class="org">
+                                                            </div>
+                                                            <div class="verify" id="error_contactBackName"></div>
+                                                        </input>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="btn-group">
+
+                                                    {if condition='isset($settledInThree.sr_idcard_positive)'}
+                                                        <input type="hidden" name="sr_idcard_positives" value="{$settledInThree.sr_idcard_positive}">
+                                                    {/if}
+                                                    {if condition='isset($settledInThree.sr_idcard_background)'}
+                                                        <input type="hidden" name="sr_idcard_backgrounds" id="city" value="{$settledInThree.sr_idcard_background}">
+                                                    {/if}
+
+
+                                                    <input class="btn"  type="submit" value="下一步，完善店铺信息认证"/>
+                                                </div>
+                                            </form>
+                                        {else}
+                                            <form action="{:url('Index/settledInThreeDealWith')}" enctype="multipart/form-data" id="stepForms" method="post" name="stepForm" onsubmit="return companyValidates();">
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            公司名称：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="text" required="" aria-required="true" readonly aria-invalid="true" id="contactCompanyName" name="sr_company_name" onblur="_contactCompanyName()" size="20" type="text" {if condition='isset($settledInThree.sr_company_name)' }  value="{$settledInThree.sr_company_name}" {/if}/>
+                                                        <div class="org">
+                                                        </div>
+                                                        <div class="verify" id="error_contactCompanyName"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            营业执照图片：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="file" name="sr_business_path" id="sr_business_path" onchange="ajaxFileUploads('sr_business_path')" size="20" type="file" value="{$settledInThree.sr_business_path}" />
+                                                        <div class="verify" id="error_contactCompanyName"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="item sr_business_path itemcss">
+                                                    {if condition="$settledInThree.sr_business_path neq ''"}
+                                                        <img src="__UPLOAD__/{$settledInThree.sr_business_path}" width="200">
+                                                    {/if}
+                                                </div>
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            营业执照注册号：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="text" id="contactLicenseNumber" readonly name="sr_business_license_number" onblur="_contactLicenseNumber()" size="20" type="text" {if condition='isset($settledInThree.sr_business_license_number)' }  value="{$settledInThree.sr_business_license_number}" {/if}/>
+                                                        <div class="org">
+                                                        </div>
+                                                        <div class="verify" id="error_contactLicenseNumber"></div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            公司所在地省/市/区：
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="value">
+                                                        <select name="sr_company_location_province" onchange="getRegion('sr_company_location_city',this.value,'sr_company_location_city','' ,'{:url('pc/Base/getRegion')}','sr_company_location_area');" id="sr_company_location_province" class="catselectB" >
+                                                            <option value="">
+                                                                    请选择省份
+                                                            </option>
+                                                             {foreach name="value" item="vo"}
+                                                                <option value="{$vo.r_id}" {if condition='isset($settledInThree.sr_company_location_province) and $settledInThree.sr_company_location_province eq $vo.r_id' }selected{/if}>
+                                                                    {$vo.r_name}
+                                                                </option>
+                                                            {/foreach}
+                                                        </select>
+                                                        <div class="imgload"><img src="PC_IMG/loading.gif"></div>
+                                                        <select name="sr_company_location_city" id="sr_company_location_city" class="catselectB" onchange="getRegion('sr_company_location_area',this.value,'sr_company_location_area','' ,'{:url('pc/Base/getRegion')}');">
+                                                            <option value="">请选择城市</option>
+                                                        </select>
+                                                        <div class="imgload"><img src="PC_IMG/loading.gif"></div>
+                                                        <select name="sr_company_location_area" id="sr_company_location_area" class="catselectB">
+                                                            <option value="">请选择区域</option>
+                                                        </select>
+                                                        <div class="imgload"><img src="PC_IMG/loading.gif"></div>
+                                                        <div class="verify"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            公司所在地详细地址：
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="value">
+                                                        <input class="text" required="" aria-required="true" aria-invalid="true" id="contactLocation" name="sr_company_location_address" onblur="_contactLocation()" size="20" type="text" {if condition='isset($settledInThree.sr_company_location_address)' }  value="{$settledInThree.sr_company_location_address}" {/if}/>
+                                                        <div class="org">
+                                                        </div>
+                                                        <div class="verify" id="error_contactLocation"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            公司电话：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="text" required="" aria-required="true" aria-invalid="true" id="contactCompanyPhone" name="sr_company_phone" onblur="_contactAndLongitude()" size="20" type="text" {if condition='isset($settledInThree.sr_company_phone)' }  value="{$settledInThree.sr_company_phone}" {/if} placeholder="区号-电话号码"/>
+                                                        <div class="org">
+                                                        </div>
+                                                        <div class="verify" id="error_contactAndLongitude"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            公司经纬度：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <div class="pickerBox">
+                                                            <input class="pickerInput" id="pickerInput" placeholder="输入关键字选取地点" onblur="_picker()"/>
+                                                            <div class="poiInfo" id="poiInfo">
+                                                            </div>
+                                                            <div class="verify" id="error_contactLongitude" style="margin-left: 337px;margin-top: -29px;"></div>
+                                                        </div>
+                                                        <div class="map container" id="container" tabindex="0"></div>
+                                                        <div id="panel"></div>
+                                                        <input class="text" name="sr_latitude_and_longitude" size="20" type="text" {if condition='isset($settledInThree.sr_latitude_and_longitude)' }  value="{$settledInThree.sr_latitude_and_longitude}" {/if}  id="coordinate" style="display: none"/>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            法人身份证姓名：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="text" required="" aria-required="true" aria-invalid="true" id="contactPerson" name="sr_legal_person" onblur="_contactPerson()" size="20" type="text" {if condition='isset($settledInThree.sr_legal_person)' }  value="{$settledInThree.sr_legal_person}" {/if} >
+                                                            <div class="org">
+                                                            </div>
+                                                            <div class="verify" id="error_contactPerson"></div>
+                                                        </input>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            法人身份证号码：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="text" required="" aria-required="true" aria-invalid="true" id="contactIdcard" name="sr_legal_person_idcard" onblur="_contactIdcard()" size="20" type="text" {if condition='isset($settledInThree.sr_legal_person_idcard)' }  value="{$settledInThree.sr_legal_person_idcard}" {/if}>
+                                                            <div class="org">
+                                                            </div>
+                                                            <div class="verify" id="error_contactIdcard"></div>
+                                                        </input>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            法人身份证正面：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="file"  name="sr_idcard_positive" size="20" type="file" id="sr_idcard_positive" onchange="ajaxFileUploads('sr_idcard_positive')"/>
+                                                        <div class="org">
+                                                        </div>
+                                                        <div class="verify" ></div>
+                                                    </div>
+                                                </div>
+                                                <div class="item sr_idcard_positive itemcss">
+                                                    {if condition="$settledInThree.sr_idcard_positive neq ''"}
+                                                        <img src="__UPLOAD__/{$settledInThree.sr_idcard_positive}" width="200">
+                                                    {/if}
+                                                </div>
+
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            法人身份证反面：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="file" name="sr_idcard_background" id="sr_idcard_background" onchange="ajaxFileUploads('sr_idcard_background')" size="20" type="file" value="" >
+                                                        </input>
+                                                        <div class="verify" ></div>
+                                                    </div>
+                                                </div>
+                                                <div class="item sr_idcard_background itemcss">
+                                                    {if condition="$settledInThree.sr_idcard_background neq ''"}
+                                                    <img src="__UPLOAD__/{$settledInThree.sr_idcard_background}" width="200">
+                                                    {/if}
+                                                </div>
+
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            公司银行账号：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="text" required="" aria-required="true" aria-invalid="true" id="contactAccount" name="scb_bank_account" onblur="_contactAccount()" size="20" type="number" {if condition='isset($scb_value.scb_bank_account)' }  value="{$scb_value.scb_bank_account}" {/if}>
+                                                            <div class="org">
+                                                            </div>
+                                                            <div class="verify" id="error_contactAccount"></div>
+                                                        </input>
+                                                    </div>
+                                                </div>
+
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <em>
+                                                            *
+                                                        </em>
+                                                        <span>
+                                                            公司开户行名称：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input class="text" id="contactBackNames" name="scb_bank_name" onblur="_contactBackNames()" size="20" type="text"  {if condition='isset($scb_value.scb_bank_name)' }  value="{$scb_value.scb_bank_name}" {/if}>
+                                                            <div class="org">
+                                                            </div>
+                                                            <div class="verify" id="error_contactBackNames"></div>
+                                                        </input>
+                                                    </div>
+                                                </div>
+
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <span>
+                                                            代理资质：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input type="file" class="file" name="sr_agency" id="sr_agency" onchange="ajaxFileUploads('sr_agency')">
+                                                        <input type="hidden" name="sr_agency_text" value="{$settledInThree.sr_agency}">
+                                                        <div class="org">
+                                                        </div>
+                                                        <div class="verify"></div>
+                                                        </input>
+                                                    </div>
+                                                </div>
+                                                <div class="item sr_agency itemcss">
+                                                    {if condition="$settledInThree.sr_agency neq ''"}
+                                                    <img src="__UPLOAD__/{$settledInThree.sr_agency}" width="200">
+                                                    {/if}
+                                                </div>
+
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <span>
+                                                            质量/环保相关资质：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input type="file"  class="file" name="sr_environ" id="sr_environ"  onchange="ajaxFileUploads('sr_environ')">
+                                                        <input type="hidden" name="sr_environ_text" value="{$settledInThree.sr_environ}">
+                                                        <div class="org">
+                                                        </div>
+                                                        <div class="verify"></div>
+                                                        </input>
+                                                    </div>
+                                                </div>
+                                                <div class="item sr_environ itemcss">
+                                                    {if condition="$settledInThree.sr_environ neq ''"}
+                                                    <img src="__UPLOAD__/{$settledInThree.sr_environ}" width="200">
+                                                    {/if}
+                                                </div>
+
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <span>
+                                                            行业相关资质：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input type="file" class="file"  name="sr_related" id="sr_related"  onchange="ajaxFileUploads('sr_related')">
+                                                        <input type="hidden" name="sr_related_text" value="{$settledInThree.sr_related}">
+                                                        <div class="org">
+                                                        </div>
+                                                        <div class="verify"></div>
+                                                        </input>
+                                                    </div>
+                                                </div>
+                                                <div class="item sr_related itemcss">
+                                                    {if condition="$settledInThree.sr_related neq ''"}
+                                                    <img src="__UPLOAD__/{$settledInThree.sr_related}" width="200">
+                                                    {/if}
+                                                </div>
+
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <span>
+                                                            荣誉证书：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input type="file" class="file"  name="sr_honor" id="sr_honor"  onchange="ajaxFileUploads('sr_honor')">
+                                                        <input type="hidden" name="sr_honor_text" value="{$settledInThree.sr_honor}">
+                                                        <div class="org">
+                                                        </div>
+                                                        <div class="verify"></div>
+                                                        </input>
+                                                    </div>
+                                                </div>
+                                                <div class="item sr_honor itemcss">
+                                                    {if condition="$settledInThree.sr_honor neq ''"}
+                                                    <img src="__UPLOAD__/{$settledInThree.sr_honor}" width="200">
+                                                    {/if}
+                                                </div>
+
+                                                <div class="item">
+                                                    <div class="label">
+                                                        <span>
+                                                            其他资质：
+                                                        </span>
+                                                    </div>
+                                                    <div class="value">
+                                                        <input type="file" class="file" name="sr_other" id="sr_other"  onchange="ajaxFileUploads('sr_other')">
+                                                        <input type="hidden" name="sr_other_text" value="{$settledInThree.sr_other}">
+                                                        <div class="org">
+                                                        </div>
+                                                        <div class="verify"></div>
+                                                        </input>
+                                                    </div>
+                                                </div>
+                                                <div class="item sr_other itemcss">
+
+                                                    {foreach name="$settledInThree.sr_otherarray" item="vo"}
+                                                    <img src="__UPLOAD__/{$vo}" width="200">
+                                                    {/foreach}
+
+
+                                                </div>
+
+                                                <div class="btn-group">
+                                                    <input class="btn uppage" type="button" value="上一步" style="float: left;" onclick="backuppage()"/>
+
+                                                    {if condition="isset($settledInThree.sr_company_location_city) and $settledInThree.sr_company_location_city gt '0'" }
+                                                        <input type="hidden" id="city2" value="{$settledInThree.sr_company_location_city}">
+                                                    {/if}
+
+                                                    {if condition="isset($settledInThree.sr_company_location_area) and $settledInThree.sr_company_location_area gt '0'" }
+                                                        <input type="hidden" id="area2" value="{$settledInThree.sr_company_location_area}">
+                                                    {/if}
+
+
+
+                                                     {if condition='isset($settledInThree.sr_idcard_positive)'}
+                                                        <input type="hidden" name="sr_idcard_positives" id="city" value="{$settledInThree.sr_idcard_positive}">
+                                                    {/if}
+                                                     {if condition='isset($settledInThree.sr_idcard_background)'}
+                                                        <input type="hidden" name="sr_idcard_backgrounds" id="city" value="{$settledInThree.sr_idcard_background}">
+                                                    {/if}
+                                                     {if condition='isset($settledInThree.sr_business_path)'}
+                                                        <input type="hidden" name="sr_business_paths" id="city" value="{$settledInThree.sr_business_path}">
+                                                    {/if}
+                                                    <button class="btn" type="submit" >下一步，完善店铺信息认证<img class="btnloading" src="PC_IMG/bloading.gif" width="15"></button>
+
+                                                </div>
+                                            </form>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="PC_JS/amap.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function backuppage(){
+            var url ="{:url('pc/index/settledInTwo',array('id'=>$sr_id))}";
+             window.location.href=url;
+        }
+        $(document).ready(function () {
+            var coordinate = $("#coordinate").val();
+            if(coordinate != ''){
+                regeocoder(coordinate);   
+            }
+
+
+            
+
+            var sr_company_location_province = $("select[name='sr_company_location_province']").val();
+            if(sr_company_location_province.length > 0){
+                var city2 = $("#city2").val();
+                var area2 = $("#area2").val();
+            // alert(city2);
+
+                getRegion('sr_company_location_city',sr_company_location_province,'sr_company_location_city',city2,'{:url("pc/Base/getRegion")}');
+
+                getRegion('sr_company_location_area',city2,'sr_company_location_area',area2,'{:url("pc/Base/getRegion")}');
+            }
+        })
+
+        /*验证经纬度*/
+        function _contactLongitude() {
+            var coordinate = $("#coordinate").val();
+            if(coordinate == '')
+            {
+                $("#error_contactLongitude").html("请选择个人经纬度！");
+                return false;
+            }else{
+                $("#error_contactLongitude").html("");
+            }
+        }
+        /*验证身份证姓名*/
+        function _contactPerson() {
+            var contactPerson = $("#contactPerson").val();
+            if(contactPerson == '')
+            {
+                $("#error_contactPerson").html("请填写身份证姓名！");
+                return false;
+            }else{
+                var regName =/^[\u4e00-\u9fa5]{2,15}$/;
+                if(!regName.test(contactPerson)){
+                    $("#error_contactPerson").html("请填写正确身份证姓名！");
+                    return false;
+                }else{
+                    $("#error_contactPerson").html("");
+                }
+            }
+        }
+        /*验证身份证号*/
+        function _contactIdcard() {
+            var contactIdcard = $("#contactIdcard").val();
+            if(contactIdcard == '')
+            {
+                $("#error_contactIdcard").html("请填写身份证号！");
+                return false;
+            }else{
+                var regIdcard =/^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
+                if(!regIdcard.test(contactIdcard)){
+                    $("#error_contactIdcard").html("请正确填写身份证号！");
+                    return false;
+                }else{
+                    $("#error_contactIdcard").html("");
+                }
+            }
+        }
+        /*验证银行卡号*/
+        function _contactAccount() {
+            var contactAccount = $("#contactAccount").val();
+            if(contactAccount == ''){
+                $("#error_contactAccount").html("请填写银行卡账号！");
+                return false;
+            }else{
+                var Account= /^[0-9]{16,19}$/;
+                if(!Account.test(contactAccount)){
+                    $("#error_contactAccount").html("请填写正确的银行卡账号！");
+                    return false;
+                }else{
+                    $("#error_contactAccount").html("");
+                }
+            }
+        }
+        /*验证开户行名称*/
+        function _contactBackName() {
+            var contactBackName = $("#contactBackName").val();
+            if(contactBackName == ''){
+                $("#contactBackName").html("请填写开户行名称！");
+                return false;
+            }else{
+                var BackName =/^[\u4e00-\u9fa5a-zA-Z0-9]+$/;
+                if(!BackName.test(contactBackName)){
+                    $("#error_contactBackName").html("请正确填写开户行名称！");
+                    return false;
+                }else{
+                    $("#error_contactBackName").html("");
+                }
+            }
+        }
+        /*验证开户行名称*/
+        function _contactBackNames() {
+            var contactBackNames = $("#contactBackNames").val();
+            if(contactBackNames == ''){
+                $("#error_contactBackNames").html("请填写开户行名称！");
+                return false;
+            }else{
+                var BackName =/^[\u4e00-\u9fa5a-zA-Z0-9]+$/;
+                if(!BackName.test(contactBackNames)){
+                    $("#error_contactBackNames").html("请正确填写开户行名称！");
+                    return false;
+                }else{
+                    $("#error_contactBackNames").html("");
+                }
+            }
+        }
+        /*验证公司名称验证*/
+        function _contactCompanyName() {
+            var contactCompanyName = $("#contactCompanyName").val();
+            if(contactCompanyName == '')
+            {
+                $("#error_contactCompanyName").html("请填写公司名称！");
+                return false;
+            }else{
+                 var contactCompanyNames =/^[\u4e00-\u9fa5]{2,15}$/;
+                 if(!contactCompanyNames.test(contactCompanyName)){
+                    $("#error_contactCompanyName").html("请填写正确格式公司名称！");
+                    return false;
+                 }else if(contactCompanyName.length > 20) {
+                     $("#error_contactCompanyName").html("公司名称最大只能输入20个字符！");
+                     return false;
+                 }else{
+                    $("#error_contactCompanyName").html("");
+                 }
+
+
+
+
+            }
+        }
+
+
+        function getByteLen(val) {
+            var len = 0;
+            for (var i = 0; i < val.length; i++) {
+                var a = val.charAt(i);
+                if (a.match(/[^\x00-\xff]/ig) != null)
+                {
+                    len += 1;
+                }
+                else
+                {
+                    len += 1;
+                }
+            }
+            return len;
+        }
+
+
+        /*验证营业执照注册号*/
+        function _contactLicenseNumber() {
+            var contactLicenseNumber = $("#contactLicenseNumber").val();
+            if(contactLicenseNumber == '')
+            {
+                $("#error_contactLicenseNumber").html("请选择营业执照注册号！");
+                return false;
+            }else{
+                var contactLicenseNumber1 = /^[A-Za-z0-9]+$/;
+                if(!contactLicenseNumber1.test(contactLicenseNumber)){
+                    $("#error_contactLicenseNumber").html("请填写正确的营业执照注册号！");
+                    return false;
+                }else{
+                    $("#error_contactLicenseNumber").html("");
+                }
+            }
+        }
+        /*验证营业执照详细地址*/
+        function _contactLicenseAddress() {
+            var contactLicenseAddress = $("#contactLicenseAddress").val();
+            if(contactLicenseAddress == '')
+            {
+                $("#error_contactLicenseAddress").html("请填写营业执照详细地址！");
+                return false;
+            }else{
+                var contactLicenseAddress1 =/^[\u4e00-\u9fa5a-zA-Z0-9]+$/;
+                if(!contactLicenseAddress1.test(contactLicenseAddress)){
+                    $("#error_contactLicenseAddress").html("请填写正确营业执照详细地址！");
+                    return false;
+                }else{
+                    $("#error_contactLicenseAddress").html("");
+                }
+            }
+        }
+        /*验证注册资本*/
+        function _contactRegistered() {
+            var contactRegistered = $("#contactRegistered").val();
+            if(contactRegistered == '')
+            {
+                $("#error_contactRegistered").html("请填写注册资本！");
+                return false;
+            }else{
+                var contactRegistered1 = /^\d+(\.\d{1,2})?$/;
+                if(!contactRegistered1.test(contactRegistered)){
+                    $("#error_contactRegistered").html("请填写正确的注册资本！");
+                    return false;
+                }else{
+                    $("#error_contactRegistered").html("");
+                }
+            }
+        }
+        /*验证法定经营范围*/
+        function _contactBusiness() {
+            var contactBusiness = $("#contactBusiness").val();
+            if(contactBusiness == '')
+            {
+                $("#error_contactBusiness").html("请填写法定经营范围！");
+                return false;
+            }else{
+                $("#error_contactBusiness").html("");
+            }
+        }
+        /*验证公司所在地详细地址*/
+        function _contactLocation() {
+            var contactLocation = $("#contactLocation").val();
+            if(contactLocation == ''){
+                $("#error_contactLocation").html("请填写公司所在地详细地址！");
+                return false;
+            }else{
+                var contactLocation1 = /^[\u4e00-\u9fa5a-zA-Z0-9]+$/;
+                if(!contactLocation1.test(contactLocation)){
+                    $("#error_contactLocation").html("请填写正确公司所在地详细地址！");
+                    return false;
+                }else{
+                    $("#error_contactLocation").html("");
+                }
+            }
+        }
+        /*验证公司电话*/
+        function _contactAndLongitude() {
+            var contactCompanyPhone = $("#contactCompanyPhone").val();
+            if(contactCompanyPhone == ''){
+                $("#error_contactAndLongitude").html("请填写公司电话！");
+                return false;
+            }else{
+                // var regPhone =/^0\d{5,9}$/;
+                // if(!regPhone.test(contactCompanyPhone)){
+                //     $("#error_contactAndLongitude").html("请正确填写公司电话");
+                //     return false;
+                // }else{
+                //     $("#error_contactAndLongitude").html("");
+                // }
+            }
+        }
+        /*营业期限选择*/
+        function _contactPeriod() {
+            if($('#contactPeriod2').is(':checked')) {
+                $("#contactPeriod1").css('display','none');
+                $("#contactPeriod1").val('');
+            }else{
+                $("#contactPeriod1").css('display','');
+                $("#contactPeriod1").val('');
+            }
+        }
+        /*公司提交表单验证*/
+        function companyValidates() {
+
+            var subs = 0;
+            /**验证营业执照照片**/
+            var sr_business_paths = $("input[name=sr_business_paths]").val();
+            var sr_business_path = $("input[name=sr_business_path]").val();
+            if(sr_business_path == ''  && sr_business_paths == ''){
+                $("input[name=sr_business_path]").siblings(".verify").html("请上传营业执照图片");
+                var subs = 1;
+            }else{
+                $("input[name=sr_business_path]").siblings(".verify").html("");
+            }
+
+            /**验证法人身份证正面**/
+            var sr_idcard_positive = $("input[name=sr_idcard_positives]").val();
+            var sr_idcard_positives = $("input[name=sr_idcard_positive]").val();
+
+            if(sr_idcard_positive == '' && sr_idcard_positives == ''){
+                $("input[name=sr_idcard_positive]").siblings(".verify").html("请上传法人身份证正面");
+                var subs = 1;
+            }else{
+                $("input[name=sr_idcard_positive]").siblings(".verify").html("");
+            }
+            /**验证身份证反面照片**/
+            var sr_idcard_backgrounds = $("input[name=sr_idcard_background]").val();
+            var sr_idcard_background = $("input[name=sr_idcard_backgrounds]").val();
+            if(sr_idcard_background == ''  && sr_idcard_backgrounds ==''){
+                $("input[name=sr_idcard_background]").siblings(".verify").html("请上传法人身份证反面");
+                var subs = 1;
+            }else{
+                $("input[name=sr_idcard_background]").siblings(".verify").html("");
+            }
+
+
+
+
+
+
+            /*验证公司名称验证*/
+            var contactCompanyName = $("#contactCompanyName").val();
+            if(contactCompanyName == '')
+            {
+                $("#error_contactCompanyName").html("请填写公司名称！");
+                var subs = 1;
+            }else{
+                var contactCompanyNames =/^[\u4e00-\u9fa5]{2,15}$/;
+                 if(!contactCompanyNames.test(contactCompanyName)){
+                    $("#error_contactCompanyName").html("请填写正确格式公司名称！");
+                    var subs = 1;
+                 }else{
+                    $("#error_contactCompanyName").html("");
+                }
+            }
+            /*验证公司电话1*/
+            var contactCompanyPhone = $("#contactCompanyPhone").val();
+            if(contactCompanyPhone == ''){
+                $("#error_contactAndLongitude").html("请填写公司电话！");
+                var subs = 1;
+            }else{
+                // var regPhone =/^0\d{2,3}\d{5,9}$/;
+                // if(!regPhone.test(contactCompanyPhone)){
+                //     $("#error_contactAndLongitude").html("请正确填写公司电话");
+                //     var subs = 1;
+                // }else{
+                //     $("#error_contactAndLongitude").html("");
+                // }
+            }
+            
+             /*验证营业执照注册号*/
+            var contactLicenseNumber = $("#contactLicenseNumber").val();
+            if(contactLicenseNumber == '')
+            {
+                $("#error_contactLicenseNumber").html("请选择营业执照注册号！");
+                var subs = 1;
+            }else{
+                var contactLicenseNumber1 = /^[A-Za-z0-9]+$/;
+                if(!contactLicenseNumber1.test(contactLicenseNumber)){
+                    $("#error_contactLicenseNumber").html("请填写正确的营业执照注册号！");
+                    var subs = 1;
+                }else{
+                    $("#error_contactLicenseNumber").html("");
+                }
+            }
+            
+            /*验证营业执照详细地址*/
+            var contactLicenseAddress = $("#contactLicenseAddress").val();
+            if(contactLicenseAddress == '')
+            {
+                $("#error_contactLicenseAddress").html("请填写营业执照详细地址！");
+                var subs = 1;
+            }else{
+                var contactLicenseAddress1 =/^[\u4e00-\u9fa5a-zA-Z0-9]+$/;
+                if(!contactLicenseAddress1.test(contactLicenseAddress)){
+                    $("#error_contactLicenseAddress").html("请填写正确营业执照详细地址！");
+                    var subs = 1;
+                }else{
+                    $("#error_contactLicenseAddress").html("");
+                }
+            }
+
+
+
+            /*验证法定经营范围*/
+            var contactBusiness = $("#contactBusiness").val();
+            if(contactBusiness == '')
+            {
+                $("#error_contactBusiness").html("请填写法定经营范围！");
+                var subs = 1;
+            }else{
+                $("#error_contactBusiness").html("");
+            }
+            /*验证公司所在地详细地址*/
+            var contactLocation = $("#contactLocation").val();
+            if(contactLocation == ''){
+                $("#error_contactLocation").html("请填写公司所在地详细地址！");
+                var subs = 1;
+            }else{
+                var contactLocation1 = /^[\u4e00-\u9fa5a-zA-Z0-9]+$/;
+                if(!contactLocation1.test(contactLocation)){
+                    $("#error_contactLocation").html("请填写正确公司所在地详细地址！");
+                    var subs = 1;
+                }else{
+                    $("#error_contactLocation").html("");
+                }
+            }
+
+            /*验证公司电话*/
+            var contactCompanyPhone = $("#contactCompanyPhone").val();
+            if(contactCompanyPhone == ''){
+                $("#error_contactCompanyPhone").html("请填写公司电话！");
+                var subs = 1;
+            }
+
+            /*验证身份证姓名*/
+            var contactPerson = $("#contactPerson").val();
+            if(contactPerson == '')
+            {
+                $("#error_contactPerson").html("请填写身份证姓名！");
+                var subs = 1;
+            }else{
+                var regName =/^[\u4e00-\u9fa5]{2,15}$/;
+                if(!regName.test(contactPerson)){
+                    $("#error_contactPerson").html("请填写正确身份证姓名！");
+                    var subs = 1;
+                }else{
+                    $("#error_contactPerson").html("");
+                }
+            }
+            /*验证身份证号*/
+            var contactIdcard = $("#contactIdcard").val();
+            if(contactIdcard == '')
+            {
+                $("#error_contactIdcard").html("请填写身份证号！");
+                var subs = 1;
+            }else{
+                var regIdcard =/^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
+                if(!regIdcard.test(contactIdcard)){
+                    $("#error_contactIdcard").html("请正确填写身份证号！");
+                    var subs = 1;
+                }else{
+                    $("#error_contactIdcard").html("");
+                }
+            }
+            /*验证银行卡号*/
+            var contactAccount = $("#contactAccount").val();
+            if(contactAccount == ''){
+                $("#error_contactAccount").html("请填写银行卡账号！");
+                var subs = 1;
+            }else{
+                var Account= /^[0-9]{16,19}$/;
+                if(!Account.test(contactAccount)){
+                    $("#error_contactAccount").html("请填写正确的银行卡账号！");
+                    var subs = 1;
+                }else{
+                    $("#error_contactAccount").html("");
+                }
+            }
+            
+            /*验证开户行*/
+            var contactBackNames = $("#contactBackNames").val();
+            if(contactBackNames == ''){
+                $("#error_contactBackNames").html("请填写开户行名称！");
+                var subs = 1;
+            }else{
+                var BackName =/^[\u4e00-\u9fa5a-zA-Z0-9]+$/;
+                if(!BackName.test(contactBackNames)){
+                    $("#error_contactBackNames").html("请正确填写开户行名称！");
+                    var subs = 1;
+                }else{
+                    $("#error_contactBackNames").html("");
+                }
+            }
+
+
+
+
+
+            var sr_company_location_province = $("select[name=sr_company_location_province]").val();
+            var sr_company_location_city = $("select[name=sr_company_location_city]").val();
+            var sr_company_location_area = $("select[name=sr_company_location_area]").val();
+
+            if(sr_company_location_province=="" || sr_company_location_city=="" ||sr_company_location_area==""){
+                $("select[name=sr_company_location_province]").siblings(".verify").html("请填写公司所在地省/市/区");
+                var subs = 1;
+            }else{
+                $("select[name=sr_company_location_province]").siblings(".verify").html("");
+            }
+
+
+            console.log('1');
+
+            if(subs > 0){
+                return false;
+            }else{
+                return true;
+                // $("#stepForms").submit();
+            }
+
+
+
+        }
+        /*个人提交表单验证*/
+        function validates() {
+            var subs = 0;
+
+
+            /**验证营业执照照片**/
+            var sr_business_path = $("input[name=sr_business_paths]").val();
+            var sr_business_paths = $("input[name=sr_business_path]").val();
+            if(sr_business_path == ''  && sr_business_paths == ''){
+                $("input[name=sr_business_path]").siblings(".verify").html("请上传营业执照图片");
+                window.location.href="#contactCompanyName";
+                var subs = 1;
+            }else{
+                $("input[name=sr_business_path]").siblings(".verify").html("");
+            }
+
+            /**验证法人身份证正面**/
+            var sr_idcard_positives = $("input[name=sr_idcard_positives]").val();
+            var sr_idcard_positive = $("input[name=sr_idcard_positive]").val();
+            if(sr_idcard_positive == ''  && sr_idcard_positives == ''){
+                $("input[name=sr_idcard_positive]").siblings(".verify").html("请上传法人身份证正面");
+                var subs = 1;
+            }else{
+
+                $("input[name=sr_idcard_positive]").siblings(".verify").html("");
+            }
+            /**验证身份证反面照片**/
+            var sr_idcard_background = $("input[name=sr_idcard_background]").val();
+            var sr_idcard_backgrounds = $("input[name=sr_idcard_backgrounds]").val();
+            if(sr_idcard_background == ''  && sr_idcard_backgrounds ==''){
+                $("input[name=sr_idcard_background]").siblings(".verify").html("请上传法人身份证反面");
+                var subs = 1;
+            }else{
+                sr_idcard_background = (sr_idcard_background=='')?sr_idcard_backgrounds:sr_idcard_background;
+                $("input[name=sr_idcard_background]").siblings(".verify").html("");
+            }
+
+
+
+
+            /*验证身份证姓名*/
+            var contactPerson = $("#contactPerson").val();
+            if(contactPerson == '')
+            {
+                $("#error_contactPerson").html("请填写身份证姓名！");
+                var subs = 1;
+            }else{
+                var regName =/^[\u4e00-\u9fa5]{2,15}$/;
+                 if(!regName.test(contactPerson)){
+                    $("#error_contactPerson").html("请正确填写身份证姓名！");
+                    var subs = 1;
+                 }else{
+                    $("#error_contactPerson").html("");
+                }
+            }
+            /*验证身份证号*/
+            var contactIdcard = $("#contactIdcard").val();
+            if(contactIdcard == '')
+            {
+                $("#error_contactIdcard").html("请填写身份证号！");
+                var subs = 1;
+            }else{
+                var regIdcard =/^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
+                if(!regIdcard.test(contactIdcard)){
+                    $("#error_contactIdcard").html("请正确填写身份证号！");
+                    var subs = 1;
+                }else{
+                    $("#error_contactIdcard").html("");
+                }
+            }
+
+            /*验证银行卡号*/
+            var contactAccount = $("#contactAccount").val();
+            if(contactAccount == ''){
+                $("#error_contactAccount").html("请填写银行卡账号！");
+                var subs = 1;
+            }else{
+                var Account= /^[0-9]{16,19}$/;
+                if(!Account.test(contactAccount)){
+                    $("#error_contactAccount").html("请填写正确的银行卡账号！");
+                    var subs = 1;
+                }else{
+                    $("#error_contactAccount").html("");
+                }
+            }
+
+            /*验证开户行名称*/
+            var contactBackName = $("#contactBackName").val();
+            if(contactBackName == ''){
+                $("#error_contactBackName").html("请填写开户行名称！");
+                var subs = 1;
+            }else{
+                var BackName =/^[\u4e00-\u9fa5a-zA-Z0-9]+$/;
+                if(!BackName.test(contactBackName)){
+                    $("#error_contactBackName").html("请正确填写开户行名称！");
+                    var subs = 1;
+                }else{
+                    $("#error_contactBackName").html("");
+                }
+            }
+            /*验证公司经纬度2*/
+
+            var pickerInput = $("#pickerInput").val();
+
+            if(pickerInput == ""){
+
+                $("#pickerInput").siblings(".verify").html("请填写公司经纬度");
+                var subs = 1;
+            }else{
+                $("#pickerInput").siblings(".verify").html("");
+            }
+
+
+            if(subs > 0){
+                return false;
+            }else{
+                $("#stepForms").submit();
+            }
+        }
+    </script>
+</html>

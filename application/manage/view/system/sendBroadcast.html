@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            消息推送
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/animate.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/datapicker/datepicker3.css" rel="stylesheet">
+        <link href="MANAGE_CSS/plugins/clockpicker/clockpicker.css" rel="stylesheet">
+        <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    </head>
+    <body class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>消息推送</h5>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a class="close-link" href="{:url('manage/index/welcome')}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a href="{:url('manage/System/broadcastList')}">
+                                    <i class="fa fa-bars"></i>
+                                    推送列表
+                                </a>
+                            </div>
+                        </div>  
+                        <div class="ibox-content">
+                            <!--{:url('manage/System/sendBroadcast')}-->
+                            <form class="form-horizontal" method="POST" action="{:url('manage/System/sendBroadcast')}" onsubmit="return sendBroadcastSubmit()">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        发送设备
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" id="um_sent_equipment0" value="0" name="um_sent_equipment" checked />
+                                            <label for="um_sent_equipment0"> Android </label>
+                                        </div>
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" id="um_sent_equipment1" value="1" name="um_sent_equipment" />
+                                            <label for="um_sent_equipment1"> IOS </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        标题
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" id="um_title" name="um_title" onblur="verifyInput('um_title','chsDash','um_title_show')" />
+                                    </div>
+                                    <code id="um_title_show">只能输入汉字、字母、数字和下划线"_"及破折号"-"!</code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        内容
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <textarea class="form-control" name="um_content" id="" cols="30" rows="10" required="" aria-required="true" aria-invalid="true"></textarea>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        推送跳转地址
+                                    </label>
+                                    <!-- <div class="col-sm-5">
+                                        <input class="form-control" type="text" aria-required="true" aria-invalid="true" name="um_url" onblur="verifyInput('um_url','url','um_url_show')" />
+                                    </div> -->
+                                    <div class="col-sm-5">
+                                        <select name="um_url" class="input-sm form-control input-s-sm inline" style="padding: 0px 12px;">
+                                            <option value="">- 请选择推送的文章 -</option> 
+                                            {foreach name="news" item="info"}
+                                            <option value="{$info.a_id}">{$info.a_title}</option> 
+                                           {/foreach}
+                                        </select>
+                                    </div>
+                                    <!-- <code id="um_url_show">URL地址可以不填,填写必须以http://或者https://开头</code> -->
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="submit" value="发送推送" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1);" value="取消" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 全局js -->
+        <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+        <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+        <!-- 自定义js -->
+        <script src="MANAGE_JS/content.js?v=1.0.0"></script>
+        <!-- iCheck -->
+        <script src="MANAGE_JS/plugins/iCheck/icheck.min.js"></script>
+        <!-- Data picker -->
+        <script src="MANAGE_JS/plugins/datapicker/bootstrap-datepicker.js"></script>
+        <!-- Color picker -->
+        <script src="MANAGE_JS/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+
+        <!-- Clock picker -->
+        <script src="MANAGE_JS/plugins/clockpicker/clockpicker.js"></script>
+        <!-- Image cropper -->
+        <script src="MANAGE_JS/plugins/cropper/cropper.min.js"></script>
+        <script src="MANAGE_JS/demo/form-advanced-demo.js"></script>
+        <script type="text/javascript" src="MANAGE_JS/globals.js"></script>
+        <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+            limitInput('m_name','chsDash');
+
+            function sendBroadcastSubmit(){
+                if($("[name=um_url]").val() == ""){
+                    swal({
+                        title: "请选择推送跳转地址!",
+                        text: "",
+                    });
+                    return false;
+                }
+            }
+
+
+        </script>
+    </body>
+</html>

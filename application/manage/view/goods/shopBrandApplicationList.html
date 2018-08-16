@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品品牌</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <style>
+        td,th{ text-align: center;}
+    </style>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>商品品牌</h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a class="close-link" href="{:url('manage/index/welcome')}">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+
+
+                                        <th>品牌名称</th>
+                                        <th>品牌英文名</th>
+                                        <th>申请店铺</th>
+                                        <th>品牌logo</th>
+
+                                        <th>品牌描述</th>  
+                                        <th>审核状态</th> 
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}
+                                        <tr id="sba_{$info.sba_id}">
+
+
+                                            <td>
+                                                {$info.sba_name}
+                                            </td>
+                                            <td>
+                                                {$info.sba_english_name}
+                                            </td>
+                                            <td>
+                                                {$info.ss_name}
+                                            </td>
+                                            <td>
+                                                <img src="__UPLOAD__/{$info.sba_logo_path}" width="100">
+                                                <!--<i class="fa fa-file-picture-o text-navy" onclick="showImg('__UPLOAD__/{$info.sba_logo_path}')"></i>-->
+                                            </td>
+
+                                            <td>
+                                                {$info.sba_desc}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.sba_status eq '0'"}
+                                                    <span style="color: rgb(237, 85, 101)">未通过</span>
+                                                {elseif condition="$info.sba_status eq '1'" /}
+                                                    <span style="color: rgb(248, 172, 89)">审核中</span>
+                                                {elseif condition="$info.sba_status eq '2'"}
+                                                    <span style="color: rgb(39, 194, 76)">正常</span>
+                                                    <!--审核通过-->
+                                                {elseif condition="$info.sba_status eq '3'"}
+                                                    <span style="color: #59b6f8">冻结</span>
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.sba_status eq '0' or $info.sba_status eq '1'"}
+                                                <a href="{:url('manage/Goods/shopBrandApplicationEdit',array('id'=>$info.sba_id))}" class="btn btn-default btn-xs"><i class="fa fa-wrench text-navy"></i>&nbsp;审核</a>
+                                                {elseif condition="$info.sba_status eq '0' or $info.sba_status eq '2'"}
+                                                <a class="btn btn-default btn-xs" onclick="faloack({$info.sba_id},3)"><i class="fa fa-lock text-navy"></i>&nbsp;冻结</a>
+                                                {elseif condition="$info.sba_status eq '0' or $info.sba_status eq '3'"}
+                                                <a class="btn btn-default btn-xs" onclick="faloack({$info.sba_id},2)"><i class="fa fa-unlock text-navy"></i>&nbsp;解冻</a>
+                                                {/if}
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="MANAGE_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="MANAGE_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/demo/peity-demo.js"></script>
+    <!-- layer javascript -->
+    <script src="MANAGE_JS/plugins/layer/layer.min.js"></script>
+    <script src="MANAGE_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+
+        function faloack(sba_id,sba_status){
+
+            $.ajax({
+                url:"{:url('/manage/Goods/shopBrandApplicationEdit/id/"+sba_id+"')}",
+                data:{sba_status:sba_status},
+                dataType:"json",
+                type:"POST",
+                success:function(data){
+
+                    if(data.code == 1){
+                        var str = "";
+                        if(sba_status==3){
+                            str ="冻结";
+                        }else if(sba_status==2){
+                            str ="解冻";
+                        }
+
+                        swal({
+                            title: "通讯提示!",
+                            text: str+"成功",
+                        });
+                        $(".sa-button-container .confirm").click(function(){
+                            window.location.reload();
+                        });
+                    }
+                }
+
+            });
+
+
+        }
+
+
+    </script>
+</body>
+</html>

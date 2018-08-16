@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店铺信息</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+    <link href="SELLER_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+    <style>
+        .m-b-xs {
+            margin-bottom: 5px;
+            width: auto;
+            padding: 0;
+            padding-left: 11px;
+            line-height: 33px;
+        }
+    </style>
+</head>
+<body class="gray-bg" style="">
+
+
+<div class="wrapper wrapper-content animated fadeInRight" style="">
+    <div class="row" style="">
+        <div style="">
+            <div class="tabs-container" style="">
+                <ul class="nav nav-tabs">
+                    <li class="tabli1 active"><a data-toggle="tab" aria-expanded="true" >店铺信息</a>
+                    </li>
+                    <li class="tabli2"><a data-toggle="tab" aria-expanded="true" >入驻信息</a>
+                    </li>
+
+                </ul>
+                <div class="tab-content" style="">
+                    <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" onsubmit="return shopsetting()" style="">
+                        <div id="tab-1" class="tab-pane active" style="">
+                            <div class="panel-body" style="">
+                                <div class="col-sm-12" style="">
+                                    <div class="ibox float-e-margins" style="">
+                                        <div class="ibox-content" style="">
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    店铺名称
+                                                </label>
+                                                <div class="col-sm-5  m-b-xs">
+                                                    {$ssRow.ss_name}
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    店铺Logo
+                                                </label>
+                                                <div class="col-sm-5">
+                                                    {if condition='$ssRow.ss_logo_img neq ""'}
+                                                    <img src="__UPLOAD__/{$ssRow.ss_logo_img}" style="width:25%;">
+                                                    {/if}
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    店铺地址
+                                                </label>
+                                                <div class="col-sm-2 m-b-xs">
+                                                    {$region[0]}
+                                                </div>
+                                                <div class="col-sm-2 m-b-xs">
+                                                    {$region[1]}
+                                                </div>
+                                                <div class="col-sm-2 m-b-xs">
+                                                    {$region[2]}
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    卖家保障
+                                                </label>
+                                                <div class="col-sm-10 checked3 m-b-xs">
+                                                    {$gulist}
+                                                </div>
+                                            </div>
+
+                                            {foreach name="guarantes" item="infos"}
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    {$infos.guname}
+                                                </label>
+                                                <div class="input-group inputrelation  m-b-xs" id="by" style="float:left;margin-left: 15px;max-width: 650px;">
+                                                    {$infos.guarantess}
+                                                </div>
+
+                                            </div>
+                                            {/foreach}
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    店铺性质
+                                                </label>
+                                                <div class="col-sm-10 m-b-xs">
+                                                    {$nature}
+                                                </div>
+                                            </div>
+                                            {if condition='$ssRow.nature eq "1" or $ssRow.nature eq "2" '}
+                                            <div id="distribution">
+                                                <div class="hr-line-dashed"></div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">
+                                                        资质上传
+                                                    </label>
+                                                    <div class="col-sm-5 ">
+
+                                                        <div style="margin-top:10px">
+                                                            {if condition='$ssRow.qualifications neq ""'}
+                                                            <img src="__UPLOAD__/{$ssRow.qualifications}" style="width:25%;">
+                                                            {/if}
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                            {/if}
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    店铺关键字
+                                                </label>
+                                                <div class="col-sm-5 inputmarinbottom  m-b-xs">
+                                                   {$ssRow.s_keywords}
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    发票设置
+                                                </label>
+                                                <div class="col-sm-8">
+
+                                                    {$arr_invoice}
+
+
+                                                </div>
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    店铺首页图片
+                                                </label>
+                                                <div class="col-sm-5">
+
+
+                                                    <div style="clear:both;"></div>
+                                                    <div style="margin-top:10px">
+
+                                                        {foreach name="ss_file" item = "r"}
+                                                        {if  $r neq ''}
+                                                        <img src="__UPLOAD__/{$r}" style="width:25%;margin: 10px;"/>
+                                                        {/if}
+                                                        {/foreach}
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group" style="">
+                                                <div class="form-group" style="">
+                                                    <label class="col-sm-2 control-label">
+                                                        店铺信息
+                                                    </label>
+                                                    <div class="col-sm-8  m-b-xs" style="">
+                                                        {$ssRow.s_content}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                       
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    店铺性质
+                                                </label>
+                                                <div class="col-sm-10">
+                                                     <div class="radio radio-info radio-inline">
+                                                        <input type="radio" name="admin_nature" {if  $ssRow.admin_nature eq 1} checked="checked" {/if}  id="nature1" value="1">
+                                                        <label for="nature1"> 显示 </label>
+                                                    </div>
+                                                    <div class="radio radio-info radio-inline" >
+                                                        <input type="radio" name="admin_nature" {if  $ssRow.admin_nature eq 2} checked="checked" {/if}  id="nature2" value="2">
+                                                        <label for="nature2"> 隐藏 </label>
+                                                    </div>
+                                                    <!-- <div class="radio radio-info radio-inline">
+                                                        <input type="radio" name="admin_nature" {if  $ssRow.admin_nature eq 1} checked="checked" {/if}  id="nature1" value="1">
+                                                        <label for="nature1"> 厂家 </label>
+                                                    </div>
+                                                    <div class="radio radio-info radio-inline" >
+                                                        <input type="radio" name="admin_nature" {if  $ssRow.admin_nature eq 2} checked="checked" {/if}  id="nature2" value="2">
+                                                        <label for="nature2"> 代理 </label>
+                                                    </div>
+                                                    <div class="radio radio-info radio-inline" >
+                                                        <input type="radio" name="admin_nature"  {if  $ssRow.admin_nature eq 3} checked="checked" {/if}  id="nature3" value="3">
+                                                        <label for="nature3"> 零售 </label>
+                                                    </div>
+                                                    <div class="radio radio-info radio-inline" >
+                                                        <input type="radio" name="admin_nature"  {if  $ssRow.admin_nature eq 4} checked="checked" {/if}  id="nature4" value="4">
+                                                        <label for="nature4"> 其他 </label>
+                                                    </div> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="hr-line-dashed"></div>
+                                            <div class="form-group">
+                                                <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                                    <input class="btn btn-primary" type="submit" value="确定">
+                                                    <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="返回">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-2" class="tab-pane" style="display: none;">
+                            <div class="panel-body">
+                                <div class="col-sm-12">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-content">
+                                            <!--店铺入驻信息-->
+                                            <div class="ibox float-e-margins">
+                                                <div class="ibox-title">
+                                                    <h5>卖家入驻联系人信息</h5>
+                                                </div>  
+                                                <div class="ibox-content">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            联系人姓名
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sr_real_name" value="{if condition='isset($info.sr_real_name)'}{$info.sr_real_name}{/if}" readonly />
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            联系人手机
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sr_mobile"  value="{if condition='isset($info.sr_mobile)'}{$info.sr_mobile}{/if}" readonly/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            联系人电子邮箱
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sr_email"  value="{if condition='isset($info.sr_email)'}{$info.sr_email}{/if}" readonly/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="ibox float-e-margins">
+                                                <div class="ibox-title">
+                                                    <h5>营业执照信息（副本)</h5>
+                                                </div>  
+                                                <div class="ibox-content">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            公司名称
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sr_company_name" value="{if condition='isset($info.sr_company_name)'}{$info.sr_company_name}{/if}" readonly />
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            营业执照注册号
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sr_business_license_number"  value="{if condition='isset($info.sr_business_license_number)'}{$info.sr_business_license_number}{/if}" readonly />
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            法人姓名
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sr_legal_person"  value="{if condition='isset($info.sr_legal_person)'}{$info.sr_legal_person}{/if}" readonly />
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            法人身份证
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sr_legal_person_idcard" value="{if condition='isset($info.sr_legal_person_idcard)'}{$info.sr_legal_person_idcard}{/if}" readonly />
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            法人身份证电子版
+                                                        </label>
+                                                        <div class="col-sm-8">
+                                                            <img src="{if condition='isset($info.sr_idcard_positive)'}__UPLOAD__/{$info.sr_idcard_positive}{/if}" alt="身份证正面" width="360px">
+                                                            <img src="{if condition='isset($info.sr_idcard_background)'}__UPLOAD__/{$info.sr_idcard_background}{/if}" alt="身份证背面" width="360px">
+                                                            <input class="form-control" type="hidden" required="" aria-required="true" aria-invalid="true" name="sr_idcard_positive"  value="{if condition='isset($info.sr_idcard_positive)'}{$info.sr_idcard_positive}{/if}"/>
+                                                            <input class="form-control" type="hidden" required="" aria-required="true" aria-invalid="true" name="sr_idcard_background"  value="{if condition='isset($info.sr_idcard_background)'}{$info.sr_idcard_background}{/if}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            营业执照地区
+                                                        </label>
+                                                        <div class="col-sm-2">
+                                                            <select class="input-sm form-control input-s-sm inline" name="sr_business_license_province" id="sr_business_license_province" onchange="this.value = {$info.sr_business_license_province}" disabled="disabled" readonly style="height: 32px;">
+
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <select class="input-sm form-control input-s-sm inline" name="sr_business_license_city" readonly onchange="this.value = {$info.sr_business_license_city}"  id="sr_business_license_city" disabled="disabled" style="height: 32px;">
+                                                                
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <select class="input-sm form-control input-s-sm inline" name="sr_business_license_area" readonly onchange="this.value = {$info.sr_business_license_area}" id="sr_business_license_area"  style="height: 32px;">
+                                                                
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            营业执照地址
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" readonly aria-required="true" aria-invalid="true" name="sr_business_license_address" value="{if condition='isset($info.sr_business_license_address)'}{$info.sr_business_license_address}{/if}" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            成立日期
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sr_date_of_establishment"  value="{if condition='isset($info.sr_date_of_establishment)'}{$info.sr_date_of_establishment|date='Y-m-d',###}{/if}" readonly />
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            营业期限
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sr_operating_period"  value="{if condition='isset($info.sr_operating_period) and $info.sr_operating_period.0 neq ""'  and $info.sr_operating_period.0 neq ""'}{$info['sr_operating_period']['0']|date="Y-m-d",###} 至 {if condition='isset($info.sr_operating_period.1) and ($info.sr_operating_period.1 eq "" or $info.sr_operating_period.1 eq "0") ' }长期{else /}{if condition="isset($info['sr_operating_period']['1'])"}{$info['sr_operating_period']['1']|date="Y-m-d",###}{/if}{/if}{/if}" readonly />
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            营业范围
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <textarea class="form-control" name="sr_business_scope" readonly cols="30" rows="10">{if condition='isset($info.sr_business_scope)'}{$info.sr_business_scope}{/if}</textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            营业执照电子版
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <img src="{if condition='isset($info.sr_business_path)'}__UPLOAD__/{$info.sr_business_path}{/if}" alt="营业执照电子版" width="360px">
+                                                            <input class="form-control" type="hidden" required="" aria-required="true" aria-invalid="true" readonly name="sr_business_path"  value="{if condition='isset($info.sr_business_path)'}{$info.sr_business_path}{/if}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            公司所地
+                                                        </label>
+                                                        <div class="col-sm-2">
+                                                            <select class="input-sm form-control input-s-sm inline" name="sr_company_location_province" id="sr_company_location_province" onchange="this.value= {$info.sr_company_location_province}" disabled="disabled" readonly style="height: 32px;">
+
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <select class="input-sm form-control input-s-sm inline" name="sr_company_location_city" readonly onchange="this.value= {$info.sr_company_location_city}"  id="sr_company_location_city" disabled="disabled" style="height: 32px;">
+                                                                
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <select class="input-sm form-control input-s-sm inline" onchange="this.value= {$info.sr_company_location_area}" readonly name="sr_company_location_area" id="sr_company_location_area" disabled="disabled" style="height: 32px;">
+                                                                
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            公司所在地详细地址
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" readonly aria-invalid="true" name="sr_company_location_address"  value="{if condition='isset($info.sr_company_location_address)'}{$info.sr_company_location_address}{/if}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            公司经纬度
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" readonly aria-invalid="true" name="sr_latitude_and_longitude"  value="{if condition='isset($info.sr_latitude_and_longitude)'}{$info.sr_latitude_and_longitude}{/if}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            公司电话
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" readonly aria-invalid="true" name="sr_company_phone" value="{if condition='isset($info.sr_company_phone)'}{$info.sr_company_phone}{/if}" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            紧急联系人姓名
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" readonly aria-invalid="true" name="sr_emergency_contact"  value="{if condition='isset($info.sr_emergency_contact)'}{$info.sr_emergency_contact}{/if}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            紧急联系人电话
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" readonly aria-required="true" aria-invalid="true" name="sr_emergency_contact_phone"  value="{if condition='isset($info.sr_emergency_contact_phone)'}{$info.sr_emergency_contact_phone}{/if}"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="ibox float-e-margins">
+                                                <div class="ibox-title">
+                                                    <h5>开户银行许可证</h5>
+                                                </div>  
+                                                <div class="ibox-content">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            公司名称
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" readonly aria-invalid="true" name="scb_company_name" value="{if condition='isset($info.scb_company_name)'}{$info.scb_company_name}{/if}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            公司银行账号
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" readonly aria-invalid="true" name="scb_bank_account"  value="{if condition='isset($info.scb_bank_account)'}{$info.scb_bank_account}{/if}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            开户银行支行所在地
+                                                        </label>
+                                                        <div class="col-sm-2">
+                                                            <select class="input-sm form-control input-s-sm inline" name="scb_bank_province"  disabled="disabled" id="scb_bank_province" readonly onchange="this.value = {$info.scb_bank_province}" disabled="disabled" style="height: 32px;">
+
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <select class="input-sm form-control input-s-sm inline" name="scb_bank_city"  disabled="disabled" id="scb_bank_city" readonly onchange="this.value = {$info.scb_bank_city}" disabled="disabled" style="height: 32px;">
+                                                                
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            开户银行支行名称
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" readonly aria-invalid="true" name="scb_bank_name"  value="{if condition='isset($info.scb_bank_name)'}{$info.scb_bank_name}{/if}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            银行开户许可证电子版
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <img src="{if condition='isset($info.scb_opening_permit)'}__UPLOAD__/{$info.scb_opening_permit}{/if}" alt="银行开户许可证电子版" width="360px">
+                                                            <input class="form-control" type="hidden" required="" aria-required="true" readonly aria-invalid="true" name="scb_opening_permit"  value="{if condition='isset($info.scb_opening_permit)'}{$info.scb_opening_permit}{/if}"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="ibox float-e-margins">
+                                                <div class="ibox-title">
+                                                    <h5>选择可经营类目</h5>
+                                                </div>
+                                                {foreach mgc_id_array as  $keys=>$vo1}
+                                                <div class="ibox-content">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            主营类目
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                             <select class="input-sm form-control input-s-sm inline" name="mgc_id" onchange="this.value = {$info.mgc_id}" readonly disabled="disabled" id="mgc_id" style="height: 32px;">
+                                                                {if condition="isset($mgc_list) and !empty($mgc_list)"}
+                                                                    {foreach name="mgc_list" item="val"}
+
+                                                                        <option value="{$val.mgc_id}" {if condition="$vo1 eq $val.mgc_id"}selected{/if}>{$val.mgc_name}</option>
+                                                                    {/foreach}
+                                                                {/if}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            二级类目
+                                                        </label>
+                                                        <div class="col-sm-10">
+                                                            {if condition="isset($second_mgc_list[$vo1])"}
+                                                            {foreach name="second_mgc_list[$vo1]" item="v"}
+                                                                <!-- <input type="checkbox" id="{$v.mgc_id}" value="{$v.mgc_id}" readonly="" {if condition="isset($v.is_checked) and ($v.is_checked eq '1')"}checked{/if}>
+                                                                <label for="{$v.mgc_id}"> {$v.mgc_name}</label> -->
+                                                                {if condition="isset($v.is_checked) and ($v.is_checked eq '1')"}
+                                                                    <div class="checkbox checkbox-success checkbox-inline">
+                                                                            <input type="checkbox" id="{$v.mgc_id}" value="{$v.mgc_id}" checked disabled="">
+                                                                            <label for="{$v.mgc_id}"> {$v.mgc_name}</label>
+                                                                    </div>
+                                                                {/if}
+
+                                                            {/foreach}
+                                                            {/if}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                {/foreach}
+
+                                            </div>
+                                            <div class="ibox float-e-margins">
+                                                <div class="ibox-title">
+                                                    <h5>店铺信息</h5>
+                                                </div>  
+                                                <div class="ibox-content">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            店铺名称
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" readonly aria-required="true" aria-invalid="true" name="ss_name" value="{if condition='isset($info.ss_name)'}{$info.ss_name}{/if}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            店铺简介
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <textarea class="form-control" name="ss_desc" readonly required="" >{if condition='isset($info.ss_desc)'}{$info.ss_desc}{/if}</textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            店铺地区
+                                                        </label>
+                                                        <div class="col-sm-2">
+                                                            <select class="input-sm form-control input-s-sm inline" name="ss_shop_province" id="ss_shop_province" onchange="getRegion('ss_shop_city',this.value,'ss_shop_area')" style="height: 32px;" disabled="disabled" readonly>
+
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <select class="input-sm form-control input-s-sm inline" name="ss_shop_city" onchange="getRegion('ss_shop_area',this.value)"  id="ss_shop_city" style="height: 32px;" disabled="disabled" readonly>
+                                                                
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <select class="input-sm form-control input-s-sm inline" name="ss_shop_area" id="ss_shop_area" style="height: 32px;" disabled="disabled" readonly>
+                                                                
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            店铺详细地址
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" readonly aria-required="true" aria-invalid="true" name="ss_shop_address" value="{if condition='isset($info.ss_shop_address)'}{$info.ss_shop_address}{/if}" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            店铺定位(经度,纬度) 
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" readonly aria-invalid="true" name="ss_shop_location"  value="{if condition='isset($info.ss_shop_location)'}{$info.ss_shop_location}{/if}"/>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+        
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 全局js -->
+<script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+<script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+<!-- 自定义js -->
+<script src="MANAGE_JS/content.js?v=1.0.0"></script>
+<!-- iCheck -->
+<script src="MANAGE_JS/plugins/iCheck/icheck.min.js"></script>
+<!-- Data picker -->
+<script src="MANAGE_JS/plugins/datapicker/bootstrap-datepicker.js"></script>
+<!-- Color picker -->
+<script src="MANAGE_JS/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+
+<!-- Clock picker -->
+<script src="MANAGE_JS/plugins/clockpicker/clockpicker.js"></script>
+<!-- Image cropper -->
+<script src="MANAGE_JS/plugins/cropper/cropper.min.js"></script>
+<script src="MANAGE_JS/demo/form-advanced-demo.js"></script>
+<script type="text/javascript" src="MANAGE_JS/globals.js"></script>
+
+<script type="text/javascript">
+    $(".nav li").click(function(){
+        var index = $(this).index();
+        $(".tab-pane").eq(index).show().siblings().hide();
+
+    });
+</script>
+<script>
+           
+    function showAndhide(argument) {
+        if (argument == 0) {
+            $("#sr_reason").hide();
+            $("#sr_reason_line").hide();
+            $("#requires").attr("required",false);
+        }else{
+            $("#sr_reason").css("display",'');
+            $("#sr_reason_line").css("display",'');
+            $("#requires").attr("required",true);
+        }
+    }
+    /*公司地址*/
+    getRegion("sr_company_location_province", 1, '', {$info.sr_company_location_province},'{:url("manage/Base/getRegion")}');
+    getRegion("sr_company_location_city", {$info.sr_company_location_province}, '', {$info.sr_company_location_city},'{:url("manage/Base/getRegion")}');
+    getRegion("sr_company_location_area", {$info.sr_company_location_city}, '', {$info.sr_company_location_area},'{:url("manage/Base/getRegion")}');
+    /*开户行*/
+    getRegion("scb_bank_province", 1,'',{$info.scb_bank_province},'{:url("manage/Base/getRegion")}');
+    getRegion("scb_bank_city", {$info.scb_bank_province},'',{$info.scb_bank_city},'{:url("manage/Base/getRegion")}');
+    /*店铺地区*/
+    getRegion("ss_shop_province", 1, '', {$info.ss_shop_province},'{:url("manage/Base/getRegion")}');
+    getRegion("ss_shop_city", {$info.ss_shop_province}, '', {$info.ss_shop_city},'{:url("manage/Base/getRegion")}');
+    getRegion("ss_shop_area", {$info.ss_shop_city}, '', {$info.ss_shop_area},'{:url("manage/Base/getRegion")}');
+    /*营业执照地区*/
+    getRegion("sr_business_license_province", 1, '', {$info.sr_business_license_province},'{:url("manage/Base/getRegion")}');
+    getRegion("sr_business_license_city", {$info.sr_business_license_province}, '', {$info.sr_business_license_city},'{:url("manage/Base/getRegion")}');
+    getRegion("sr_business_license_area", {$info.sr_business_license_city}, '', {$info.sr_business_license_area},'{:url("manage/Base/getRegion")}');
+
+
+</script>
+
+</body>
+</html>

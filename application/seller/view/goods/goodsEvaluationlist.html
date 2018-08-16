@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品系列</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>用户评论</h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a href="{:url('seller/Goods/goodsTypeAdd')}">
+                                <i class="fa fa-plus"></i>
+                                商品系列添加
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <form action="" method="get">
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="请输入名称" class="input-sm form-control" name="sgt_name" value="{if condition="isset($data.sgt_name)"}{$data.sgt_name}{/if}">
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-sm btn-primary"> 搜索</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <!-- <th style="width:3%"> </th> -->
+                                        <!--<th>ID</th>-->
+                                        <th>系列名称</th>
+                                        <th>添加时间</th>
+                                        <th>描述</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}
+                                        <tr id="sgt_{$info.sgt_id}">
+                                            <!-- <td>
+                                                <input type="checkbox" class="i-checks" name="sgt_id[]" value="{$info.sgt_id}">
+                                            </td> -->
+                                            <!--<td>-->
+                                                <!--{$info.sgt_id}-->
+                                            <!--</td>-->
+                                            <td>
+                                                {$info.sgt_name}
+                                            </td>
+                                            <td>
+                                                {$info.sgt_add_time|date='Y-m-d H:i:s',###}
+                                            </td>
+                                            <td>
+                                                {$info.sgt_desc}
+                                            </td>
+                                            <td>
+                                               <!--  <a href="{:url('seller/Goods/goodsSpecificationList',array('id'=>$info.sgt_id))}" class="btn btn-default btn-xs"><i class="fa fa-bars text-navy"></i>&nbsp;商品属性列表</a>&nbsp;&nbsp; -->
+
+                                                <a href="{:url('seller/Goods/goodsTypeEdit',array('id'=>$info.sgt_id))}" class="btn btn-default btn-xs"><i class="fa fa-wrench text-navy"></i>&nbsp;修改</a>&nbsp;&nbsp;
+
+                                                <a onclick="show_confirm({$info.sgt_id})" class="btn btn-default btn-xs"><i class="fa fa-close text-navy"></i>&nbsp;删除</a>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="SELLER_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/demo/peity-demo.js"></script>
+    <script src="SELLER_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+
+        function show_confirm($sgt_id) {
+            sweetAlert({
+                title: "确定删除吗?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#AEDEF4",
+                confirmButtonText: "确定",
+                cancelButtonText:"取消",
+                closeOnConfirm: false
+            }, function() {
+                $.ajax({
+                    url:"{:url('seller/Goods/goodsTypeDel')}",
+                    data:{"id":$sgt_id},
+                    dataType:"json",
+                    type:"POST",
+                    success:function(info){
+                        if (info.code != '1') {
+                            swal({
+                                title: "删除失败!",
+                                text: info.msg
+                            });
+                        } else {
+                            swal({
+                                title: info.msg,
+                            });
+                            $('.sa-button-container .confirm').click(function(){
+                                window.location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>

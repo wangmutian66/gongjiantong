@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发货列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 style="width:40%">发货单列表 </h5>
+                       <!--  <div class="ibox-tools" style="margin-right: 15px;">
+                            <a href="{:url('seller/Recruitment/recruitmentAdd')}">
+                                <i class="fa fa-plus"></i>
+                                招聘添加
+                            </a>
+                        </div> -->
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <form action="" method="get" id="ss_form">
+                                <div class="col-sm-2 m-b-xs">
+                                    <select class="input-sm form-control input-s-sm inline" style="padding: 0;" name="o_shipping_status" onchange="changeform()">
+                                        <option value="">请选择订单状态</option>
+                                        <option value="0"{if condition="$o_shipping_status eq '0'"}selected{/if}>未发货</option>
+                                        <option value="2"{if condition="$o_shipping_status eq '2'"}selected{/if}>已发货</option>
+                                    </select>
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width:3%"> </th>
+                                        <th>订单编号</th>
+                                        <th>下单时间</th>
+                                        <th>收货人</th>
+                                        <th>联系电话</th>
+                                        <th>所选物流</th>
+                                        <th>物流费用</th>
+                                        <th>支付时间</th>
+                                        <th>订单总价</th>
+                                        <th>订单状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($g_value) and !empty($g_value)"}
+                                    {foreach name="g_value" item="info"}
+                                        <tr id="ri_{$info.o_id}">
+                                            <td>
+                                                <input type="checkbox" class="i-checks" name="ri_id[]" value="{$info.o_id}">
+                                            </td>
+                                            <td>
+                                                {$info.o_sn}
+                                            </td>
+                                            <td>
+                                                {$info.o_add_time|date='Y-m-d H:i',###}
+                                            </td>
+                                            <td>
+                                                {$info.usa_user_name}
+                                            </td>
+                                            <td>
+                                                {$info.usa_mobile}
+                                            </td>
+                                            <td>
+                                                {$info.o_shipping_name}
+                                            </td>
+                                            <td >{$info.o_shipping_price}</td>
+
+                                            <td>
+                                                {$info.o_pay_time|date='Y-m-d H:i',###}
+                                            </td>
+                                            <td>
+                                                {$info.o_payable_price}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.o_shipping_status eq '0'"}
+                                                <span style="color:red">未发货</span>
+                                                {else/}
+                                                <span style="color:green">已发货</span>
+                                                {/if}
+                                            </td>
+                                            <td>
+
+                                                <!-- <a data-toggle="modal" data-target="#myModal2" onclick="ri_show({$info.o_id})" class="btn btn-default btn-xs"><i class="fa fa-eye text-navy"></i>&nbsp;查看 </a>&nbsp;&nbsp; -->
+
+                                                <!-- <a onclick="refresh({$info.o_id},'{:url(\"seller/recruitment/recruitmentRefresh\")}')" class="btn btn-default btn-xs"><i class="fa fa-refresh text-navy"></i>&nbsp;刷新 </a>&nbsp;&nbsp; -->
+                                                {if condition="$info.o_shipping_status eq '0'"}
+                                                <a href="{:url('seller/Ordermanage/deliverygoods',array('id'=>$info.o_id))}" class="btn btn-default btn-xs"><i class="fa fa-send text-navy"></i>&nbsp;去发货</a>&nbsp;&nbsp;
+                                                {else/}
+
+                                                <a href="{:url('seller/Ordermanage/detail',array('order_id'=>$info.o_id))}" class="btn btn-default btn-xs "><i class="fa fa-list-alt"></i>&nbsp;查看&nbsp;&nbsp;&nbsp;</a>
+                                                {/if}
+                                                <!--<a href="{:url('seller/Ordermanage/recruitmentEdit',array('id'=>$info.o_id))}" class="btn btn-default btn-xs"><i class="fa fa-print text-navy"></i>&nbsp;配货单 </a>&nbsp;&nbsp;-->
+
+                                                <!-- <a onclick="del('ri_{$info.o_id}',{$info.o_id},'{:url(\"seller/recruitment/recruitmentDel\")}')" class="btn btn-default btn-xs"><i class="fa fa-close text-navy"></i>&nbsp;删除 </a> -->
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title">招聘详情</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span>公司名称: </span>
+                        <span id="ri_company"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>招聘标题: </span>
+                        <span id="ri_title"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>标签: </span>
+                        <span id="ri_label"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>联系方式: </span>
+                        <span id="ri_contact_mobile"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>行业: </span>
+                        <span id="ui_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>技能: </span>
+                        <span id="us_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>岗位简介: </span>
+                        <span id="ri_contents"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>工资待遇: </span>
+                        <span id="ri_wage"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>招聘人数: </span>
+                        <span id="ri_number_recruits"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>工作省/市/区: </span>
+                        <span id="ri_work"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>投放省/市: </span>
+                        <span id="ri_puton"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>发布时间: </span>
+                        <span id="ri_add_time"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>刷新时间: </span>
+                        <span id="ri_refresh_time"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>添加人: </span>
+                        <span id="sm_name"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="SELLER_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/demo/peity-demo.js"></script>
+    <script src="SELLER_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+        function changeform(){
+            $("#ss_form").submit();
+        }
+        function ri_show(id) {
+            $.ajax({
+                url:'{:url("seller/recruitment/recruitmentShow")}',
+                type:"post",
+                data:{id:parseInt(id)},
+                dataType:"json",
+                success:function (info) {
+                    if (info.code != '1') {
+                        swal({
+                            title: "数据请求失败,请稍候再试!~",
+                            text: info.msg
+                        });
+                    }else{
+                        var param = JSON.parse(info.data);
+                        $("#ri_company").html(param.ri_company);
+                        $("#ri_contact_mobile").html(param.ri_contact_mobile);
+                        $("#ri_title").html(param.ri_title);
+                        $("#ri_label").html(param.ri_label);
+                        $("#ui_name").html(param.ui_name);
+                        $("#us_name").html(param.us_name);
+                        $("#ri_contents").html(param.ri_contents);
+                        $("#ri_wage").html(param.ri_wage);
+                        $("#ri_number_recruits").html(param.ri_number_recruits);
+                        $("#ri_work").html(param.work_province+','+param.work_city+','+param.work_area);
+                        $("#ri_puton").html(param.puton_province+','+param.puton_city);
+                        $("#ri_add_time").html(param.ri_add_time);
+                        $("#ri_refresh_time").html(param.ri_refresh_time);
+                        $("#sm_name").html(param.sm_name);
+                    }
+                },
+                error:function () {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            })
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户资金变动列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>用户资金变动列表</h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a class="close-link" href="{:url('manage/index/welcome')}">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a href="{:url('manage/Users/usersList')}">
+                                <i class="fa fa-bars"></i>
+                                用户列表
+                            </a>
+                        </div>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a href="{:url('manage/Users/userMoneyEdit',array("id" => $id))}">
+                                <i class="glyphicon glyphicon-wrench"></i>
+                                更改用户资金
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>类型</th>
+                                        <th>金额</th>
+                                        <th>积分</th>    
+                                        <th>时间</th>    
+                                        <th>对应订单id</th>    
+                                        <th>描述</th>    
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}   
+                                        <tr>
+                                            <td>
+                                                {if condition="$info.ual_type eq '0'"}
+                                                    减少
+                                                {else /}
+                                                    增加
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {$info.u_money}
+                                            </td>
+                                            <td>
+                                                {$info.u_integral}
+                                            </td>
+                                            <td>
+                                                {$info.change_time}
+                                            </td>
+                                            <td>
+                                                {$info.o_id}
+                                            </td>
+                                            <td>
+                                                {$info.ual_desc}
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="MANAGE_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="MANAGE_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/demo/peity-demo.js"></script>
+    <script src="MANAGE_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+    </script>
+</body>
+</html>

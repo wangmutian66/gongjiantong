@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>文章列表</h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a class="close-link" href="{:url('manage/index/welcome')}">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a href="{:url('manage/Articles/articlesAdd')}">
+                                <i class="fa fa-plus"></i>
+                                文章添加
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <form action="" method="get">
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="请输入作者名称" class="input-sm form-control" name="a_author" value="{if condition="isset($data.a_author)"}{$data.a_author}{/if}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="请输入文章标题" class="input-sm form-control" name="a_title" value="{if condition="isset($data.a_title)"}{$data.a_title}{/if}">
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-sm btn-primary"> 搜索</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width:3%"> </th>
+                                        <th>ID</th>  
+                                        <th>标题</th>
+                                        <th>作者</th>
+                                        <th>添加时间</th>
+                                        <th>类型</th>
+                                        <th>是否开启</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}
+                                        <tr id="ac_{$info.a_id}">
+                                            <td>
+                                                <input type="checkbox" class="i-checks" name="a_id[]" value="{$info.a_id}">
+                                            </td>
+                                            <td>
+                                                {$info.a_id}
+                                            </td>
+                                            <td>
+                                                {$info.a_title}
+                                            </td>
+                                            <td>
+                                                {$info.a_author}
+                                            </td>
+                                            <td>
+                                                {$info.a_add_time|date='Y-m-d H:i:s',###}
+                                            </td>
+                                            <td>
+                                                {if condition="isset($info.a_type) and $info.a_type eq 0"}
+                                                    原创
+                                                {elseif condition="isset($info.a_type) and $info.a_type eq 1"}
+                                                    转载
+                                                {else /}
+                                                    翻译
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {if condition="isset($info.a_is_open) and $info.a_is_open eq 0"}
+                                                    关闭
+                                                {else /}
+                                                    开启
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#myModal2" onclick="mpg_show({$info.a_id})" class="btn btn-default btn-xs"><i class="fa fa-eye text-navy"></i>&nbsp;查看 </a>&nbsp;&nbsp;
+                                                <a href="{:url('manage/Articles/articlesEdit',array('id'=>$info.a_id))}" class="btn btn-default btn-xs"><i class="fa fa-wrench text-navy"></i>&nbsp;修改 </a>&nbsp;&nbsp;
+                                                <a onclick="del('ac_{$info.a_id}',{$info.a_id},'{:url(\"manage/Articles/articlesDel\")}')" class="btn btn-default btn-xs"><i class="fa fa-close text-navy"></i>&nbsp;删除 </a>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title">文章详情</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span>标题: </span>
+                        <span id="a_title"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>描述: </span>
+                        <span id="a_description"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>作者: </span>
+                        <span id="a_author"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>文章分类: </span>
+                        <span id="ac_id"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>添加时间: </span>
+                        <span id="a_add_time"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>关键字: </span>
+                        <span id="a_keywords"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>类型: </span>
+                        <span id="a_type"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>是否开启: </span>
+                        <span id="a_is_open"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>文章缩略图: </span>
+                        <span><img src="" id="a_thumb_path" width="50"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>链接地址: </span>
+                        <span id="a_link"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>点击量: </span>
+                        <span id="a_click_sum"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>内容: </span>
+                        <span id="a_content"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="MANAGE_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="MANAGE_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/demo/peity-demo.js"></script>
+    <script src="MANAGE_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+        function mpg_show(id) {
+            $.ajax({
+                url:'{:url("manage/Articles/articlesShow")}',
+                type:"post",
+                data:{id:parseInt(id)},
+                dataType:"json",
+                success:function (info) {
+                    if (info.code != '1') {
+                        swal({
+                            title: "数据请求失败,请稍候再试!~",
+                            text: info.msg
+                        });
+                    }else{
+                        var param = JSON.parse(info.data);
+                        $("#a_title").html(param.a_title);
+                        $("#a_description").html(param.a_description);
+                        $("#a_author").html(param.a_author);
+                        $("#ac_id").html(param.ac_name);
+                        $("#a_add_time").html(param.a_add_time);
+                        $("#a_keywords").html(param.a_keywords);
+                        $("#a_type").html(param.a_type);
+                        $("#a_is_open").html(param.a_is_open);
+                        $("#a_thumb_path").attr("src","__UPLOAD__/"+param.a_thumb_path);
+                        $("#a_link").html(param.a_link);
+                        $("#a_click_sum").html(param.a_click_sum);
+                        $("#a_content").html(param.a_content);
+                    }
+                },
+                error:function () {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            })
+        }
+        function getChild(id,argument) {
+            var t = '';
+            var oID = $("input[name='ac_"+id+"']");
+            var floor = $(".ac_"+id).attr("floor");
+            var tId = $("#ac_"+id);
+            var mg = 25 * floor;
+            floor = (parseInt(floor) + 1);
+            if ($(argument).attr("class") == 'glyphicon glyphicon-plus') {
+                $(argument).attr("class",'glyphicon glyphicon-minus');
+                if (oID.length <= 0) {
+                    $.ajax({
+                        url:'{:url("manage/Articles/articlesCategoryList")}',
+                        type:"post",
+                        data:{id:parseInt(id)},
+                        dataType:"json",
+                        success:function (info) {
+                            if (info.code != '1') {
+                                swal({
+                                    title: "数据请求失败,请稍候再试!~",
+                                    text: info.msg
+                                });
+                            }else{
+                               var data = JSON.parse(info.data);
+                               if (data.length > 0) {
+                                    $.each(data,function(i,n){
+                                        if (n.ac_show_in_nav == 1) {
+                                            show_in_nav = "开启";
+                                        }else{
+                                            show_in_nav = "关闭";
+                                        }
+                                        t += '<tr id="ac_'+ n.ac_id +'">';
+                                            t += '<td>';
+                                            if(floor < 3){
+                                                t += '<span class="glyphicon glyphicon-plus" style="margin-left: ' + (mg*2) + 'px "  onclick="getChild(' + n.ac_id + ',this)"></span>';
+                                            }
+                                            t += '</td>';
+                                        t += '<td>';
+                                            t += '<span style="margin-left: ' + mg + 'px ">' + n.ac_name + '</span>';
+                                            t += '<input type="hidden" class="ac_' + n.ac_id + '" floor="'+ floor +'" name="ac_' + id + '">';
+                                        t += '</td>';
+                                        t += '<td>';
+                                            t += '<span>' + show_in_nav + '</span>';
+                                        t += '</td>';
+                                        t += '<td>';
+                                            t += '<span>' + n.ac_sort_order + '</span>';
+                                        t += '</td>';
+                                        t += '<td>';
+                                                t += '<a data-toggle="modal" data-target="#myModal2" onclick="mpg_show('+n.ac_id+')">';
+                                                    t += '<i class="fa fa-eye text-navy"></i>';
+                                                t += '</a>';
+                                                t += '&nbsp;&nbsp<a href="/manage/Articles/articlesCategoryEdit/id/'+n.ac_id+'">';
+                                                    t += '<i class="fa fa-wrench text-navy"></i>';
+                                                t += '</a>&nbsp;&nbsp;'
+                                                t += '<a onclick="del("ac_' + n.ac_id + '",'+ n.ac_id  +',\'{:url(\"manage/Articles/articlesCategoryDel\")}\')">';
+                                                    t += '<i class="fa fa-close text-navy"></i>';
+                                                t += '</a>'
+                                        t += '</td>';
+                                    t += '</tr>';
+                                    })
+                                    tId.after(t);
+                               }
+                            }
+                        },
+                        error:function () {
+                            swal({
+                                title: "通讯出错!",
+                                text: "请联系开发人员或管理员!"
+                            });
+                        }
+                    })
+                }else{
+                    for (var i = 0; i < oID.length; i++) {
+                        $(oID[i]).parent('td').parent('tr').css("display",'');
+                        var ac_id = $("input[name='"+$(oID[i]).parent('td').parent('tr').attr('id')+"']");
+                        ac_id.parent('td').parent('tr').css("display",'');
+                    }
+                }
+            }else{
+                if (oID.length >= 0) {
+                    $(argument).attr("class",'glyphicon glyphicon-plus');
+                    for (var i = 0; i < oID.length; i++) {
+                        var ac_id = $("input[name='"+$(oID[i]).parent('td').parent('tr').attr('id')+"']");
+                        ac_id.parent('td').parent('tr').css("display",'none');
+                        ac_id.parent('td').parent('tr').prev("tr").children('td').children("span[class]").attr('class',"glyphicon glyphicon-minus");
+                        $(oID[i]).parent('td').parent('tr').css("display",'none');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

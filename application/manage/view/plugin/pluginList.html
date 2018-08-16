@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章分类列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>文章分类列表</h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a class="close-link" href="{:url('manage/index/welcome')}">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a href="{:url('manage/Articles/articlesCategoryAdd')}">
+                                <i class="fa fa-plus"></i>
+                                文章分类添加
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width:3%"> </th>
+                                        <th>文章分类名称</th>
+                                        <th>是否在导航条展示</th>
+                                        <th>排序</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}
+                                        <tr id="ac_{$info.ac_id}">
+                                            <td>
+                                                <span class="glyphicon glyphicon-plus" onclick="getChild({$info.ac_id},this)"></span>
+                                                <input type="hidden" class="ac_{$info.ac_id}" floor="1" >
+                                            </td>
+                                            <td>
+                                                {$info.ac_name}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.ac_show_in_nav eq '1'"}
+                                                    开启
+                                                {else /}
+                                                    关闭
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {$info.ac_sort_order}
+                                            </td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#myModal2" onclick="mpg_show({$info.ac_id})"><i class="fa fa-eye text-navy"></i> </a>&nbsp;&nbsp;
+                                                <a href="{:url('manage/Articles/articlesCategoryEdit',array('id'=>$info.ac_id))}"><i class="fa fa-wrench text-navy"></i> </a>&nbsp;&nbsp;
+                                                <a onclick="del('ac_{$info.ac_id}',{$info.ac_id},'{:url(\"manage/Articles/articlesCategoryDel\")}')"><i class="fa fa-close text-navy"></i> </a>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title">文章分类详情</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span>分类名称: </span>
+                        <span id="ac_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>父类: </span>
+                        <span id="ac_parent"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>是否在导航条展示: </span>
+                        <span id="ac_show_in_nav"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>排序: </span>
+                        <span id="ac_sort_order"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>关键字: </span>
+                        <span id="ac_keywords"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>描述: </span>
+                        <span id="ac_desc"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="MANAGE_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="MANAGE_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/demo/peity-demo.js"></script>
+    <script src="MANAGE_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+        function mpg_show(id) {
+            $.ajax({
+                url:'{:url("manage/Articles/articlesCategoryShow")}',
+                type:"post",
+                data:{id:parseInt(id)},
+                dataType:"json",
+                success:function (info) {
+                    if (info.code != '1') {
+                        swal({
+                            title: "数据请求失败,请稍候再试!~",
+                            text: info.msg
+                        });
+                    }else{
+                        var param = JSON.parse(info.data);
+                        // console.log(param)
+                        $("#ac_name").html(param.ac_name);
+                        $("#ac_parent").html(param.ac_parent);
+                        $("#ac_show_in_nav").html(param.ac_show_in_nav);
+                        $("#ac_sort_order").html(param.ac_sort_order);
+                        $("#ac_keywords").html(param.ac_keywords);
+                        $("#ac_desc").html(param.ac_desc);
+                    }
+                },
+                error:function () {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            })
+        }
+        function getChild(id,argument) {
+            var t = '';
+            var oID = $("input[name='ac_"+id+"']");
+            var floor = $(".ac_"+id).attr("floor");
+            var tId = $("#ac_"+id);
+            var mg = 25 * floor;
+            floor = (parseInt(floor) + 1);
+            if ($(argument).attr("class") == 'glyphicon glyphicon-plus') {
+                $(argument).attr("class",'glyphicon glyphicon-minus');
+                if (oID.length <= 0) {
+                    $.ajax({
+                        url:'{:url("manage/Articles/articlesCategoryList")}',
+                        type:"post",
+                        data:{id:parseInt(id)},
+                        dataType:"json",
+                        success:function (info) {
+                            if (info.code != '1') {
+                                swal({
+                                    title: "数据请求失败,请稍候再试!~",
+                                    text: info.msg
+                                });
+                            }else{
+                               var data = JSON.parse(info.data);
+                               if (data.length > 0) {
+                                    $.each(data,function(i,n){
+                                        if (n.ac_show_in_nav == 1) {
+                                            show_in_nav = "开启";
+                                        }else{
+                                            show_in_nav = "关闭";
+                                        }
+                                        t += '<tr id="ac_'+ n.ac_id +'">';
+                                            t += '<td>';
+                                            if(floor < 3){
+                                                t += '<span class="glyphicon glyphicon-plus" style="margin-left: ' + (mg*2) + 'px "  onclick="getChild(' + n.ac_id + ',this)"></span>';
+                                            }
+                                            t += '</td>';
+                                        t += '<td>';
+                                            t += '<span style="margin-left: ' + mg + 'px ">' + n.ac_name + '</span>';
+                                            t += '<input type="hidden" class="ac_' + n.ac_id + '" floor="'+ floor +'" name="ac_' + id + '">';
+                                        t += '</td>';
+                                        t += '<td>';
+                                            t += '<span>' + show_in_nav + '</span>';
+                                        t += '</td>';
+                                        t += '<td>';
+                                            t += '<span>' + n.ac_sort_order + '</span>';
+                                        t += '</td>';
+                                        t += '<td>';
+                                                t += '<a data-toggle="modal" data-target="#myModal2" onclick="mpg_show('+n.ac_id+')">';
+                                                    t += '<i class="fa fa-eye text-navy"></i>';
+                                                t += '</a>';
+                                                t += '&nbsp;&nbsp<a href="/manage/Articles/articlesCategoryEdit/id/'+n.ac_id+'">';
+                                                    t += '<i class="fa fa-wrench text-navy"></i>';
+                                                t += '</a>&nbsp;&nbsp;'
+                                                t += '<a onclick="del(\'ac_' + n.ac_id + '\','+ n.ac_id  +',\'{:url(\"manage/Articles/articlesCategoryDel\")}\')">';
+                                                    t += '<i class="fa fa-close text-navy"></i>';
+                                                t += '</a>'
+                                        t += '</td>';
+                                    t += '</tr>';
+                                    })
+                                    tId.after(t);
+                               }
+                            }
+                        },
+                        error:function () {
+                            swal({
+                                title: "通讯出错!",
+                                text: "请联系开发人员或管理员!"
+                            });
+                        }
+                    })
+                }else{
+                    for (var i = 0; i < oID.length; i++) {
+                        $(oID[i]).parent('td').parent('tr').css("display",'');
+                        var ac_id = $("input[name='"+$(oID[i]).parent('td').parent('tr').attr('id')+"']");
+                        ac_id.parent('td').parent('tr').css("display",'');
+                    }
+                }
+            }else{
+                if (oID.length >= 0) {
+                    $(argument).attr("class",'glyphicon glyphicon-plus');
+                    for (var i = 0; i < oID.length; i++) {
+                        var ac_id = $("input[name='"+$(oID[i]).parent('td').parent('tr').attr('id')+"']");
+                        ac_id.parent('td').parent('tr').css("display",'none');
+                        ac_id.parent('td').parent('tr').prev("tr").children('td').children("span[class]").attr('class',"glyphicon glyphicon-minus");
+                        $(oID[i]).parent('td').parent('tr').css("display",'none');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

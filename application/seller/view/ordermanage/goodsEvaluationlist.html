@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户评论</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>用户评论</h5>
+                        
+                    </div>
+                    <div class="ibox-content">
+                        
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>订单编号</th>
+                                        <th>用户</th>
+                                        <th>订单状态</th>
+                                        <th>评价状态</th>
+                                        <th>评价等级</th>
+                                        <th>评价时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}
+                                    <tr>
+                                        <td>{$info.o_sn}</td>
+                                        <td>{$info.userinfo}</td>
+                                        <td>
+                                            {if condition="$info.o_status eq '0'"}
+                                            <span style="color:red">未确认</span>
+                                            {elseif condition="$info.o_status eq '1'"}
+                                            <span style="color:green">已确认</span>
+                                            {elseif condition="$info.o_status eq '2'"}
+                                            <span style="color:red">已取消</span>
+                                            {elseif condition="$info.o_status eq '5'"}
+                                            <span style="color:#00a1ff">已完成</span>
+                                            {elseif condition="$info.o_status eq '6'"}
+                                                {if condition="$info.or_type eq '1'"}
+                                                换货
+                                                {else/}
+                                                退款
+                                                {/if}
+                                            {/if}
+                                        </td>
+                                     
+                                       
+                                      
+                                        <td>
+                                            <!-- {if condition="$info.o_comments_status eq '0'"}
+                                            <span style="color:red">未评价</span>
+                                            {elseif condition="$info.o_comments_status eq '1'"}
+                                            <span style="color:green">已评价</span>
+                                            {elseif condition="$info.o_comments_status eq '2'"}
+                                            <span style="color:green">已追评</span>
+                                            {/if} -->
+                                            {if condition="$info.oe_count eq '1'"}
+                                            <span style="color:green">已评价</span>
+                                            {elseif condition="$info.oe_count gt '1'"}
+                                            <span style="color:green">已追评</span>
+                                            {/if}
+                                        </td>
+                                        <td>
+                                            {if condition="$info.oe_quality_star eq '1'"}
+                                            <span ><img src="SELLER_IMG/stars.png" width="20"/><img src="SELLER_IMG/star.png" width="20"/><img src="SELLER_IMG/star.png" width="20"/><img src="SELLER_IMG/star.png" width="20"/><img src="SELLER_IMG/star.png" width="20"/></span>
+                                            {elseif condition="$info.oe_quality_star eq '2'"}
+                                            <span><img src="SELLER_IMG/stars.png" width="20"/><img src="SELLER_IMG/stars.png" width="20"/><img src="SELLER_IMG/star.png" width="20"/><img src="SELLER_IMG/star.png" width="20"/><img src="SELLER_IMG/star.png" width="20"/></span>
+                                            {elseif condition="$info.oe_quality_star eq '3'"}
+                                            <span><img src="SELLER_IMG/stars.png" width="20"/><img src="SELLER_IMG/stars.png" width="20"/><img src="SELLER_IMG/stars.png" width="20"/><img src="SELLER_IMG/star.png" width="20"/><img src="SELLER_IMG/star.png" width="20"/></span>
+                                            {elseif condition="$info.oe_quality_star eq '4'"}
+                                            <span><img src="SELLER_IMG/stars.png" width="20"/><img src="SELLER_IMG/stars.png" width="20"/><img src="SELLER_IMG/stars.png" width="20"/><img src="SELLER_IMG/stars.png" width="20"/><img src="SELLER_IMG/star.png" width="20"/></span>
+                                            {elseif condition="$info.oe_quality_star eq '5'"}
+                                            <span><img src="SELLER_IMG/stars.png" width="20"/><img src="SELLER_IMG/stars.png" width="20"/><img src="SELLER_IMG/stars.png" width="20"/><img src="SELLER_IMG/stars.png" width="20"/><img src="SELLER_IMG/stars.png" width="20"/></span>
+                                            {/if}
+                                        </td>
+                                        <td>{$info.oe_add_time} </td>
+                                        <td>
+                                            <a href="{:url('seller/Ordermanage/goodsevaluationshow',array('order_id'=>$info.o_id))}" class="btn btn-default btn-xs green"><i class="fa fa-list-alt"></i>&nbsp;查看 </a>
+                                           
+                                        </td>
+                                    </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="SELLER_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/demo/peity-demo.js"></script>
+    <!-- layer javascript -->
+    <script src="SELLER_JS/plugins/layer/layer.min.js"></script>
+    <script src="SELLER_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+        function changeform(){
+            $("#ss_form").submit();
+        }
+        function delorder($oid){
+            sweetAlert({
+                title: "确定删除吗?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#AEDEF4",
+                confirmButtonText: "确定",
+                cancelButtonText:"取消",
+                closeOnConfirm: false
+            }, function(){
+
+                $.ajax({
+                    url:"{:url('seller/Ordermanage/delorder')}",
+                    data:{oid:$oid},
+                    dataType:"json",
+                    type:"POST",
+                    success:function(data){
+                        if(data.code == 200){
+                            swal("删除成功!",
+                                "",
+                                "success");
+                            $(".confirm").click(function(){
+                                window.location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+
+        }
+
+
+
+    </script>
+</body>
+</html>

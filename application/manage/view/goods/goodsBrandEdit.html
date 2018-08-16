@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            添加商品属性
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/animate.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+    </head>
+    <body class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>添加商品属性</h5>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a class="close-link" href="{:url('manage/index/welcome')}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a href="{:url('manage/Goods/goodsTypeList')}">
+                                    <i class="fa fa-bars"></i>
+                                    商品属性列表
+                                </a>
+                            </div>
+                        </div>  
+                        <div class="ibox-content">
+                            <form class="form-horizontal" method="POST" action="{:url('manage/Goods/goodsBrandEdit',array("id" => $info.mgb_id))}" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        品牌名称
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="mgb_name" value="{$info.mgb_name}" id="mgb_name" onblur="verifyInput('mgb_name','chsAlphaNum','mgb_name_show')"/>
+                                    </div>
+                                    <code id="mgb_name_show">只能输入中文,英文和数字</code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        品牌英文名
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="mgb_english_name" value="{$info.mgb_english_name}" id="mgb_english_name" onblur="verifyInput('mgb_english_name','alphaNum','mgb_english_name_show')" />
+                                    </div>
+                                    <code id="mgb_english_name_show">只能输入英文及数字</code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        品牌logo
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input type="file" aria-required="true" aria-invalid="true" name="mgb_logo_path" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        品牌网址
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" aria-required="true" aria-invalid="true" name="mgb_official_website" value="{$info.mgb_official_website}" id="mgb_official_website" onblur="verifyInput('mgb_official_website','url','mgb_official_website_show')"/>
+                                    </div>
+                                    <code id="mgb_official_website_show">url网址需要以"http://"或者"https://"开头</code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        是否推荐
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" id="is_recommend0" value="1" name="is_recommend" {if condition="$info.is_recommend eq '1'"}checked{/if} />
+                                            <label for="is_recommend0"> 推荐 </label>
+                                        </div>
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" id="is_recommend1" value="0" name="is_recommend" {if condition="$info.is_recommend eq '0'"}checked{/if} />
+                                            <label for="is_recommend1"> 不推荐 </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        排序
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="number" min="1" max="100" required="" aria-required="true" aria-invalid="true" name="mgb_sort" value="{$info.mgb_sort}" id="mgb_sort" onblur="verifyInput('mgb_sort','nun','mgb_sort_show')"/>
+                                    </div>
+                                    <code id="mgb_sort_show">排序输入1-100的正整数,值越小排序越靠前</code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        品牌描述
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <textarea class="form-control" aria-required="true" aria-invalid="true" name="mgb_desc" cols="10">{$info.mgb_desc}</textarea>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="submit" value="保存内容" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 全局js -->
+        <script src="MANAGE_JS/jquery.min.js?v=2.1.4">
+        </script>
+        <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6">
+        </script>
+        <!-- 自定义js -->
+        <script src="MANAGE_JS/content.js?v=1.0.0">
+        </script>
+        <!-- iCheck -->
+        <script src="MANAGE_JS/plugins/iCheck/icheck.min.js">
+        </script>
+        <script type="text/javascript" src="MANAGE_JS/globals.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+            limitInput('mgb_english_name','alphaNum');
+            limitInput('mgb_name','chsAlphaNum');
+            limitInput('mgb_sort','num');
+        </script>
+    </body>
+</html>

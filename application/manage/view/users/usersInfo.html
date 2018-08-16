@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            修改用户信息
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/animate.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    </head>
+    <body class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>修改用户信息</h5>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a class="close-link" href="{:url('manage/index/welcome')}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a href="{:url('manage/Users/usersList')}">
+                                    <i class="fa fa-bars"></i>
+                                    用户列表
+                                </a>
+                            </div>
+                        </div>  
+                        <div class="ibox-content">
+                            <form class="form-horizontal" method="POST" action="{:url('manage/Users/usersInfo')}">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        用户昵称
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" name="u_name" required="" aria-required="true" id="u_name" onblur="verifyInput('u_name','chsDash','u_name_show')" aria-invalid="true" value="{$info.u_name}" />
+                                    </div>
+                                    <code id="u_name_show">只能输入汉字、字母、数字和下划线及破折号</code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        用户余额
+                                    </label>
+                                    <label class="col-sm-1 control-label">
+                                        {$info.u_money} 元
+                                    </label>
+                                    <label class="col-sm-2 control-label">
+                                        用户积分
+                                    </label>
+                                    <label class="col-sm-1 control-label">
+                                        {$info.u_integral} 积分
+                                    </label>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        用户密码
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="password" name="u_passwd" aria-required="true" aria-invalid="true" />
+                                    </div>
+                                    <code>
+                                        不填写的情况下默认为不修改
+                                    </code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        用户手机号
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="number" name="u_mobile" onblur="verifyInput('u_mobile','mobile','u_mobile_show')" id="u_mobile" aria-required="true" required="" aria-invalid="true" value="{$info.u_mobile}" />
+                                    </div>
+                                    <code id="u_mobile_show">请输入手机号</code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        用户邮箱
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="email" name="u_email" aria-required="true" required="" onblur="verifyInput('u_email','mobile','u_email_show')" id="u_email" aria-invalid="true" value="{$info.u_email}" />
+                                    </div>
+                                    <code id="u_email_show">*</code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        用户性别
+                                    </label>
+                                    <div class="col-sm-5 m-b-xs">
+                                        <select class="input-sm form-control input-s-sm inline" name="u_sex" style="height: 31px;">
+                                            <option value="2" {if condition="$info.u_sex eq '2'"}selected{/if}>保密</option>
+                                            <option value="0" {if condition="$info.u_sex eq '0'"}selected{/if}>女</option>
+                                            <option value="1" {if condition="$info.u_sex eq '1'"}selected{/if}>男</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="submit" value="保存内容" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 全局js -->
+        <script src="MANAGE_JS/jquery.min.js?v=2.1.4">
+        </script>
+        <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6">
+        </script>
+        <!-- 自定义js -->
+        <script src="MANAGE_JS/content.js?v=1.0.0">
+        </script>
+        <!-- iCheck -->
+        <script src="MANAGE_JS/plugins/iCheck/icheck.min.js">
+        </script>
+        <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            修改商品属性
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/animate.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+    </head>
+    <body class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>修改商品属性</h5>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a class="close-link" href="{:url('seller/index/welcome')}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a href="{:url('seller/Goods/goodsTypeList')}">
+                                    <i class="fa fa-bars"></i>
+                                    商品属性列表
+                                </a>
+                            </div>
+                        </div>  
+                        <div class="ibox-content">
+                            <form class="form-horizontal" method="POST" action="{:url('seller/Goods/goodsSpecificationEdit',array('id' => $id))}">
+                                <input type="hidden" name="sgt_id" value="{$info.sgt_id}">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        属性名称
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sgs_name" value="{$info.sgs_name}" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        属性是否可选
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" id="sgs_type0" value="0" name="sgs_type" {if condition="$info.sgs_type eq '0'"}checked{/if}/>
+                                            <label for="sgs_type0"> 单选 </label>
+                                        </div>
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" id="sgs_type1" value="1" name="sgs_type" {if condition="$info.sgs_type eq '1'"}checked{/if}/>
+                                            <label for="sgs_type1"> 多选 </label>
+                                        </div>
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" id="sgs_type2" value="2" name="sgs_type" {if condition="$info.sgs_type eq '2'"}checked{/if}/>
+                                            <label for="sgs_type2"> 唯一 </label>
+                                        </div>
+                                    </div>
+                                    <code class="col-sm-4" style="background-color:#fff;">
+                                        选择"单选/多选属性"时，可以对商品该属性设置多个值，同时还能对不<br>同属性值指定不同的价格加价，用户购买商品时需要选定具体的属性值。<br>选择"唯一属性"时，商品的该属性值只能设置一个值，用户只能查看该值。
+                                    </code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        属性值
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <textarea class="form-control" aria-required="true" aria-invalid="true" name="sgs_value" cols="10">{$info.sgs_value}</textarea>
+                                    </div>
+                                    <code class="col-sm-4" style="background-color:#fff;">
+                                        多个属性值之间用竖线"|"分s割,选择"唯一属性"时，<br>填写多个属性值后台只保留第一个。
+                                    </code>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="submit" value="保存内容" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 全局js -->
+        <script src="SELLER_JS/jquery.min.js?v=2.1.4">
+        </script>
+        <script src="SELLER_JS/bootstrap.min.js?v=3.3.6">
+        </script>
+        <!-- 自定义js -->
+        <script src="SELLER_JS/content.js?v=1.0.0">
+        </script>
+        <!-- iCheck -->
+        <script src="SELLER_JS/plugins/iCheck/icheck.min.js">
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+        </script>
+    </body>
+</html>

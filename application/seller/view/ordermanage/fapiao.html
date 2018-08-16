@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单发票</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>订单发票</h5>
+                    <div class="ibox-tools" style="margin-right: 15px;">
+                        <a class="close-link" href="{:url('seller/index/welcome')}">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="ibox-content">
+                    <div class="ncap-order-style">
+
+                        
+                        <div class="ncap-order-details">
+
+                                <div class="tabs-panels">
+                                        <h3>发票信息：{if condition="$list.i_invtype eq '0'"}电子发票{elseif condition="$list.i_invtype eq '1'"}普通发票{elseif condition="$list.i_invtype eq '2'"}专用发票{/if}{if condition="$list.i_invtype neq '2'"}{if condition="$list.i_taitype eq '0'"} - 单位{elseif condition="$list.i_taitype eq '1'"} - 个人{/if}{/if}</h3>
+                                        {if condition="$list.i_invtype eq '0'"}
+                                            {if condition="$list.i_taitype eq '0'"}
+                                                <dl>
+                                                <dt>公司名称：</dt>
+                                                <dd>{if condition="isset($list.i_name)"}{$list.i_name}{/if}</dd>
+                                                <dt>纳税人识别号：</dt>
+                                                <dd>{if condition="isset($list.i_num)"}{$list.i_num}{/if}</dd>
+                                                <dt>收票人邮箱：</dt>
+                                                <dd>{if condition="isset($list.i_email)"}{$list.i_email}{/if}</dd>
+                                                </dl>
+                                            {elseif condition="$list.i_taitype eq '1'"}
+                                                <dl>
+                                                <dt>抬头：</dt>
+                                                <dd>{if condition="isset($list.i_name)"}{$list.i_name}{/if}</dd>
+                                                <dt>收票人邮箱：</dt>
+                                                <dd>{if condition="isset($list.i_email)"}{$list.i_email}{/if}</dd>
+                                                </dl>
+                                            {/if}
+                                        {elseif condition="$list.i_invtype eq '1'"}
+                                            {if condition="$list.i_taitype eq '0'"}
+                                                <dl>
+                                                <dt>公司名称：</dt>
+                                                <dd>{if condition="isset($list.i_name)"}{$list.i_name}{/if}</dd>
+                                                <dt>纳税人识别号：</dt>
+                                                <dd>{if condition="isset($list.i_num)"}{$list.i_num}{/if}</dd>
+                                                </dl>
+                                            {elseif condition="$list.i_taitype eq '1'"}
+                                                <dl>
+                                                <dt>抬头：</dt>
+                                                <dd>{if condition="isset($list.i_name)"}{$list.i_name}{/if}</dd>
+                                                </dl>
+                                            {/if}
+                                        {elseif condition="$list.i_invtype eq '2'"}
+                                            <dl>
+                                                <dt>抬头：</dt>
+                                                <dd>{if condition="isset($list.i_name)"}{$list.i_name}{/if}</dd>
+                                                <dt>纳税人识别号：</dt>
+                                                <dd>{if condition="isset($list.i_num)"}{$list.i_num}{/if}</dd>
+                                                <dt>注册电话：</dt>
+                                                <dd>{if condition="isset($list.i_regtel)"}{$list.i_regtel}{/if}</dd>
+                                                
+                                            </dl>
+                                            <dl>
+                                                <dt>注册地址：</dt>
+                                                <dd>{if condition="isset($list.i_regtel)"}{$list.i_regaddr}{/if}</dd>
+                                                <dt>开户银行：</dt>
+                                                <dd>{if condition="isset($list.i_regtel)"}{$list.i_bank}{/if}</dd>
+                                                <dt>开户账号：</dt>
+                                                <dd>{if condition="isset($list.i_regtel)"}{$list.i_banknum}{/if}</dd>
+                                            </dl>
+                                             <h3>发票收件信息</h3>
+                                            <dl>
+                                                <dt>收件人：</dt>
+                                                <dd>{if condition="isset($list.i_regtel)"}{$list.i_conname}{/if}</dd>
+                                                <dt>联系电话：</dt>
+                                                <dd>{if condition="isset($list.i_regtel)"}{$list.i_contel}{/if}</dd>
+                                                <dt>联系地址：</dt>
+                                                <dd>{if condition="isset($list.i_regtel)"}{$list.i_conaddr}{/if}</dd>
+                                            </dl>
+                                        {/if}
+                                        
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+   
+   
+</body>
+</html>

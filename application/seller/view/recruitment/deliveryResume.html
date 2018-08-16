@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投递简历列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 style="width:40%">投递简历列表</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <form action="" method="get">
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="请输入招聘标题" class="input-sm form-control" name="ri_title" value="{if condition="isset($data.ri_title)"}{$data.ri_title}{/if}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="招聘人数" class="input-sm form-control" name="ri_number_recruits" value="{if condition="isset($data.ri_number_recruits)"}{$data.ri_number_recruits}{/if}">
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-sm btn-primary"> 搜索</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+
+
+                                        <th>简历头像</th>
+                                        <th>简历姓名</th>
+                                        <th>工作年限</th>
+                                        <th>简历性别</th>
+                                        <th>简历电话</th>
+                                        <th>简历邮箱</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($ujs.data) and !empty($ujs.data)"}
+                                    {foreach name="ujs.data" item="info"}
+                                        <tr >
+
+                                            <td>
+
+                                                {if condition=" isset($info.ur_headimg_path) and $info.ur_headimg_path neq '' "}
+                                                    <img src="__UPLOAD__/{$info.ur_headimg_path}" style="width:120px;height:80px">
+                                                {else /}
+                                                    <i class="fa fa-file-picture-o text-navy" ></i>
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {if condition=" isset($info.ur_user_name) and $info.ur_user_name neq '' "}
+                                                    {$info.ur_user_name}
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {if condition=" isset($info.ur_year_of_work) and $info.ur_year_of_work neq '' "}
+
+                                                    {if condition="$info.ur_year_of_work eq 1"}
+                                                        无经验
+                                                    {elseif condition="$info.ur_year_of_work eq 2"}
+                                                        应届生
+                                                    {elseif condition="$info.ur_year_of_work eq 3"}
+                                                        一年以下
+                                                    {elseif condition="$info.ur_year_of_work eq 4"}
+                                                        1-3年
+                                                    {elseif condition="$info.ur_year_of_work eq 5"}
+                                                        3-5年
+                                                    {elseif condition="$info.ur_year_of_work eq 6"}
+                                                        5年以上
+                                                    {/if}
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {if condition=" isset($info.ur_sex) and $info.ur_sex neq '' "}
+                                                    {if condition="$info.ur_sex eq 0"}
+                                                        女
+                                                    {else /}
+                                                        男
+                                                    {/if}
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {if condition=" isset($info.ur_mobile) and $info.ur_mobile neq '' "}
+                                                    {$info.ur_mobile}
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {if condition=" isset($info.ur_email) and $info.ur_email neq '' "}
+                                                    {$info.ur_email}
+                                                {/if}
+                                            </td>  
+                                            <td>
+                                                <a data-toggle="modal" data-target="#myModal2" {if condition=" isset($info.ur_id) and $info.ur_id neq '' "} onclick="resume({$info.ur_id})" {/if} class="btn btn-default btn-xs"><i class="fa fa-eye text-navy"></i>&nbsp;查看简历 </a>&nbsp;&nbsp;
+                                            </td> 
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title">简历详情</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span>简历名称: </span>
+                        <span id="ur_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>姓名: </span>
+                        <span id="ur_user_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>生日: </span>
+                        <span id="ur_birthday"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>工作年限: </span>
+                        <span id="ur_year_of_work"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>最高学历: </span>
+                        <span id="ur_highest_education"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>性别: </span>
+                        <span id="ur_sex"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>电话: </span>
+                        <span id="ur_mobile"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>邮箱: </span>
+                        <span id="ur_email"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>学习经历: </span>
+                        <span id="ule_ids"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>自我评价: </span>
+                        <span id="ur_self_evaluation"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <span>现居住地省/市/区: </span>
+                        <span id="ur_living"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>期望薪资: </span>
+                        <span id="ur_expected_salary"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>期望工作地省/市/区: </span>
+                        <span id="ur_exoect_workplaceg"></span>
+                    </div>
+                    
+
+                    <div class="form-group">
+                        <span>紧急联系人姓名: </span>
+                        <span id="ur_emergency_contact"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>紧急联系人电话: </span>
+                        <span id="ur_emergency_contact_mobile"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>用户行业: </span>
+                        <span id="ui_id"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>用户技能: </span>
+                        <span id="us_ids"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>工作经历: </span>
+                        <span id="uwe_value"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>证书: </span>
+                        <div id="uc_value">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="SELLER_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/demo/peity-demo.js"></script>
+    <script src="SELLER_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+        function resume(id) {
+            $.ajax({
+                url:'{:url("seller/Recruitment/deliveryResume",array("ri_id"=>$ri_id))}',
+                type:"post",
+                data:{id:parseInt(id)},
+                dataType:"json",
+                success:function (info) {
+                    if (info.code != '1') {
+                        swal({
+                            title: "数据请求失败,请稍候再试!~",
+                            text: info.msg
+                        });
+                    }else{
+                        var param = JSON.parse(info.data);
+
+                        $("#ur_name").html(param.ur_name);
+                        $("#ur_user_name").html(param.ur_user_name);
+                        $("#ur_birthday").html(param.ur_birthday);
+                        $("#ur_year_of_work").html(param.ur_year_of_work);
+                        $("#ur_highest_education").html(param.ur_highest_education);
+                        $("#ur_sex").html(param.ur_sex);
+                        $("#ur_mobile").html(param.ur_mobile);
+                        $("#ur_email").html(param.ur_email);
+                        $("#ule_ids").html(param.ule_value);
+                        $("#ur_self_evaluation").html(param.ur_self_evaluation);
+                        $("#uwe_value").html(param.uwe_value);
+                        $("#ur_living").html(param.ur_living);
+                        $("#ur_expected_salary").html(param.ur_name);
+                        $("#ur_exoect_workplaceg").html(param.ur_exoect_workplaceg);
+                        $("#uc_ids").html(param.uc_ids);
+                        $("#ur_emergency_contact").html(param.ur_emergency_contact);
+                        $("#ui_id").html(param.ui_id);
+                        $("#ui_id").html(param.ui_name);
+                        $("#us_ids").html(param.us_name);
+                        $("#uc_value").html(param.uc_value);    
+                    }
+                },
+                error:function () {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            })
+        }
+    </script>
+</body>
+</html>

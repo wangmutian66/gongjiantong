@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品订单</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <style>
+
+
+    </style>
+</head>
+<body>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">请输入商品寄回的详细地址</h4>
+            </div>
+            <div class="modal-body">
+                <textarea style="width: 100%; height: 140px; border-radius: 3px; border:1px solid #ccc; resize: none;" name="or_address_1"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="submitupdate()">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel1">请输入拒绝退换货的原因：</h4>
+            </div>
+            <div class="modal-body">
+                <textarea style="width: 100%; height: 140px; border-radius: 3px; border:1px solid #ccc; resize: none;" name="or_examine_content_1"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="submitupdate1()">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>退换货单</h5>
+                    <div class="ibox-tools" style="margin-right: 15px;">
+                        <a class="close-link" href="{:url('seller/index/welcome')}">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="ibox-content">
+                    <div class="ncap-order-style">
+
+                        <div class="ncap-order-details">
+
+                            <form id="order-action"  method="post"  name="priceForm">
+                                <input type="hidden" name="or_address" onchange="editaddress()"/>
+                                <div class="tabs-panels">
+                                    <div class="misc-info">
+                                        <h3>订单信息</h3>
+                                        <dl>
+                                            <dt>退换货类型： </dt>
+                                            <dd>
+                                                {if condition="$orRow.or_type eq '0'"}
+                                                退款
+                                                {else/}
+                                                换货
+                                                {/if}
+                                            </dd>
+                                            <dt>订单 ID：</dt>
+                                            <dd>{$oRow.o_id}</dd>
+                                            <dt>订单号：</dt>
+                                            <dd>{$oRow.o_sn}</dd>
+
+                                        </dl>
+                                        <dl>
+                                            <dt>下单时间： </dt>
+                                            <dd>{$oRow.o_add_time|date='Y-m-d H:i',###}</dd>
+                                            <dt>申请时间： </dt>
+                                            <dd>{$orRow.or_time|date='Y-m-d H:i',###}</dd>
+                                            <dt>运费：</dt>
+                                            <dd>{$oRow.o_logistics}</dd>
+                                            <dt>应付金额：</dt>
+                                            <dd>{$oRow.o_payable_price}</dd>
+
+                                        </dl>
+
+                                    </div>
+
+
+
+                                    <div class="goods-info misc-info">
+                                        <h4>商品信息</h4>
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th>商品编号</th>
+                                                <th colspan="2">商品</th>
+                                                <th>规格属性</th>
+                                                <th>数量</th>
+                                                <th>单品价格</th>
+                                                <th>活动</th>
+                                                <th>折扣价</th>
+                                                <th>单品小计</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {if condition="isset($gsplist) and !empty($gsplist)"}
+                                            {foreach name="gsplist" item="info"}
+                                            <tr>
+                                                <td class="w60">{$info.goods_sn}</td>
+                                                <td class="w30"><div class="goods-thumb"><img alt="" src="/public/upload/{$info.g_show_img_path}" width="50"></div></td>
+                                                <td style="text-align: left;">{$info.goods_name}<br></td>
+                                                <td class="w80">{$info.sp_name}</td>
+                                                <td class="w60">{$info.goods_buy_num}</td>
+                                                <td class="w100">{$info.gsp_price}</td>
+                                                <td><div>{if condition="$info.act_type eq '1'"}<span style="color:red;">折扣</span>{elseif condition="$info.act_type eq '2'"}<span style="color:red;">满{$info.act_meet}减{$info.act_reduction}</span>{else/}{/if}</div></td>
+                                                <td class="w60">{$info.g_discount_price} </td>
+                                                <td class="w80">{$info.xiaoji}</td>
+                                            </tr>
+                                            {/foreach}
+                                            {/if}
+                                            </tbody></table>
+                                    </div>
+                                    <div class="misc-info">
+                                        <h4>退货原因</h4>
+
+                                        <div class="inforesion">
+                                            {$orRow.or_why}
+
+                                            <div class="infoimg">
+                                                {if condition="$orRow.or_img_path1 neq '' "}
+                                                <img src="__UPLOAD__{$orRow.or_img_path1}" width="200">
+                                                {/if}
+                                                {if condition="$orRow.or_img_path2 neq '' "}
+                                                <img src="__UPLOAD__{$orRow.or_img_path2}" width="200">
+                                                {/if}
+                                                {if condition="$orRow.or_img_path3 neq '' "}
+                                                <img src="__UPLOAD__{$orRow.or_img_path3}" width="200">
+                                                {/if}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="misc-info">
+                                        <h3>用户信息</h3>
+                                        <dl>
+                                            <dt>用户：</dt>
+                                            <dd>{$oRow.usa_user_name}  ID:{$oRow.u_id}</dd>
+                                            <dt>电话:</dt>
+                                            <dd>{$oRow.usa_mobile}</dd>
+                                            <dt>E-Mail：</dt>
+                                            <dd>{$oRow.o_email}</dd>
+                                        </dl>
+                                    </div>
+
+
+
+                                    <div class="misc-info">
+                                        <h4>
+                                            {if condition="$orRow.or_type eq '0'"}
+                                            退款状态
+                                            {elseif condition="$orRow.or_type eq '1'"}
+                                            换货状态
+                                            {/if}
+                                        </h4>
+
+                                        <div class="thstatus">
+                                            <div class="thsbox" style="width: 511px;">
+                                                <div class="thsquan-success"></div>
+                                                {if condition="$orRow.or_status eq 0"}
+                                                <div class="thxian{if condition="$orstatus eq 'or_status'"}s{/if}"></div>
+                                            <div class="{if condition="$orstatus eq 'or_status'"}thsquan-error{else/}thsquan-default{/if}"></div>
+                                        {else/}
+                                        <div class="thxians"></div>
+                                        <div class="thsquan-success"></div>
+                                        {/if}
+
+                                        {if condition="$orRow.or_receiving eq 0"}
+                                        <div class="thxian{if condition="$orstatus eq 'or_receiving'"}s{/if}"></div>
+                                    <div class="{if condition="$orstatus eq 'or_receiving'"}thsquan-error{else/}thsquan-default{/if}"></div>
+                                {else/}
+                                <div class="thxians"></div>
+                                <div class="thsquan-success"></div>
+                                {/if}
+
+                                {if condition="$orRow.or_refund eq 0"}
+                                <div class="thxian"></div>
+                                <div class="thsquan-default"></div>
+                                {else/}
+                                <div class="thxians"></div>
+                                <div class="thsquan-success"></div>
+                                {/if}
+
+                                {if condition="$orRow.or_over eq 0"}
+                                <div class="thxian"></div>
+                                <div class="thsquan-default"></div>
+                                {else/}
+                                <div class="thxians"></div>
+                                <div class="thsquan-success"></div>
+                                {/if}
+                        </div>
+                        <div class="thsbox">
+                            <div class="thstext">
+                                <ul>
+                                    <li>
+                                        <div class="thswenzi" style="color:#ff7f00;">提交<br/>售后</div>
+                                    </li>
+                                    <li><div class="thswenzi" {if condition="$orstatus eq 'or_status'"}style="color:#dd2803;"{/if} {if condition="$orRow.or_status neq 0"}style="color:#ff7f00;"{/if}>第三方<br/>卖家确认</div></li>
+                            <li><div class="thswenzi" {if condition="$orstatus eq 'or_receiving'"}style="color:#dd2803;"{/if} {if condition="$orRow.or_receiving neq 0"}style="color:#ff7f00;"{/if}>第三方<br/>卖家收货</div></li>
+                        <li><div class="thswenzi" {if condition="$orRow.or_refund neq 0"}style="color:#ff7f00;"{/if}> {if condition="$orRow.or_type eq 0"}退款{else/}换货{/if}处理</div></li>
+                    <li><div class="thswenzi" {if condition="$orRow.or_over neq 0"}style="color:#ff7f00;"{/if}>买家<br/>已收货</div></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{if condition="$orRow.or_type eq '0'"}
+
+<div class="contact-info">
+    <h3>费用信息 </h3>
+
+    <dl>
+        <dt>应退款金额：</dt>
+        <dd>{$returnprice}元</dd>
+    </dl>
+    {if condition="$orRow.or_refund eq '1' and $orRow.or_type eq '0'"}
+    <dl class="row">
+        <dt class="tit">
+            <label>可执行操作</label>
+        </dt>
+        <dd class="opt" style="margin-left:10px">
+
+            <a class="ncap-btn-big ncap-btn-green" onclick="returnor({$orRow.or_id})">确定退款</a>
+
+        </dd>
+    </dl>
+    {/if}
+</div>
+{/if}
+<div class="misc-info">
+    <h4>操作</h4>
+    {if condition="$orRow.or_status eq '0'"}
+    <dl>
+        <dt></dt>
+        <dd>
+            <label><input type="radio" name="or_examine" checked="" value="1" onclick="distribution(1)">审核通过</label>
+            <label><input type="radio" name="or_examine" value="-1" onclick="distribution(-1)">拒绝通过</label>
+        </dd>
+    </dl>
+    <dl id="distribution" style="display: none;">
+        <dt>拒绝原因：</dt>
+        <dd><span class="tabletitle" style="float: left;margin-top: 10px;"></span><span class="tablecontent"><textarea name="or_examine_content" id="remark" style="width:300px; height:120px;" placeholder="拒绝原因" class="tarea"></textarea></span></dd>
+    </dl>
+    <hr>
+    {/if}
+
+    {if condition="$orRow.or_satisfaction eq '1'"}
+    <dl>
+        <dt>售后评价：</dt>
+        <dd>
+            <textarea name="or_content"  style="width:300px; height:120px;" placeholder="售后评价" class="tarea" readonly>{$orRow.or_content}</textarea>
+        </dd>
+    </dl>
+    {/if}
+    <dl>
+        <dt>状态：</dt>
+        <dd>
+            {if condition="$orRow.or_status eq '0'"}
+            待审核
+            {elseif condition="$orRow.or_receiving eq '0'"}
+                {if condition="$orRow.or_examine eq '-1'"}
+                已拒绝
+                {else/}
+                待收货
+                {/if}
+            {elseif condition="$orRow.or_refund eq '0'"}
+                {if condition="$orRow.or_type eq '0'"}
+                待退款
+                {elseif condition="$orRow.or_type eq '1'"}
+                待换货
+                {/if}
+            {elseif condition="$orRow.or_refund eq '1'"}
+                {if condition="$orRow.or_type eq '0'"}
+                待后台退款
+                {elseif condition="$orRow.or_type eq '1'"}
+                待商家换货
+                {/if}
+            {elseif condition="$orRow.or_refund eq '1'"}
+            待完成
+            {/if}
+        </dd>
+    </dl>
+</div>
+
+
+<div class="bot">
+    {if condition="$orRow.or_status eq '0'"}
+    <input type="hidden" name="file" value="or_status">
+    <!--onclick="document.priceForm.submit()"-->
+        
+        <a data-toggle="modal" id="ti" data-target="#myModal" class="ncap-btn-big ncap-btn-green">提交</a>
+        <a data-toggle="modal" id="tis" class="ncap-btn-big ncap-btn-green" onclick="submitupdate2()" style="display:none">提交</a>
+    {elseif condition="$orRow.or_receiving eq '0'"}
+    <input type="hidden" name="file" value="or_receiving">
+   
+    <!--onclick="document.priceForm.submit()"-->
+    <input type="hidden" name="or_examine">
+    <textarea name="or_examine_content" id="remark1" style="display:none;" placeholder="拒绝原因" class="tarea"></textarea>
+    <a href="JavaScript:void(0);" onclick='$("input[name=or_examine]").val("1");document.priceForm.submit()' class="ncap-btn-big ncap-btn-green">
+        
+        {if condition="$orRow.or_examine eq '-1'"}
+            再次收货
+        {else/}
+            收到退换货
+        {/if}
+    </a>
+    <a href="JavaScript:void(0);" onclick='$("input[name=or_examine]").val("-1");' data-toggle="modal" data-target="#myModal1"  class="ncap-btn-big ncap-btn-green">拒绝退换货</a>
+    {elseif condition="$orRow.or_refund eq '0'"}
+    <input type="hidden" name="file" value="or_refund">
+    <a href="JavaScript:void(0);" onclick="document.priceForm.submit()" class="ncap-btn-big ncap-btn-green"> 
+        <!-- 提交 -->
+         {if condition="$orRow.or_type eq '0'"}退款{elseif condition="$orRow.or_type eq '1'"}换货{/if}
+    </a> 
+    {/if}
+    <a href="JavaScript:void(0);" onclick="javascript:history.go(-1)" class="ncap-btn-big ncap-btn-mini">取消</a>
+</div>
+
+</div>
+
+
+
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+<script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+<script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+<script type="text/javascript">
+    function returnor($or_id){
+        $.ajax({
+            url:"{:url('manage/Audit/returnor')}",
+            type:"POST",
+            dataType:"json",
+            data:{or_id:$or_id},
+            success:function (data) {
+                if(data.code == 200){
+                    swal({
+                        title: "通讯提示!",
+                        text: "操作成功!"
+                    });
+                    $(".sa-button-container .confirm").click(function(){
+                        window.location.reload();
+                    });
+
+                }else{
+                    swal({
+                        title: "通讯提示!",
+                        text: "操作失败!"
+                    });
+                }
+            }
+        });
+    }
+
+    function distribution(type){
+        if(type == -1){
+            $("#distribution").show();
+            $("#tis").show();
+            $("#ti").hide();
+        }else{
+            $("#distribution").hide();
+
+        }
+    }
+    function submitupdate(){
+
+        var or_address_1 = $("textarea[name=or_address_1]").val();
+        $("input[name=or_address]").val(or_address_1);
+        document.priceForm.submit();
+    }
+
+    //拒绝退换货
+    function submitupdate1(){
+        var or_examine_content_1 = $("textarea[name=or_examine_content_1]").val();
+        $("input[name=or_examine]").val("-1");
+        $("textarea[name=or_examine_content]").val(or_examine_content_1);
+        document.priceForm.submit();
+    }
+
+    function submitupdate2(){
+       
+        document.priceForm.submit();
+    }
+
+
+
+</script>
+</body>
+</html>

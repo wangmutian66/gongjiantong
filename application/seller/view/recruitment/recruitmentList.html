@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>招聘列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 style="width:40%">招聘列表 </h5>
+                    <div class="ibox-tools" style="margin-right: 15px;">
+                        {if condition="$ss_is_areview eq '2'"}
+                        <a href="{:url('seller/Recruitment/recruitmentAdd')}">
+                            <i class="fa fa-plus"></i>
+                            招聘添加
+                        </a>
+                        {/if}
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    {if condition="$ss_is_areview eq '2'"}
+                    <div class="row">
+                        <form action="" method="get">
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                    <input type="text" placeholder="请输入招聘标题" class="input-sm form-control" name="ri_title" value="{if condition="isset($data.ri_title)"}{$data.ri_title}{/if}">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                    <input type="text" placeholder="招聘人数" class="input-sm form-control" name="ri_number_recruits" value="{if condition="isset($data.ri_number_recruits)"}{$data.ri_number_recruits}{/if}">
+                                    <span class="input-group-btn">
+                                                <button type="submit" class="btn btn-sm btn-primary"> 搜索</button>
+                                            </span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="table-responsive">
+
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th style="width:3%"> </th>
+                                <th>公司名称</th>
+                                <th>招聘标题</th>
+                                <th>联系方式</th>
+                                <th>招聘行业</th>
+                                <!-- <th>招聘技能</th> -->
+                                <th>招聘人数</th>
+                                <th>工资待遇</th>
+                                <th>刷新次数</th>
+                                <th>添加时间</th>
+                                <th>发布状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {if condition="isset($ri_list) and !empty($ri_list)"}
+                            {foreach name="ri_list.data" item="info"}
+                            <tr id="ri_{$info.ri_id}">
+                                <td>
+                                    <input type="checkbox" class="i-checks" name="ri_id[]" value="{$info.ri_id}">
+                                </td>
+                                <td>
+                                    {$info.ri_company}
+                                </td>
+                                <td>
+                                    {$info.ri_title}
+                                </td>
+                                <td>
+                                    {$info.ri_contact_mobile}
+                                </td>
+                                <td>
+                                    {$info.ui_name}
+                                </td>
+                              <!--   <td>
+                                    {$info.us_name}
+                                </td> -->
+                                <td>
+                                    {$info.ri_number_recruits}
+                                </td>
+                                <td>
+                                    {$info.ri_wage}
+                                </td>
+                                <td id="ris_{$info.ri_id}">{$info.ri_refresh_frequency}</td>
+                                <td>
+                                    {$info.ri_add_time|date='Y-m-d H:i:s',###}
+                                </td>
+                                <td>
+                                    {if condition="$info.ri_is_release eq 0"}
+                                    <span style="color:#b70f0f;">未发布</span>
+                                    {else}
+                                    <span style="color:#0e9614;">已发布</span>
+                                    {/if}
+                                </td>
+                                <td>
+                                    <a class="btn btn-default btn-xs" href="{:url('seller/Recruitment/deliveryResume',array('ri_id'=>$info.ri_id))}"><i class="fa fa-eye text-navy"></i>&nbsp;查看简历({$info.ur_count}) </a>&nbsp;&nbsp;
+                                    <!--<a data-toggle="modal" data-target="#myModal2" onclick="ri_show({$info.ri_id})" class="btn btn-default btn-xs"><i class="fa fa-eye text-navy"></i>&nbsp;查看 </a>&nbsp;&nbsp;-->
+
+                                    <!--<a onclick="refresh({$info.ri_id},'{:url(\"seller/recruitment/recruitmentRefresh\")}')" class="btn btn-default btn-xs"><i class="fa fa-refresh text-navy"></i>&nbsp;刷新 </a>&nbsp;&nbsp;-->
+
+                                    <a href="{:url('seller/recruitment/recruitmentEdit',array('id'=>$info.ri_id))}" class="btn btn-default btn-xs"><i class="fa fa-wrench text-navy"></i>&nbsp;修改 </a>&nbsp;&nbsp;
+
+                                    <a onclick="del('ri_{$info.ri_id}',{$info.ri_id},'{:url(\"seller/recruitment/recruitmentDel\")}')" class="btn btn-default btn-xs"><i class="fa fa-close text-navy"></i>&nbsp;删除 </a>
+                                </td>
+                            </tr>
+                            {/foreach}
+                            {/if}
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <!-- 分页 start -->
+                    {if condition="isset($ri_list.page) and !empty($ri_list.page)"}
+                    {$ri_list.page}
+                    {/if}
+                    <!-- 分页 end -->
+                    {else/}
+                    <input type="button"  class="btn btn-sm btn-primary" value="申请招聘信息" onclick="articlereview()">
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated flipInY">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="modal_title">招聘详情</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <span>公司名称: </span>
+                    <span id="ri_company"></span>
+                </div>
+                <div class="form-group">
+                    <span>招聘标题: </span>
+                    <span id="ri_title"></span>
+                </div>
+                <div class="form-group">
+                    <span>标签: </span>
+                    <span id="ri_label"></span>
+                </div>
+                <div class="form-group">
+                    <span>联系方式: </span>
+                    <span id="ri_contact_mobile"></span>
+                </div>
+                <div class="form-group">
+                    <span>行业: </span>
+                    <span id="ui_name"></span>
+                </div>
+                <div class="form-group">
+                    <span>技能: </span>
+                    <span id="us_name"></span>
+                </div>
+                <div class="form-group">
+                    <span>岗位简介: </span>
+                    <span id="ri_contents"></span>
+                </div>
+                <div class="form-group">
+                    <span>工资待遇: </span>
+                    <span id="ri_wage"></span>
+                </div>
+                <div class="form-group">
+                    <span>招聘人数: </span>
+                    <span id="ri_number_recruits"></span>
+                </div>
+                <div class="form-group">
+                    <span>工作省/市/区: </span>
+                    <span id="ri_work"></span>
+                </div>
+                <div class="form-group">
+                    <span>投放省/市: </span>
+                    <span id="ri_puton"></span>
+                </div>
+                <div class="form-group">
+                    <span>发布时间: </span>
+                    <span id="ri_add_time"></span>
+                </div>
+                <div class="form-group">
+                    <span>刷新时间: </span>
+                    <span id="ri_refresh_time"></span>
+                </div>
+                <div class="form-group">
+                    <span>添加人: </span>
+                    <span id="sm_name"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 全局js -->
+<script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+<script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+<script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Peity -->
+<script src="SELLER_JS/plugins/peity/jquery.peity.min.js"></script>
+<!-- 自定义js -->
+<script src="SELLER_JS/content.js?v=1.0.0"></script>
+<!-- iCheck -->
+<script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+<!-- Peity -->
+<script src="SELLER_JS/demo/peity-demo.js"></script>
+<script src="SELLER_JS/globals.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+    function ri_show(id) {
+        $.ajax({
+            url:'{:url("seller/recruitment/recruitmentShow")}',
+            type:"post",
+            data:{id:parseInt(id)},
+            dataType:"json",
+            success:function (info) {
+                if (info.code != '1') {
+                    swal({
+                        title: "数据请求失败,请稍候再试!~",
+                        text: info.msg
+                    });
+                }else{
+                    var param = JSON.parse(info.data);
+                    $("#ri_company").html(param.ri_company);
+                    $("#ri_contact_mobile").html(param.ri_contact_mobile);
+                    $("#ri_title").html(param.ri_title);
+                    $("#ri_label").html(param.ri_label);
+                    $("#ui_name").html(param.ui_name);
+                    $("#us_name").html(param.us_name);
+                    $("#ri_contents").html(param.ri_contents);
+                    $("#ri_wage").html(param.ri_wage);
+                    $("#ri_number_recruits").html(param.ri_number_recruits);
+                    $("#ri_work").html(param.work_province+','+param.work_city+','+param.work_area);
+                    $("#ri_puton").html(param.puton_province+','+param.puton_city);
+                    $("#ri_add_time").html(param.ri_add_time);
+                    $("#ri_refresh_time").html(param.ri_refresh_time);
+                    $("#sm_name").html(param.sm_name);
+                }
+            },
+            error:function () {
+                swal({
+                    title: "通讯出错!",
+                    text: "请联系开发人员或管理员!"
+                });
+            }
+        })
+    }
+
+    function articlereview(){
+        $.ajax({
+            url:"{:url('seller/Recruitment/articlereview')}",
+            type:"POST",
+            dataType:"json",
+            success:function(data){
+                if (data.code == 200) {
+                    swal({
+                        title: "文章审核已发送给后台！",
+                        text: ""
+                    });
+                    $('.confirm').click(function(){
+                        window.location.reload();
+                    });
+                }else{
+                    swal({
+                        title: data.msg,
+                        text: ""
+                    });
+                }
+            }
+        });
+    }
+
+
+
+
+
+</script>
+</body>
+</html>

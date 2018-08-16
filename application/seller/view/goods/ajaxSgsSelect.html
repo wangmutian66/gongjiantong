@@ -1,0 +1,79 @@
+<style type="text/css">
+    .btns-default{
+        background-color: #F3F3F3;
+        color:#000;
+    }
+    .btns-success{
+        border:1px solid #00A55B;
+        background-color:#00A55B;
+        color:#fff;
+    }
+    .btn:hover{
+        color:#333;
+    }
+    .btn:focus{
+        color:#fff;
+    }
+</style>
+<div style="margin: 0% 2%;">
+    <table class="table table-bordered" id="goods_spec_table1">
+        <input type="hidden" name="goods_id" value="{$goods_id}">
+        <tbody>
+            <tr>
+              <td colspan="2"><b>商品规格:</b></td>
+            </tr>
+            {if condition="isset($sgs_value) and !empty($sgs_value)"}
+                {foreach name="sgs_value" item = "sgs"}
+                    <tr>
+                        <td style="width:10%">{$sgs.sgs_name}:<input type="hidden" id="sgs_type{$sgs.sgs_id}" value="{$sgs.sgs_type}"><br>{if condition="$sgs.sgs_type eq 2"} <span style="color:red">唯一属性只能选择一个 </span>{/if}</td>
+                        <td>
+                            {foreach name="sgs.item" item="sgi"}
+                                <button type="button" class="btn 
+                                <?php 
+                                  if(!empty($item_ids)){
+                                    if(in_array($sgi['sgi_id'],$item_ids)){  
+                                        echo 'btns-success'; 
+                                    }else{
+                                        echo 'btns-default';  
+                                    } 
+                                  }else{
+                                    echo 'btns-default';  
+                                  }                       
+                                ?>" 
+                                style="margin-left: 1%;" data-spec_id='{$sgs.sgs_id}' data-item_id='{$sgi.sgi_id}'>{$sgi.sgi_item}</button> 
+                            {/foreach}  
+                        </td>
+                    </tr>
+                {/foreach}
+            {/if}
+        </tbody>
+    </table>
+</div>
+
+<div id="goods_spec_table2" style="margin: 0% 2%;"> <!--ajax 返回 规格对应的库存--> </div>
+<script type="text/javascript">
+$("#ajax_spec_data button").click(function(){
+  var spec_id = $(this).data('spec_id');
+  var sgs_type = $("#sgs_type"+spec_id).val();
+  if(sgs_type > 1){
+    $("button[data-spec_id="+spec_id+"]").removeClass('btns-success');
+    $("button[data-spec_id="+spec_id+"]").removeClass('btns-default');
+    var item_id = $(this).data('item_id');
+    $("button[data-item_id="+item_id+"]").addClass('btns-success');
+  }else{
+    if($(this).hasClass('btns-success'))
+    {
+       $(this).removeClass('btns-success');
+       $(this).addClass('btns-default');        
+    }
+    else
+    {
+       $(this).removeClass('btns-default');
+       $(this).addClass('btns-success');        
+    }
+  }
+  ajaxGetSpecInput();           
+});
+
+</script>
+

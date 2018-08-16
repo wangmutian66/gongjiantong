@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统设置</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeIn">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>基本设置</h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a class="close-link" href="{:url('manage/index/welcome')}">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" onclick="tab(1)" aria-expanded="true">平台信息</a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" onclick="tab(2)" aria-expanded="false">基本设置</a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" onclick="tab(3)" aria-expanded="false">相关文章设置</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                       <form class="form-horizontal" method="POST" action="{:url('manage/System/system')}" enctype="multipart/form-data" >
+                            <div name="tab" class="tab-pane active">
+                                <div class="panel-body">
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            平台名称
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <input class="form-control" type="text" required aria-required="true" aria-invalid="true" id="platform_name" name="platform[name]" onblur="verifyInput('platform_name','chAlp','platform_name_show')" value="{if condition="isset($data.platform.name)"}{$data.platform.name}{/if}" />
+                                        </div>
+                                        <code id="platform_name_show">请输入中英文!</code>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            平台描述
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <textarea class="form-control" name="platform[desc]">{if condition="isset($data.platform.desc)"}{$data.platform.desc}{/if}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            关键字
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <textarea class="form-control" name="platform[keywords]">{if condition="isset($data.platform.keywords)"}{$data.platform.keywords}{/if}</textarea>
+                                        </div>
+                                        <code>多个用英文的逗号","分割</code>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            平台地址
+                                        </label>
+                                        <div class="col-sm-2">
+                                            <select class="input-sm form-control input-s-sm inline" name="platform[province]" id="platform_province" onchange="getRegion('platform_city',this.value,'platform_area')" style="height: 32px;">
+
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <select class="input-sm form-control input-s-sm inline" name="platform[city]" onchange="getRegion('platform_area',this.value)"  id="platform_city" style="height: 32px;">
+                                                <option value="">请选择城市</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <select class="input-sm form-control input-s-sm inline" name="platform[area]" id="platform_area" style="height: 32px;">
+                                                <option value="">请选择地区</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            详细地址
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <input class="form-control" type="text" required aria-required="true" aria-invalid="true" name="platform[address]"  value="{if condition="isset($data.platform.address)"}{$data.platform.address}{/if}"/>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            客服QQ号
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <input  class="form-control" name="platform[qq]"  value="{if condition="isset($data.platform.qq)"}{$data.platform.qq}{/if}" id="qq" onblur="verifyInput('qq','num','qq_show')" />
+                                        </div>
+                                        <code id="qq_show"></code>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            联系人
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <input  class="form-control" name="platform[contact_user]" id="platform_contact_user" onblur="verifyInput('platform_contact_user','ch','platform_contact_user_show')" value="{if condition="isset($data.platform.contact_user)"}{$data.platform.contact_user}{/if}"/>
+                                        </div>
+                                        <code id="platform_contact_user_show"></code>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            联系电话
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <input  class="form-control" name="platform[contact_mobile]" id="platform_contact_mobile" onblur="verifyInput('platform_contact_mobile','num','platform_contact_mobile_show')" value="{if condition="isset($data.platform.contact_mobile)"}{$data.platform.contact_mobile}{/if}" />
+                                        </div>
+                                        <code id="platform_contact_mobile_show"></code>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            logo
+                                        </label>
+                                        <div class="col-sm-1">
+                                            {if condition="isset($data.platform.logo_path)"}<img src="__UPLOAD__/{$data.platform.logo_path}" alt="" width="30">{/if}
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input class="form-control" type="file" aria-required="true" aria-invalid="true" name="logo_path" value="50" />
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            备案号
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <input class="form-control" type="text" required aria-required="true" aria-invalid="true" name="platform[filing]"  value="{if condition="isset($data.platform.filing)"}{$data.platform.filing}{/if}"/>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            转账百分比
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <input class="form-control" type="text" style="width: 100px; display: inline-block;" required aria-required="true" aria-invalid="true" name="platform[transfer]"  value="{if condition="isset($data.platform.transfer)"}{$data.platform.transfer}{/if}"/> %
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            确认收货天数
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <input class="form-control" type="text" style="width: 100px; display: inline-block;" required aria-required="true" aria-invalid="true" name="platform[arrivaltime]"  value="{if condition="isset($data.platform.arrivaltime)"}{$data.platform.arrivaltime}{/if}"/> 天
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            是否关闭
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="radio radio-info radio-inline">
+                                                <input type="radio" id="platform[is_open]" value="0" name="platform[is_open]" checked {if condition="isset($info.platform.is_open) and ($info.platform.is_open eq '0')"}checked{/if}>
+                                                <label for="platform[is_open]" style="padding-left: 0px;"> 开启 </label>
+                                            </div>
+                                            <div class="radio radio-info radio-inline">
+                                                <input type="radio" id="platform[is_open]1" value="1" name="platform[is_open]" {if condition="isset($info.platform.is_open) and ($info.platform.is_open eq '1')"}checked{/if}>
+                                                <label for="platform[is_open]1" style="padding-left: 0px;"> 关闭 </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            关闭原因文章
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <select class="input-sm form-control input-s-sm inline" name="platform[close_cause]" style="height: 32px;">
+                                                <option value="">请选择文章</option>
+                                                {if condition="isset($list) and !empty($list)"}
+                                                    {foreach name='list' item='val'}
+                                                        <option value="{$val.a_id}" {if condition="isset($data.platform.close_cause) and ($data.platform.close_cause eq $val.a_id)"}selected{/if}>{$val.a_title}</option>
+                                                    {/foreach}
+                                                {/if}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                            <input class="btn btn-primary" type="submit" value="保存内容" />
+                                            <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div name="tab" class="tab-pane" style="display: none;">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            首页热门搜索词
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <textarea class="form-control" name="other[search]" required>{if condition="isset($data.other.search)"}{$data.other.search}{/if}</textarea>
+                                        </div>
+                                        <code>多个用英文的逗号","分割</code>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            招聘热门搜索词
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <textarea class="form-control" name="other[recruitment_search]" required>{if condition="isset($data.other.recruitment_search)"}{$data.other.recruitment_search}{/if}</textarea>
+                                        </div>
+                                        <code>多个用英文的逗号","分割</code>
+                                    </div>
+                                   <!--  <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            短息验证码超时时间
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <input  class="form-control" name="other[sms_timeout]" required value="{if condition="isset($data.other.sms_timeout)"}{$data.other.sms_timeout}{/if}" />
+                                        </div>
+                                    </div> -->
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            个人信息注销后多久删除
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <input class="form-control" type="number" required aria-required="true" id="other_delete_user_info" onblur="verifyInput('other_delete_user_info','num','other_delete_user_info_show')" aria-invalid="true" name="other[delete_user_info]" value="{if condition="isset($data.other.delete_user_info)"}{$data.other.delete_user_info}{/if}"/>
+                                        </div>
+                                        <code id="other_delete_user_info_show">单位:天(只能输入正整数)</code>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            规范支付金额
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <input  class="form-control" name="other[specification_pay_money]" id="specification_pay_money" onblur="verifyInput('specification_pay_money','num','specification_pay_money_show')" type="number" required value="{if condition="isset($data.other.specification_pay_money)"}{$data.other.specification_pay_money}{/if}"/>
+                                        </div>
+                                        <code id="specification_pay_money_show">单位:元(只能输入正整数)</code>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            规范免费浏览次数
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <input  class="form-control" name="other[specification_free_browsse_num]" id="specification_free_browsse_num" onblur="verifyInput('specification_free_browsse_num','num','specification_free_browsse_num_show')" type="number" required value="{if condition="isset($data.other.specification_free_browsse_num)"}{$data.other.specification_free_browsse_num}{/if}"/>
+                                        </div>
+                                        <code id="specification_free_browsse_num_show">只能输入正整数</code>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                            <input class="btn btn-primary" type="submit" />
+                                            <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div name="tab" class="tab-pane" style="display: none;">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            更新文章
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <select class="input-sm form-control input-s-sm inline" name="article[update]" id="update" style="height: 32px;">
+                                                <option value="">请选择文章</option>
+                                                {if condition="isset($list) and !empty($list)"}
+                                                    {foreach name='list' item='val'}
+                                                        <option value="{$val.a_id}" {if condition="isset($data.article.update) and ($data.article.update eq $val.a_id)"}selected{/if}>{$val.a_title}</option>
+                                                    {/foreach}
+                                                {/if}
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" placeholder="请输入文章名" class="input-sm form-control" id="update_value">
+                                                <span class="input-group-btn">
+                                                    <a onclick="search_articles('update')" class="btn btn-sm btn-primary"> 搜索</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            商户更新文章
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <select class="input-sm form-control input-s-sm inline" name="article[shop_update]" id="shop_update" style="height: 32px;">
+                                                <option value="">请选择文章</option>
+                                                {if condition="isset($list) and !empty($list)"}
+                                                    {foreach name='list' item='val'}
+                                                        <option value="{$val.a_id}" {if condition="isset($data.article.shop_update) and ($data.article.shop_update eq $val.a_id)"}selected{/if}>{$val.a_title}</option>
+                                                    {/foreach}
+                                                {/if}
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" placeholder="请输入文章名" class="input-sm form-control" id="shop_update_value">
+                                                <span class="input-group-btn">
+                                                    <a onclick="search_articles('shop_update')" class="btn btn-sm btn-primary"> 搜索</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            帮助文章
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <select class="input-sm form-control input-s-sm inline" name="article[help]" id="help" style="height: 32px;">
+                                                <option value="">请选择文章</option>
+                                                {if condition="isset($list) and !empty($list)"}
+                                                    {foreach name='list' item='val'}
+                                                        <option value="{$val.a_id}" {if condition="isset($data.article.help) and ($data.article.help eq $val.a_id)"}selected{/if}>{$val.a_title}</option>
+                                                    {/foreach}
+                                                {/if}
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" placeholder="请输入文章名" class="input-sm form-control" id="help_value">
+                                                <span class="input-group-btn">
+                                                    <a onclick="search_articles('help')" class="btn btn-sm btn-primary"> 搜索</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            入住协议
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <select class="input-sm form-control input-s-sm inline" name="article[check_in]" id="checkIn" style="height: 32px;">
+                                                <option value="">请选择文章</option>
+                                                {if condition="isset($list) and !empty($list)"}
+                                                    {foreach name='list' item='val'}
+                                                        <option value="{$val.a_id}" {if condition="isset($data.article.check_in) and ($data.article.check_in eq $val.a_id)"}selected{/if}>{$val.a_title}</option>
+                                                    {/foreach}
+                                                {/if}
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" placeholder="请输入文章名" class="input-sm form-control" id="check_in_value">
+                                                <span class="input-group-btn">
+                                                    <a onclick="search_articles('check_in')" class="btn btn-sm btn-primary"> 搜索</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            软件许可,服务协议
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <select class="input-sm form-control input-s-sm inline" name="article[licensing_and_service]" id="licensing_and_service" style="height: 32px;">
+                                                <option value="">请选择文章</option>
+                                                {if condition="isset($list) and !empty($list)"}
+                                                    {foreach name='list' item='val'}
+                                                        <option value="{$val.a_id}" {if condition="isset($data.article.licensing_and_service) and ($data.article.licensing_and_service eq $val.a_id)"}selected{/if}>{$val.a_title}</option>
+                                                    {/foreach}
+                                                {/if}
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" placeholder="请输入文章名" class="input-sm form-control" id="licensing_and_service_value">
+                                                <span class="input-group-btn">
+                                                    <a onclick="search_articles('licensing_and_service')" class="btn btn-sm btn-primary"> 搜索</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            隐私权政策
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <select class="input-sm form-control input-s-sm inline" name="article[privacy]" id="privacy" style="height: 32px;">
+                                                <option value="">请选择文章</option>
+                                                {if condition="isset($list) and !empty($list)"}
+                                                    {foreach name='list' item='val'}
+                                                        <option value="{$val.a_id}" {if condition="isset($data.article.privacy) and ($data.article.privacy eq $val.a_id)"}selected{/if}>{$val.a_title}</option>
+                                                    {/foreach}
+                                                {/if}
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" placeholder="请输入文章名" class="input-sm form-control" id="privacy_value">
+                                                <span class="input-group-btn">
+                                                    <a onclick="search_articles('privacy')" class="btn btn-sm btn-primary"> 搜索</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            公告文章
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <select class="input-sm form-control input-s-sm inline" name="article[announcement]" id="announcement" style="height: 32px;">
+                                                <option value="">请选择文章</option>
+                                                {if condition="isset($list) and !empty($list)"}
+                                                    {foreach name='list' item='val'}
+                                                        <option value="{$val.a_id}" {if condition="isset($data.article.announcement) and ($data.article.announcement eq $val.a_id)"}selected{/if}>{$val.a_title}</option>
+                                                    {/foreach}
+                                                {/if}
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" placeholder="请输入文章名" class="input-sm form-control" id="announcement_value">
+                                                <span class="input-group-btn">
+                                                    <a onclick="search_articles('announcement')" class="btn btn-sm btn-primary"> 搜索</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                            <input class="btn btn-primary" type="submit" />
+                                            <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="MANAGE_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="MANAGE_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/demo/peity-demo.js"></script>
+    <script src="MANAGE_JS/globals.js"></script>
+    <script type="text/javascript">
+        {if condition="isset($data.platform.province)"}
+        getRegion("platform_province", 1, '', {$data.platform.province});
+        getRegion("platform_city", {$data.platform.province}, '', {$data.platform.city});
+        getRegion("platform_area", {$data.platform.city}, '', {$data.platform.area});
+        {else/}
+        getRegion("platform_province", 1);
+        {/if}
+        function tab(num) {
+            var oDiv = $("div[name='tab']");
+            for (var i = 0; i < oDiv.length; i++) {
+                if (i == (num-1)) {
+                    $(oDiv[i]).css("display","block").addClass("active");
+                } else {
+                    $(oDiv[i]).css("display","none").removeClass("active");
+                }
+            }
+        }
+        function search_articles(id) {
+            var v = $("#"+id+"_value").val();
+            var add = $("#"+id);
+            $.ajax({
+                url: "{:url('manage/System/getArticle')}",
+                type: "post",
+                data: {
+                    value : v
+                },
+                dataType: "json",
+                success: function(info) {
+                    if (info.code == 200) {
+                        add.empty();
+                        var opt = "<option value=''>请选择文章</option>";
+                        var data = JSON.parse(info.data);
+                        $.each(data, function(i, n) {
+                            opt += "<option value='" + n.a_id + "'>" + n.a_title + "</option>";
+                        })
+                        add.append(opt);
+                    } else {
+                        swal({
+                            title: "出错啦!",
+                            text: info.msg,
+                        });
+                    }
+                },
+                error: function() {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            })
+        }
+        limitInput("platform_name","chAlp");//平台名称
+        limitInput("qq","num");//QQ
+        limitInput("platform_contact_user","ch");//联系人
+        limitInput("platform_contact_mobile","num");//联系电话
+        limitInput("other_delete_user_info","num");//多久删除用户信息 
+        limitInput("specification_pay_money","num");//规范金额
+        limitInput("specification_free_browsse_num","num");//规范免费浏览次数 
+    </script>
+</body>
+</html>

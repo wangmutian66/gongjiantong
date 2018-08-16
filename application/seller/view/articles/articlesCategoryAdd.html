@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            添加文章分类
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/animate.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    </head>
+    <body class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>添加文章分类</h5>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a class="close-link" href="{:url('seller/index/sellerWelcome')}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a href="{:url('seller/Articles/articlesCategoryList')}">
+                                    <i class="fa fa-bars"></i>
+                                    文章分类列表
+                                </a>
+                            </div>
+                        </div>  
+                        <div class="ibox-content">
+                            <form class="form-horizontal" method="POST" action="{:url('seller/Articles/articlesCategoryAdd')}">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        文章分类名称
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sac_name" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        关键字
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input  class="form-control" name="sac_keywords" />
+                                    </div>
+                                    <div class="col-sm-5" style="color:red;">
+                                        如果多个用逗号","分隔
+                                    </div> 
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        分类归属
+                                    </label>
+                                    <div class="col-sm-2 m-b-xs">
+                                        <select class="input-sm form-control input-s-sm inline" onchange="getCategory(this.value)" name="sac_parent_id_1" style="height: 32px;">
+                                            <option value="0">顶级分类</option>
+                                            {if condition="isset($first_cate) and !empty($first_cate)"}
+                                                {foreach name="first_cate" item = "first"}
+                                                    <option value="{$first.sac_id}">{$first.sac_name}</option>
+                                                {/foreach}
+                                            {/if}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 m-b-xs">
+                                        <select class="input-sm form-control input-s-sm inline" name="sac_parent_id_2" id="sac_parent_id_2" style="height: 32px;">
+                                            <option value="0">请选择</option>
+                                        </select>
+                                    </div>
+                                </div><div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        导航条展示
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <div class="radio radio-info radio-inline">
+                                            <input type="radio" name="sac_show_in_nav" id="sac_show_in_nav1" checked value="1" />
+                                            <label for="sac_show_in_nav1"> 展示 </label>
+                                        </div>
+                                        <div class="radio radio-info radio-inline" >
+                                            <input type="radio" name="sac_show_in_nav" id="sac_show_in_nav2"  value="0" />
+                                            <label for="sac_show_in_nav2" > 不展示 </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        排序
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sac_sort_order" value="50" />
+                                    </div>
+                                    <div class="col-sm-5" style="color:red;">
+                                        从1-100,值越低越靠前
+                                    </div> 
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        描述
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <textarea  class="form-control" name="sac_desc" id="" cols="20" rows="10"></textarea>
+                                    </div>                                   
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        别名
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="sac_alias" value="" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="submit" value="保存内容" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 全局js -->
+        <script src="SELLER_JS/jquery.min.js?v=2.1.4">
+        </script>
+        <script src="SELLER_JS/bootstrap.min.js?v=3.3.6">
+        </script>
+        <!-- 自定义js -->
+        <script src="SELLER_JS/content.js?v=1.0.0">
+        </script>
+        <!-- iCheck -->
+        <script src="SELLER_JS/plugins/iCheck/icheck.min.js">
+        </script>
+        <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+
+            function getCategory(id) {
+                if (id > 0) {
+                    $.ajax({
+                        url:"{:url('seller/Articles/getArticlesCategory')}",
+                        type:"post",
+                        data:{id:id},
+                        dataType:"json",
+                        success:function(info){
+                            $("#sac_parent_id_2").empty();
+                            if (info.code == 200) {
+                                var opt = "<option value=''>请选择文章分类</option>";
+                                var data = JSON.parse(info.data);
+                                $.each(data,function(i,n){
+                                    opt += "<option value='" + n.sac_id + "'>" + n.sac_name + "</option>";
+                                })
+                                $("#sac_parent_id_2").append(opt);
+                            }else{
+                                var opt = "<option value=''>请选择文章分类</option>";
+                                $("#sac_parent_id_2").append(opt);
+                            }
+                        },
+                        error:function(){
+                            swal({
+                                title: "通讯出错!",
+                                text: "请联系开发人员或管理员!"
+                            });
+                        }
+                    })
+                }
+            }
+        </script>
+    </body>
+</html>

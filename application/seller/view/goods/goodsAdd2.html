@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            商品添加
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+
+        <!-- Web Uploader -->
+        <script type="text/javascript">
+
+            var url = '{:url("seller/Goods/goodsImg")}';
+            var gp = 'gp_picture_path[]';
+            var addImg = 'goods_img';
+        </script>
+
+        <script src="SELLER_JS/photoclip/jquery-1.11.2.min.js"></script>
+        <script src="SELLER_JS/photoclip/ajaxfileupload.js"></script>
+
+
+        <script>
+            function ajaxFileUpload() {
+
+                $.ajaxFileUpload
+                ({
+                    url: url, //用于文件上传的服务器端请求地址
+                        secureuri: false, //是否需要安全协议，一般设置为false
+                        data: { img:$("#file23").val() },
+                        fileElementId: ['file23'], //文件上传域的ID
+                        dataType: 'json', //返回值类型 一般设置为json
+                        success: function (data, status)  //服务器成功响应处理函数
+                        {
+                            alert("!");
+                            console.log(data);
+                            console.log(status);
+                        },
+                        error: function (data, status, e)//服务器响应失败处理函数
+                        {
+                            alert("!");
+                            console.log(data);
+                        }
+                })
+                return false;
+            }
+        </script>
+    </head>
+    <body class="gray-bg">
+
+ <input type="file" id="file23" name="file23" onchange="ajaxFileUpload()"/>
+
+
+
+    </body>
+</html>

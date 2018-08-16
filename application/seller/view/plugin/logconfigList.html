@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物流</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="SELLER_CSS/preview/style.css" rel="stylesheet">
+</head>
+<style>
+    img {  
+ max-width: 100%; /*图片自适应宽度*/  
+}
+</style>
+<body class="gray-bg">
+
+
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>物流配置</h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a href="{:url('seller/Plugin/logconfigAdd',array('log_id'=>$log_id))}">
+                                <i class="fa fa-plus"></i>
+                                物流配送区添加
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <!-- <div class="row">
+                            <form action="" method="get">
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="请输入物流名称" class="input-sm form-control" name="g_name" value="{if condition="isset($data.g_name)"}{$data.g_name}{/if}">
+                                    </div>
+                                    
+                                </div>
+                                
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-sm btn-primary" style="border-radius: 3px;"> 搜索</button>
+                                </span>
+                            </form>
+                        </div> -->
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th width="180">配送区名称</th> 
+                                        <th width="180">配送地址</th>
+                                        <th width="100">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($log_value) and !empty($log_value)"}
+                                    {foreach name="log_value" item="info"}
+                                    
+                                        <tr>
+                                            <td>
+                                                {$info.logc_name}
+                                            </td>
+                                            
+                                           
+                                             <td>
+
+                                                 {if condition="$info.logc_national eq '1'"}
+                                                 全国
+                                                 {else/}
+                                                 {$info.logc_area}
+                                                 {/if}
+                                            </td>
+                                            <td>
+                                               
+                                                <a href="{:url('seller/Plugin/logconfigEdit',array('id'=>$info.logc_id))}" class="btn btn-default btn-xs"><i class="fa fa-wrench text-navy"></i>&nbsp;修改</a>&nbsp;&nbsp;
+
+                                                <a onclick="del('log_{$info.logc_id}',{$info.logc_id},'{:url(\"seller/Plugin/logDels\")}','post','json',true)" class="btn btn-default btn-xs"><i class="fa fa-close text-navy"></i>&nbsp;删除</a>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+    <!-- 全局js -->
+    <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="SELLER_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="SELLER_JS/demo/peity-demo.js"></script>
+    <script src="SELLER_JS/plugins/layer/layer.min.js"></script>
+    <script src="SELLER_JS/globals.js"></script>
+    <script src="SELLER_JS/preview/swiper.min.js"></script>
+
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            var seletvalue = $("select[name=sgc1_id]").val();
+
+            if(seletvalue !=""){
+                $("select[name=sgc1_id]").find("option").eq(0).attr("selected",true);
+                $("#gl_parent_id_2,#gl_parent_id_3").html("<option value=''>请选择商品分类</option>");
+            }
+        });
+
+        function goodaddsubmit(){
+            if($("input[name=sba_logo_path]").val() == "" && $("#tian").is(":visible")){
+                swal({
+                    title: "通讯出错!",
+                    text: "请上传图片"
+                });
+                return false;
+            }
+
+            if($("select[name=mgb_id]").val() == "" && !$("#tian").is(":visible")){
+                swal({
+                    title: "通讯出错!",
+                    text: "请选择商品品牌"
+                });
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>

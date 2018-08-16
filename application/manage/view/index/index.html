@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+
+    <title> 工建通- 主页</title>
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link href="SELLER_CSS/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="favicon.ico"> <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet">
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+    <div id="wrapper">
+        <!--左侧导航开始-->
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="nav-close"><i class="fa fa-times-circle"></i>
+            </div>
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                                    <span class="block m-t-xs" style="font-size:20px;">
+                                        <i class="fa fa-area-chart"></i>
+                                        <strong class="font-bold">{$m_name}</strong>
+                                    </span>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="logo-element">{$m_name}
+                        </div>
+                    </li>
+                    <li class="dropdown" style="float: right;top: -42px;">
+                        <a class="glyphicon glyphicon-log-out" href="{:url('manage/login/logout')}"></a>
+                    </li>
+                    <!-- 一级标题(不可点击, 没有链接) -->
+                    {foreach name="menu_list" item="variable"}
+                        <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                            <span class="ng-scope">{$variable.name}</span>
+                        </li>
+                        {if condition="isset($variable.sub_menu) and $variable.sub_menu neq null"}
+                            {foreach name="variable.sub_menu" item="value"}
+                                <li>
+                                    <a href="{:url($value.link)}">
+                                        <i class="{$value.icon}"></i>
+                                        <span class="nav-label">{$value.name}</span>
+                                        {if condition="isset($value.sub_menu) and $value.sub_menu neq null"}
+                                        <span class="fa arrow"></span>
+                                        {/if}
+                                    </a>
+                                    {if condition="isset($value.sub_menu) and $value.sub_menu neq null"}
+                                        <ul class="nav nav-second-level">
+                                            {foreach name="value.sub_menu" item="val"}
+                                                <li>
+                                                    <a class="J_menuItem" href="{:url($val.link)}">{$val.name}</a>
+                                                </li>
+                                            {/foreach}
+                                        </ul>
+                                    {/if}
+                                </li>
+                            {/foreach}
+                        {/if}
+                        <li class="line dk"></li>
+                    {/foreach}
+                </ul>
+            </div>
+        </nav>
+        <!--左侧导航结束-->
+        <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <!-- <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-info " href="#"><i class="fa fa-bars"></i> </a> -->
+                    <!-- </div> -->
+                    <!--<ul class="nav navbar-top-links navbar-right">-->
+                        <!--<li class="dropdown">-->
+                            <!--<a class="glyphicon glyphicon-log-out" href="{:url('manage/login/logout')}"></a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                </nav>
+            </div>
+            <div class="row J_mainContent" id="content-main">
+                <iframe id="J_iframe" width="100%" height="100%" src="{:url('manage/index/welcome')}" frameborder="0" data-id="index_v1.html" seamless></iframe>
+            </div>
+        </div>
+        <!--右侧部分结束-->
+    </div>
+
+    <!-- 全局js -->
+    <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="MANAGE_JS/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="MANAGE_JS/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="MANAGE_JS/plugins/layer/layer.min.js"></script>
+
+    <!-- 自定义js -->
+    <script src="MANAGE_JS/hAdmin.js?v=4.1.0"></script>
+    <script type="text/javascript" src="MANAGE_JS/index.js"></script>
+
+    <!-- 第三方插件 -->
+    <script src="MANAGE_JS/plugins/pace/pace.min.js"></script>
+
+    <!--<script type="text/javascript" src="MANAGE_JS/plugins/pop/jquery.min.js"></script>-->
+    <script type="text/javascript" src="MANAGE_JS/plugins/pop/yanue.pop.js"></script>
+    <!--jquery右下角pop弹窗start -->
+    <script type="text/javascript" >
+
+        yanuemessage(
+            "{:url('manage/shop/shopShowMessage')}",
+            "{:url('manage/shop/updateShopShowMessage')}"
+        );
+
+
+
+
+    </script>
+    <div id="pop" style="display:none;">
+        <style type="text/css">
+            *{margin:0;padding:0;}
+            #pop{background:#fff;width:260px;border:1px solid #e0e0e0;font-size:12px;position: fixed;right:10px;bottom:10px;}
+            #popHead{line-height:32px;background:#f6f0f3;border-bottom:1px solid #e0e0e0;position:relative;font-size:12px;padding:0 0 0 10px;}
+            #popHead h2{font-size:14px;color:#666;line-height:32px;height:32px; margin: 0; padding: 0;}
+            #popHead #popClose{position:absolute;right:10px;top:1px;}
+            #popHead a#popClose:hover{color:#f00;cursor:pointer;}
+            #popContent{padding:5px 10px;}
+            #popTitle a{line-height:24px;font-size:14px;font-family:'微软雅黑';color:#333;font-weight:bold;text-decoration:none;}
+            #popTitle a:hover{color:#f60;}
+            #popIntro{/*text-indent:24px;*/line-height:160%;margin:5px 0;color:#666; text-align: center;}
+            #popMore{text-align:right;border-top:1px dotted #ccc;line-height:24px;margin:8px 0 0 0;}
+            #popMore a{color:#f60;}
+            #popMore a:hover{color:#f00;}
+        </style>
+        <div id="popHead">
+            <a id="popClose" title="关闭">关闭</a>
+            <h2>温馨提示</h2>
+        </div>
+        <div id="popContent">
+            <dl>
+                <dt id="popTitle"></dt>
+                <dd id="popIntro"></dd>
+            </dl>
+
+        </div>
+    </div>
+    
+    <!-- Toastr script -->
+    <script src="SELLER_JS/plugins/toastr/toastr.min.js">
+    </script>
+    <!-- 客服js -->
+    <script src="__STATIC__/customer_service/webim.config.js" type="text/javascript">
+    </script>
+    <script src="__STATIC__/customer_service/strophe-1.2.8.min.js" type="text/javascript">
+    </script>
+    <script src="__STATIC__/customer_service/websdk-1.4.13.js" type="text/javascript">
+    </script>
+    <script src="__STATIC__/customer_service/customerservicem.js" type="text/javascript">
+    </script>
+    <!-- 结束-->
+    <script type="text/javascript">
+        window.onload = function(){
+            var options = {
+                apiUrl: WebIM.config.apiURL,
+                user: "67d4d1d052ce3418",
+                pwd: '123456',
+                appKey: WebIM.config.appkey
+            };
+            conn.open(options);
+
+        }
+      
+        function chatRecordLogs(u_im_ids,sm_im_id,msgs,type) {
+
+            $.ajax({
+                type:'POST',
+                data:{"u_im_ids":u_im_ids,"sm_im_id":'67d4d1d052ce3418',"msgs":msgs,"type":type},
+                url:'{:url("manage/Users/ajaxChatRecord1")}',
+                success:function(data){
+                    return data.code;
+                },
+                error:function () {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

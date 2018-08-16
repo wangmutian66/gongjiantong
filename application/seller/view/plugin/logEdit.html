@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            商品修改
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/animate.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="SELLER_CSS/plugins/webuploader/webuploader.css">
+        <link rel="stylesheet" type="text/css" href="SELLER_CSS/demo/webuploader-demo.css">
+        <link href="SELLER_CSS/photoclip/jquery.gridly.css" rel="stylesheet">
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/ueditor.config.js"></script>
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/ueditor.all.min.js"> </script>
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/lang/zh-cn/zh-cn.js"></script>
+        <script src="SELLER_JS/photoclip/jquery-1.11.2.min.js"></script>
+        <script src="SELLER_JS/photoclip/vendor/jquery.ui.widget.js"></script>
+        <script src="SELLER_JS/photoclip/jquery.iframe-transport.js"></script>
+        <script type="text/javascript" src="SELLER_JS/photoclip/tools.js"></script>
+        <script src="SELLER_JS/photoclip/ajaxfileupload.js"></script>
+        <script src="SELLER_JS/photoclip/jquery.gridly.js" type="text/javascript"></script>
+        <script src="SELLER_JS/photoclip/iscroll-zoom.js"></script>
+        <script src="SELLER_JS/photoclip/hammer.js"></script>
+        <script src="SELLER_JS/photoclip/lrz.all.bundle.js"></script>
+        <script src="SELLER_JS/photoclip/jquery.photoClip.js"></script>
+        <style>
+            .lightBoxGallery img {
+                margin: 5px;
+                width: 160px;
+            }
+            .cancels{
+                width: 24px;height: 24px;display: inline;float: right;text-indent: -9999px;overflow: hidden;background: url(SELLER_IMG/icons.png) no-repeat;margin: 5px 1px 1px;background-position: -48px -24px;cursor: pointer;
+            }
+            .fileCancel{
+                position: absolute;height: 0;background: rgba( 0, 0, 0, 0.5 );width: 100%;top: 0;left: 0;overflow: hidden;z-index: 300;
+            }
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                  -webkit-appearance: none;
+            }
+            .gui{
+                border: solid 1px gray;
+                min-width: 70px;
+                float: left;
+                margin: 0px 4px;
+                text-align: center;
+                padding: 6px 12px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+        </style>
+        <script type="application/javascript">
+            function ajaxFileUploads(){
+               
+                $.ajaxFileUpload
+                (
+                    {
+
+                        url: '{:url("seller/Plugin/goodsImgupdate")}', //用于文件上传的服务器端请求地址
+                        secureuri: false, //是否需要安全协议，一般设置为false
+                        data: { img:$("#log_img").val() },
+                        fileElementId: ['log_img'], //文件上传域的ID
+                        dataType: 'json', //返回值类型 一般设置为json
+                        success: function (data, status)  //服务器成功响应处理函数
+                        {
+                            $("#views").html("<img src='/public/upload/"+data["pic_cover"]+"' width='200'>");
+
+                        },
+                        error: function (data, status, e)//服务器响应失败处理函数
+                        {
+                            alert(data);
+                        }
+                    }
+                )
+                return false;
+            }
+        </script>
+    </head>
+    <body class="gray-bg">
+        <a data-toggle="modal" data-target="#myModal23" id="mysqlqietu">
+            <i class="fa fa-plus"></i>
+            物流添加
+        </a>
+        
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div>
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" aria-expanded="true" onclick="tab('1')">物流信息</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <form class="form-horizontal" method="POST" action="{:url('seller/Plugin/logEdit',array('id'=>$log_value.log_id))}" enctype="multipart/form-data" >
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="panel-body">
+                                        <div class="col-sm-12">
+                                            <div class="ibox float-e-margins">
+                                                <div class="ibox-content">
+                                                    
+                                                    
+                                                <div class="hr-line-dashed"></div>
+                                                
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            商品名称
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <select class="form-control" style="height: auto;"  name="log_name">
+                                                                {foreach name="logistics" key="k" item="info" }
+                                                                {if condition="$info eq $log_value.log_name"}
+                                                                <option value="{$k}" selected>{$info}</option>
+                                                                {else/}
+                                                                <option value="{$k}">{$info}</option>
+                                                                {/if}
+                                                                {/foreach}
+                                                            </select>
+                                                            <!--<input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="log_name" value="{$log_value.log_name}"/>-->
+                                                        </div>
+                                                    </div>
+                                                   <div class="hr-line-dashed"></div>
+                                                
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            物流描述
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <textarea class="form-control" aria-required="true" aria-invalid="true" name="log_describe" cols="10">{$log_value.log_describe}</textarea>
+                                                        </div>
+                                                    </div>
+                                                    
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                                
+                               
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="submit" value="保存内容" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                    </div>
+                                </div>   
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <!-- 全局js -->
+        <!--<script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>-->
+        <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+        <!-- 自定义js -->
+        <script src="SELLER_JS/content.js?v=1.0.0"></script>
+        <script src="SELLER_JS/globals.js?v=1.0.0"></script>
+        <!-- Web Uploader -->
+        <script type="text/javascript">
+            var BASE_URL = 'SELLER_JS/plugins/webuploader';
+            var url = '{:url("seller/Plugin/logImg")}';
+            var gp = 'gp_picture_path[]';
+            var addImg = 'goods_img';
+        </script>
+        <script src="SELLER_JS/plugins/webuploader/webuploader.min.js"></script>
+
+        <script src="SELLER_JS/demo/webuploader-demo.js"></script>
+        <!-- iCheck -->
+        <script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+        <!-- 复文本编辑器js -->
+        <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+        
+        <script>
+           
+             $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+
+
+            </script>
+    </body>
+</html>

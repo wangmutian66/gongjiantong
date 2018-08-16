@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>商品列表</h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a class="close-link" href="{:url('manage/index/welcome')}">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <form action="" method="get">
+                                <div class="col-sm-2 m-b-xs">
+                                    <select class="input-sm form-control input-s-sm inline" name="g_goods_verify" style="height: 31px;">
+                                        <option value="">请选择审核状态</option>
+                                        <option value="0"{if condition="isset($_GET.g_goods_verify) and $_GET.g_goods_verify eq '1'"}selected{/if}>审核中</option>
+                                        <option value="2"{if condition="isset($_GET.g_goods_verify) and $_GET.g_goods_verify eq '0'"}selected{/if}>审核不通过</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="请输入关键词" class="input-sm form-control" name="g_name" value="{if condition="isset($data.g_name)"}{$data.g_name}{/if}">
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-sm btn-primary"> 搜索</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width:3%"> </th>
+                                        <th>ID</th>
+                                        <th>商品名称</th>
+                                        <th>展示图</th>
+                                        <th>店铺</th> 
+                                        <th>商品分类</th>
+                                        <th>库存</th>
+                                        <th>现价</th>
+                                        <th>审核状态</th>
+                                        <th>排序</th>  
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}
+                                        <tr id="g_{$info.g_id}">
+                                            <td>
+                                                <input type="checkbox" class="i-checks" name="g_id[]" value="{$info.g_id}">
+                                            </td>
+                                            <td>
+                                                {$info.g_id}
+                                            </td>
+                                            <td>
+                                                {$info.g_name}
+                                            </td>
+                                            <td>
+                                                <i class="fa fa-file-picture-o text-navy" onclick="showImg('__UPLOAD__/{$info.g_show_img_path}')"></i>
+                                            </td>
+                                            <td>
+                                                {$info.ss_name}
+                                            </td>
+                                            <td>
+                                                {$info.mgc_name}
+                                            </td>
+                                            <td>
+                                                {$info.g_inventory}
+                                            </td>
+                                            <td>
+                                                {$info.g_original_price}元
+                                            </td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" id="show_info_{$info.g_id}">
+                                                        {if condition="$info.g_goods_verify eq '0'"}
+                                                            审核中
+                                                        {elseif condition="$info.g_goods_verify eq '1'"/}
+                                                            通过
+                                                        {else /}
+                                                            不通过
+                                                        {/if}
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a onclick="check_goods_info({$info.g_id},this,'0','g_goods_verify')">审核中</a>
+                                                        </li>
+                                                        <li>
+                                                            <a onclick="check_goods_info({$info.g_id},this,'1','g_goods_verify')">通过</a>
+                                                        </li>
+                                                        <li>
+                                                            <a onclick="check_goods_info({$info.g_id},this,'2','g_goods_verify')">不通过</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {$info.g_sort}
+                                            </td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#myModal2" onclick="mpg_show({$info.g_id})" class="btn btn-default btn-xs"><i class="fa fa-eye text-navy"></i>&nbsp;查看 </a>&nbsp;&nbsp;
+                                                <a onclick="del('g_{$info.g_id}',{$info.g_id},'{:url(\"manage/Goods/goodsDel\")}')" class="btn btn-default btn-xs"><i class="fa fa-close text-navy"></i>&nbsp;删除 </a>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title">商品详情</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span>商品名称: </span>
+                        <span id="g_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>平台品牌: </span>
+                        <span id="mgb_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>商品分类: </span>
+                        <span id="mgc_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>店铺名: </span>
+                        <span id="ss_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>商品号: </span>
+                        <span id="g_sn"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>简述: </span>
+                        <span id="g_desc"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>库存: </span>
+                        <span id="g_inventory"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>原价: </span>
+                        <span id="g_original_price"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>现价: </span>
+                        <span id="g_current_price"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>成本价: </span>
+                        <span id="g_cost_price"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>点击数: </span>
+                        <span id="g_number_of_clicks"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>评论数: </span>
+                        <span id="g_number_of_comments"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>销量: </span>
+                        <span id="g_sales"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>商品关键字: </span>
+                        <span id="g_keywords"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>是否上架: </span>
+                        <span id="is_show"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>点击量: </span>
+                        <span id="g_click_sum"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>排序: </span>
+                        <span id="g_sort"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>添加时间: </span>
+                        <span id="g_add_time"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>竞价金额: </span>
+                        <span id="g_pay_money"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>商品详情: </span>
+                        <span id="g_content"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="MANAGE_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="MANAGE_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/demo/peity-demo.js"></script>
+    <!-- layer javascript -->
+    <script src="MANAGE_JS/plugins/layer/layer.min.js"></script>
+    <script src="MANAGE_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+        function mpg_show(id) {
+            $.ajax({
+                url:'{:url("manage/Goods/goodsInfo")}',
+                type:"post",
+                data:{id:parseInt(id)},
+                dataType:"json",
+                success:function (info) {
+                    if (info.code != '1') {
+                        swal({
+                            title: "数据请求失败,请稍候再试!~",
+                            text: info.msg
+                        });
+                    }else{
+                        var param = JSON.parse(info.data);
+                        $("#g_name").html(param.g_name);
+                        $("#mgb_name").html(param.mgb_name);
+                        $("#mgc_name").html(param.mgc_name);
+                        $("#ss_name").html(param.ss_name);
+                        $("#g_sn").html(param.g_sn);
+                        $("#g_desc").html(param.g_desc);
+                        $("#g_inventory").html(param.g_inventory);
+                        $("#g_original_price").html(param.g_original_price);
+                        $("#g_current_price").html(param.g_current_price);
+                        $("#g_cost_price").html(param.g_cost_price);
+                        $("#g_number_of_clicks").html(param.g_number_of_clicks);
+                        $("#g_number_of_comments").html(param.g_number_of_comments);
+                        $("#g_sales").html(param.g_sales);
+                        $("#g_keywords").html(param.g_keywords);
+                        $("#is_show").html(param.is_show);
+                        $("#g_click_sum").html(param.g_click_sum);
+                        $("#g_sort").html(param.g_sort);
+                        $("#g_add_time").html(param.g_add_time);
+                        $("#g_pay_money").html(param.g_pay_money);
+                        $("#g_content").html(param.g_content);
+                    }
+                },
+                error:function () {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            })
+        }
+        function check_goods_info(id,element,val,field) {
+            $.ajax({
+                url:"{:url('manage/Goods/changeGoodsInfo')}",
+                type:"post",
+                data:{id:id,val:val,field:field},
+                dataType:"json",
+                success:function(info){
+                   if (info.code == 1) {
+                        var data = JSON.parse(info.data);
+                        if (data.val != 1) {
+                            if (data.val == 0) {
+                                $("#show_info_"+data.id).html("审核中<span class=\"caret\"></span>");
+                            } else if (data.val == 2) {
+                                $("#show_info_"+data.id).html("不通过<span class=\"caret\"></span>");
+                            }
+                        } else {
+                            $("#g_"+data.id).empty();
+                        }
+                    } else {
+                        swal({
+                            title: "修改失败!",
+                            text: info.msg
+                        });
+                    }
+                },
+                error:function(){
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            })
+        }
+    </script>
+</body>
+</html>

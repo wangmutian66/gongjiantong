@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <title>{$title}</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="SELLER_CSS/bootstrap.min.css" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css" rel="stylesheet">
+    <link href="SELLER_CSS/login.css" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <link href="SELLER_CSS/styleindex.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <style>
+        #captcha_img{ cursor: pointer;}
+    </style>
+</head>
+
+<body>
+<div class="ileft">
+    <img src="SELLER_IMG/logo_03.png">
+    <div class="ilefttext">工建通商家管理系统</div>
+</div>
+<div class="iright">
+    <div class="iright-box">
+        <div class="irbox-1">
+            <div class="irbox-1-title">工建通后台登录</div>
+            <div class="irbox-2">
+                <div class="irbox-2-label">
+                    <input type="text" placeholder="用户名" name="sm_seller_name" id="sm_seller_name"> <img src="SELLER_IMG/icon_user.jpg">
+                </div>
+                <div class="irbox-2-label">
+                    <input type="password" placeholder="密码" name="sm_seller_passwd" id="sm_seller_passwd"> <img src="SELLER_IMG/icon_pwd.jpg">
+                </div>
+
+                <div class="irbox-2-label">
+                    <input type="text" placeholder="验证码" style="width: calc(100% - 198px );" name="captcha"  id="sm_seller_captcha"> <img src="SELLER_IMG/icon_yzm.jpg">
+                    <img src="{:captcha_src()}" id="captcha_img"  class="imgyzm" onclick="refreshVerify()">
+                </div>
+                <div class="irbox-2-a">
+                    <a href="javascript:refreshVerify()">点击刷新</a>
+                </div>
+
+
+                <button onclick="check_login()">登  录</button>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="irighttext">© {$company}</div>
+</div>
+
+
+
+
+</body>
+<script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+<!-- 客服js -->
+<script type='text/javascript' src='__STATIC__/customer_service/webim.config.js'></script>
+<script type='text/javascript' src='__STATIC__/customer_service/strophe-1.2.8.min.js'></script>
+<script type='text/javascript' src='__STATIC__/customer_service/websdk-1.4.13.js'></script>
+<script type='text/javascript' src='__STATIC__/customer_service/customerservice.js'></script>
+
+<!-- 结束 -->
+<script type="text/javascript">
+    $(function(){
+        document.onkeydown = function(e){
+            var ev = document.all ? window.event : e;
+            if(ev.keyCode==13) {
+                check_login();
+                return false;
+
+            }
+        }
+    });
+
+
+
+    var timeid=null;
+    function check_login() {
+        clearInterval(timeid);
+        var sm_name = $("#sm_seller_name").val();
+        var sm_passwd = $("#sm_seller_passwd").val();
+        var sm_captcha= $("#sm_seller_captcha").val();
+        if (sm_name == '' && sm_passwd == '' && sm_captcha == '') {
+            swal({
+                title: "抱歉出错了!",
+                text: "手机号,密码和验证码是必填项哦!"
+            });
+        }else if (sm_name == '') {
+            swal({
+                title: "抱歉出错了!",
+                text: "用户名不能为空哦!"
+            });
+        }else if (sm_passwd == '') {
+            swal({
+                title: "抱歉出错了!",
+                text: "密码不能为空哦!"
+            });
+        }else if (sm_captcha == '') {
+            swal({
+                title: "抱歉出错了!",
+                text: "验证码不能为空哦!"
+            });
+        }else{
+            $.ajax({
+                url:'{:url("seller/Login/sellerLogin")}',
+                type:'post',
+                data:{sm_seller_name:sm_name,sm_seller_passwd:sm_passwd,sm_seller_captcha:sm_captcha},
+                dataType:'json',
+                success:function(info){
+                    if (info.code == '-1') {
+                        refreshVerify();
+                        swal({
+                            title: "登录失败!",
+                            text: info.msg
+                        });
+
+                    }else if(info.code == '2'){
+
+                        swal({
+                           title: info.msg,
+                        });
+
+                        var i=2;
+                        // $(".sweet-alert h2").html("请先入驻 <em style='font-size:16px;'>"+i+"s</em>");
+                        $(".sa-button-container").html(i+"秒之后自动跳转").css({"color":"#8e8484","font-size":"14px"});
+                        $(".confirm").hide();
+                        timeid = setInterval(function(){
+                            if(i==0){
+                                clearInterval(timeid);
+                                var obj = eval('(' + info.data + ')');
+                                //console.log('{:url("pc/login/pcLogins")}?u_mobile='+obj.u_mobile+'&u_passwd='+obj.u_passwd);
+                                window.location.href = '{:url("/pc/login/pcLogins")}?u_mobile='+obj.u_mobile+'&u_passwd='+obj.u_passwd;
+                            }else{
+                                i--;
+                                $(".sa-button-container").html(i+"秒之后自动跳转")
+                            }
+                        },1000);
+
+                        
+                    }else{
+                        swal({
+                            title: info.msg,
+                        });
+                        var data = JSON.parse(info.data);
+                        if(data.data != 1){
+                            /* 环信用户注册 */
+                            var options = { 
+                                username: data.sm_im_name,
+                                password: data.sm_im_pass,
+                                nickname: data.sm_im_nickname,
+                                appKey: WebIM.config.appkey,
+                                success: function () { 
+                                    window.location.href = '{:url("seller/index/index")}';
+                                },  
+                                error: function () { }, 
+                                apiUrl: WebIM.config.apiURL
+                            };                             
+                            conn.registerUser(options);
+                        }else{
+                            window.location.href = '{:url("seller/index/index")}';
+                        }
+                    }
+                },
+                error:function() {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            });
+        }
+    }
+    function refreshVerify() {
+
+       console.log("111");
+       var ts = Date.parse(new Date())/1000;
+            var url ="{:url('/captcha')}"+'?id='+ts;
+            $('#captcha_img').attr('src',url);
+    }
+</script>
+
+</html>

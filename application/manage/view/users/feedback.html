@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>反馈列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="SELLER_CSS/preview/style.css" rel="stylesheet">
+</head>
+<style>
+    img {
+        max-width: 100%; /*图片自适应宽度*/
+    }
+</style>
+<body class="gray-bg">
+
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>反馈列表</h5>
+                   
+                </div>
+                <div class="ibox-content">
+
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th style="width:100px">添加时间</th>
+                                <th style="width:100px">用户</th>
+                                <tH style="width:350px">商品图片</tH>
+                                <th style="width:350px">内容</th>
+                            </tr>
+                            </thead>
+                            {if condition="isset($feedback) and !empty($feedback)"}
+                            {foreach name="feedback" item="info"}
+                            <tr>
+                                <td>{$info.f_add_time|date='Y-m-d H:i',###}</td>
+                                <td>{$info.u_id|yonghu}</td>
+                                <td>
+                                    {foreach name="info.co_imgs" item="i"}
+                                    {if condition="$i neq '' "}
+                                    <img src="__UPLOAD__/{$i}" width="100" />
+                                    {/if}
+                                    {/foreach}
+                                </td>
+                                <td>{$info.f_content}</td>
+                            </tr>
+                            {/foreach}
+                            {/if}
+                        </table>
+                    </div>
+                    <!-- 分页 start -->
+                    {if condition="isset($page) and !empty($page)"}
+                    {$page}
+                    {/if}
+                    <!-- 分页 end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 全局js -->
+<script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+<script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+<script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Peity -->
+<script src="SELLER_JS/plugins/peity/jquery.peity.min.js"></script>
+<!-- 自定义js -->
+<script src="SELLER_JS/content.js?v=1.0.0"></script>
+<!-- iCheck -->
+<script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+<!-- Peity -->
+<script src="SELLER_JS/demo/peity-demo.js"></script>
+<script src="SELLER_JS/plugins/layer/layer.min.js"></script>
+<script src="SELLER_JS/globals.js"></script>
+<script src="SELLER_JS/preview/swiper.min.js"></script>
+<script>
+    function toogle(th) {
+        var ele = $(th).children(".move");
+        if (ele.attr("data-state") == "on") {
+
+            isopenMsg(0);
+            ele.animate({
+                left: "0"
+            }, 300, function() {
+                ele.attr("data-state", "off");
+            });
+            $(th).removeClass("on").addClass("off");
+        } else if (ele.attr("data-state") == "off") {
+
+            isopenMsg(1);
+            ele.animate({
+                left: '25px'
+            }, 300, function() {
+                $(this).attr("data-state", "on");
+            });
+            $(th).removeClass("off").addClass("on");
+        }
+    }
+
+
+
+
+
+
+</script>
+
+
+</body>
+</html>

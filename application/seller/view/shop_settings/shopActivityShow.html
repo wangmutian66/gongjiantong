@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            添加活动
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/animate.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/datapicker/datepicker3.css" rel="stylesheet">
+        <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    </head>
+    <body class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>活动展示</h5>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a class="close-link" href="{:url('seller/index/welcome')}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+
+                        </div>  
+                        <div class="ibox-content">
+                            <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" onsubmit="return shopStopActivity()">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        活动类型
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <span class="dqline">{if condition="$info.act_type eq '1'"}限时折扣{/if}{if condition="$info.act_type eq '2'"}全场满减{/if}</span>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        选择商品
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <span class="dqline">{if condition="$info.g_ids eq '0'"}全部{else/}{$goodsname}{/if}</span>
+
+                                    </div>
+                                </div>
+
+
+
+
+                                <div class="hr-line-dashed"></div>
+
+
+                                <div class="form-group" id="data_5">
+                                    <label class="col-sm-2 control-label">选择时间范围</label>
+                                    {if condition="$info.act_isstop eq '0' or $info.act_isstop eq '2' "}
+                                    <div class="col-sm-5">
+
+                                            <span class="dqline">{$info.act_start_time}
+                                            到
+                                                {$info.act_end_time}</span>
+
+                                    </div>
+                                    {elseif condition="$info.act_isstop eq '1'"}
+                                    <div class="col-sm-8">
+                                        <div class="input-daterange input-group" id="datepicker">
+                                            <input type="text" class="input-sm form-control" name="act_start_time" value="{$info.act_start_time}" />
+                                            <span class="input-group-addon">到</span>
+                                            <input type="text" class="input-sm form-control" name="act_end_time" value="{$info.act_end_time}" />
+                                        </div>
+                                    </div>
+                                    {/if}
+
+                                </div>
+                                <div class="hr-line-dashed tabs tab1" {if condition="$info.act_type eq '1'"}style="display:block;"{/if}></div>
+                                <div class="form-group tabs tab1" {if condition="$info.act_type eq '1'"}style="display:block;"{/if}>
+                                    <label class="col-sm-2 control-label">
+                                        折扣商品
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <span class="dqline">
+
+                                        <table border="1" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+                                                <tr><td>商品名称</td><td>规格</td><td>库存</td><td>价格</td><td>折扣价</td></tr>
+                                                {if condition="isset($actDiscount) and !empty($actDiscount)"}
+                                                {foreach name="actDiscount" item = "g"}
+                                                <tr> <td>{$g.g_name}</td><td>{$g.sp_name}</td><td>{$g.gsp_inventory}{$g.g_unit_name}</td><td>{$g.gsp_price}元</td><td>{$g.g_discount_price}元</td></tr>
+                                                {/foreach}
+                                                {else/}
+                                                     <tr><td colspan="5" style="text-align: center;">该系列下暂无商品</td></tr>
+                                                {/if}
+                                            </table>
+                                        </span>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="hr-line-dashed tabs  tab2" {if condition="$info.act_type eq '2'"}style="display:block;"{/if}></div>
+                                <div class="form-group tabs tab2" {if condition="$info.act_type eq '2'"}style="display:block;"{/if}>
+                                    <label class="col-sm-2 control-label">
+                                        满减
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <span class="dqline">满{$info.act_meet}减{$info.act_reduction}</span>
+                                    </div>
+                                </div>
+
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        活动描述
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <span class="dqline">{$info.act_describe}</span>
+                                    </div>
+                                </div>
+
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        终止原因
+                                    </label>
+                                    <div class="col-sm-5">
+                                        {if condition="$info.act_isstop eq '0'"}
+                                        <textarea class="form-control" aria-required="true" aria-invalid="true" name="act_stop_reason" id="act_stop_reason" cols="10"></textarea>
+                                        {elseif condition="$info.act_isstop eq '1' or $info.act_isstop eq '2' "}
+                                        {$info.act_stop_reason}
+                                        {/if}
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        {if condition="$info.act_isstop eq '0'"}
+                                        <input class="btn btn-primary" type="submit" value="终止" />
+                                        {elseif condition="$info.act_isstop eq '1'"}
+                                        <input class="btn btn-primary" type="submit" value="恢复活动" />
+                                        {/if}
+                                        <input class="btn btn-white" type="button" onclick="window.location.href='{:url('seller/ShopSettings/shopSettings',array('type'=>'4'))}'" value="返回" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 全局js -->
+        <script src="SELLER_JS/jquery.min.js?v=2.1.4">
+        </script>
+        <script src="SELLER_JS/bootstrap.min.js?v=3.3.6">
+        </script>
+        <!-- 自定义js -->
+        <!--<script src="SELLER_JS/content.js?v=1.0.0">-->
+        <!--// </script>-->
+        <!-- iCheck -->
+        <script src="SELLER_JS/plugins/iCheck/icheck.min.js">
+
+        </script>
+        <!-- Data picker -->
+        <script src="SELLER_JS/plugins/datapicker/bootstrap-datepicker.js"></script>
+        <!-- Image cropper -->
+        <script src="SELLER_JS/plugins/cropper/cropper.min.js"></script>
+        <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+
+                $(".sgtclass").click(function(){
+                    var id = $(this).attr("id");
+                    $(".good_"+id).prop("checked",$(this).prop("checked"));
+                });
+                $(".sgtclass").each(function(key,element){
+                    var id = $(element).val();
+                    $(".good_sgt_"+id).click(function(){
+                        $(".good_sgt_"+id).each(function(key,element){
+                            if(!$(element).prop("checked")){
+                                $("#"+$(element).attr("parent-id")).prop("checked",false);
+                                return false;
+                            }
+                            $("#"+$(element).attr("parent-id")).prop("checked",true);
+                        });
+                    });
+                });
+
+                $(".colposur span").click(function(){
+                    $(this).parent(".colposur").next(".colgoods").slideToggle();
+                });
+
+
+
+            });
+
+            function changeshop(element){
+                var eleval = $(element).val();
+
+                if(eleval == 2){
+                    $("#sgtdemo").show();
+                }else{
+                    $("#sgtdemo").hide();
+                }
+            }
+
+            function changeactive(element){
+                var eleval = $(element).val();
+                $(".tabs").hide();
+                $(".tab"+eleval).show();
+            }
+
+            function shopStopActivity(){
+                var act_isstop =  "{$info.act_isstop}";
+                var act_stop_reason = $("#act_stop_reason").val();
+
+                if(act_stop_reason == "" && act_isstop == "0"){
+                    swal({
+                        title: "通讯出错!",
+                        text: "请填写终止原因!"
+                    });
+
+                    return false;
+                }
+
+
+
+
+
+            }
+
+
+        </script>
+        <script src="SELLER_JS/demo/form-advanced-demo.js"></script>
+    </body>
+</html>

@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+
+    <title> 工建通- 主页</title>
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+
+    <link href="PC_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet"/>
+    <link href="PC_CSS/SettledIn.css" rel="stylesheet"/>
+    <link href="PC_CSS/rili.css" rel="stylesheet"/>
+    <script src="PC_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="PC_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="https://webapi.amap.com/maps?v=1.4.0&key=34757d6f3a85d3ad5fac697a62f0204f" type="text/javascript"></script>
+    <script src="https://webapi.amap.com/ui/1.0/main.js?v=1.0.10"></script>
+    <script src="https://webapi.amap.com/demos/js/liteToolbar.js" type="text/javascript"></script>
+    <script src="PC_JS/jquery.date_input.pack.js"></script>
+    <script src="SELLER_JS/globals.js"></script>
+    <script src="PC_JS/plugins/sweetalert/sweetalert.min.js"></script>
+
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+    <input id="user" type="hidden" value="{$sm_im.sm_im_id}">
+    <!-- 按钮触发模态框 -->
+    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" id="modal" style="display: none;">开始演示模态框</button>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                    <h4 class="modal-title" id="myModalLabel">店铺设置</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form action="" method="post" id="stepForm" onsubmit="return validates()">
+                    <div class="list">
+                        <div class="item">
+                            <div class="label">
+                                <em>
+                                    *
+                                </em>
+                                <span>
+                                                    店铺名称：
+                                                </span>
+                            </div>
+                            <div class="value">
+                                <input class="text" required="" aria-required="true" aria-invalid="true" id="contactName" name="ss_name" onblur="_contactName()" size="20" type="text" {if condition='isset($settledInFour.ss_name)' }  value="{$settledInFour.ss_name}" {/if}/>
+                                <div class="org">
+                                </div>
+                                <div class="verify" id="error_contactName"></div>
+                            </div>
+                        </div>
+
+                        <div class="selectbefor">
+
+                            {foreach mgc_id_array as  $keys=>$vo1}
+                            <div class="item mgc_id">
+                                <div class="label">
+                                    <em>
+                                        *
+                                    </em>
+                                    <span>
+                                                        一级经营类目：
+                                                    </span>
+                                </div>
+                                <div class="value">
+                                    <select name="mgc_id[]" class="catselectC" onchange="_contactMgc(this)" id="mgc_id" class="mgc_id" >
+                                        <option value="">
+                                            请选择一级类目
+                                        </option>
+                                        {foreach name="list" item="vo"}
+                                        <option value="{$vo.mgc_id}" {if condition='isset($settledInFour.mgc_id) and $vo1 eq $vo.mgc_id' }  selected {/if}>
+                                        {$vo.mgc_name}
+                                        </option>
+                                        {/foreach}
+                                    </select>
+                                    {if condition = "$keys eq '0' "}
+                                    <input type="button" class="btn btn-info" value="添加" onclick="addbtn()">
+                                    {else/}
+                                    <input type="button"  class="btn btn-danger" value="删除" onclick="delbtn(this)">
+                                    {/if}
+
+
+                                    <div class="org">
+                                    </div>
+                                    <div class="verify" id="error_contactMgc"></div>
+                                </div>
+                            </div>
+
+                            <div class="item" style="display:none" id="s_ss_mgc_ids" >
+                                <div class="label">
+                                    <em>
+                                        *
+                                    </em>
+                                    <span>
+                                                        二级经营类目：
+                                                    </span>
+                                </div>
+                                <div class="value" id="ss_mgc_ids">
+                                    <div class="org">
+                                    </div>
+                                    <div class="verify" ></div>
+                                </div>
+                            </div>
+                            {/foreach}
+
+                        </div>
+
+
+
+                        <div class="item">
+                            <div class="label">
+                                <em>
+                                    *
+                                </em>
+                                <span>
+                                                    店铺所在省/市/区：
+                                                </span>
+                            </div>
+                            <div class="value" style="overflow: hidden;">
+                                <select name="ss_shop_province" onchange="getRegion('ss_shop_city',this.value,'ss_shop_city',{$settledInFour.ss_shop_city},'{:url('pc/Base/getRegion')}','ss_shop_area');" id="ss_shop_province" class="catselectB">
+                                    <option value="">
+                                        请选择省份
+                                    </option>
+                                    {foreach name="value" item="vo"}
+                                    <option value="{$vo.r_id}"  {if condition='isset($settledInFour.ss_shop_province) and $settledInFour.ss_shop_province eq $vo.r_id'} selected {/if}>
+                                    {$vo.r_name}
+                                    </option>
+                                    {/foreach}
+                                </select>
+                                <div class="imgload"><img src="PC_IMG/loading.gif"></div>
+                                <select name="ss_shop_city" onchange="getRegion('ss_shop_area',this.value,'ss_shop_area','{$settledInFour.ss_shop_area}','{:url('pc/Base/getRegion')}');" id="ss_shop_city" class="catselectB">
+                                    <option>请选择城市</option>
+                                </select>
+                                <div class="imgload"><img src="PC_IMG/loading.gif"></div>
+                                <select name="ss_shop_area" id="ss_shop_area" class="catselectB">
+                                    <option>请选择区域</option>
+                                </select>
+                                <div class="imgload"><img src="PC_IMG/loading.gif"></div>
+                                <div class="verify" id="error_pickeresle" ></div>
+
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="label">
+                                <em>
+                                    *
+                                </em>
+                                <span>
+                                                    店铺详细地址：
+                                                </span>
+                            </div>
+                            <div class="value">
+                                <input class="text" id="contactAddress" required="" aria-required="true" aria-invalid="true" name="ss_shop_address" onblur="_contactAddress()" size="20" type="text" {if condition='isset($settledInFour.ss_shop_address)' }  value="{$settledInFour.ss_shop_address}" {/if}/>
+                                <div class="org">
+                                </div>
+                                <div class="verify" id="error_contactAddress"></div>
+                            </div>
+                        </div>
+
+
+                        <div class="item">
+                            <div class="label">
+                                <em>
+                                    *
+                                </em>
+                                <span>
+                                                    店铺定位：
+                                                </span>
+                            </div>
+                            <div class="value">
+                                <div class="value">
+                                    <div class="pickerBox">
+                                        <input class="pickerInput" required="" aria-required="true" aria-invalid="true" id="pickerInput" style="margin: 0;" placeholder="输入关键字选取地点"/>
+                                        <div class="poiInfo" id="poiInfo">
+                                        </div>
+                                        <div class="verify" id="error_pickerInput" style="margin-left: 337px;margin-top: -29px;"></div>
+                                    </div>
+                                    <div class="map container" id="container" style="margin-top: 0; margin: 0; padding: 0;" tabindex="0"></div>
+                                    <input class="text" name="ss_shop_location" size="20" type="text" {if condition='isset($settledInFour.ss_shop_location)' }  value="{$settledInFour.ss_shop_location}" {/if} id="coordinate" style="display: none" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="label">
+                                <em>
+                                    *
+                                </em>
+                                <span>
+                                                    店铺简介：
+                                                </span>
+                            </div>
+                            <div class="value">
+                                <textarea id="contactDesc" name="ss_desc" onblur="_contactDesc()" size="20" type="text"  rows="8" cols="53" style="width:507px;resize: none;"> {if condition='isset($settledInFour.ss_desc)' } {$settledInFour.ss_desc}  {/if}</textarea>
+                                <div class="org">
+                                </div>
+                                <div class="verify" id="error_contactDesc"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    </form>
+
+
+                </div>
+                <div class="modal-footer">
+                    <!--<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>-->
+                    <button type="button" class="btn btn-primary" onclick="document.getElementById('stepForm').onsubmit()">提交</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+
+
+
+    <div id="wrapper">
+        <!--左侧导航开始-->
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="nav-close"><i class="fa fa-times-circle"></i>
+            </div>
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="nav-header" style="text-align: center; ">
+                        <img src="SELLER_IMG/lefticon.png" style="width: 80%;margin: 10px 0 0 0; box-shadow: 0 0 17px #c1c1c1;border-radius: 25px;">
+                        <div class="font-bold" style="font-size:15px; color:#fff; margin-top: 10px;">{$title}</div>
+
+                    </li>
+
+
+                    <!-- 一级标题(不可点击, 没有链接) -->
+                    {foreach name="menu_list" item="variable"}
+                        <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                            <span class="ng-scope">{$variable.name}</span>
+                        </li>
+                        {if condition="isset($variable.sub_menu) and $variable.sub_menu neq null"}
+                            {foreach name="variable.sub_menu" item="value"}
+                                <li>
+                                    <a href="{if condition='isset($value.sub_menu) and $value.sub_menu eq null'}{:url($value.link)}{/if}">
+                                        <i class="{$value.icon}"></i>
+                                        <span class="nav-label">{$value.name}</span>
+                                        {if condition="isset($value.sub_menu) and $value.sub_menu neq null"}
+                                        <span class="fa arrow"></span>
+                                        {/if}
+                                    </a>
+                                    {if condition="isset($value.sub_menu) and $value.sub_menu neq null"}
+                                        <ul class="nav nav-second-level">
+                                            {foreach name="value.sub_menu" item="val"}
+                                                <li>
+                                                    <a class="J_menuItem" href="{:url($val.link)}">{$val.name}</a>
+                                                </li>
+                                            {/foreach}
+                                        </ul>
+                                    {/if}
+                                </li>
+                            {/foreach}
+                        {/if}
+                        <li class="line dk"></li>
+                    {/foreach}
+                    <li class="dropdown" >
+                        <a class="glyphicon glyphicon-log-out" href="{:url('seller/Login/logout')}"> 退出</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!--左侧导航结束-->
+        <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+
+                    </div>
+                    <ul class="nav navbar-top-links navbar-right">
+
+                        <li class="dropdown">
+
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+            <div class="row J_mainContent" id="content-main">
+                <iframe id="J_iframe" width="100%" height="100%" src="{:url('seller/index/sellerWelcome')}" frameborder="0" data-id="index_v1.html" seamless></iframe>
+            </div>
+        </div>
+        <!--右侧部分结束-->
+    </div>
+
+    <!-- 全局js -->
+    <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="SELLER_JS/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="SELLER_JS/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="SELLER_JS/plugins/layer/layer.min.js"></script>
+
+    <!-- 自定义js -->
+    <script src="SELLER_JS/hAdmin.js?v=4.1.0"></script>
+    <script type="text/javascript" src="SELLER_JS/index.js"></script>
+
+    <!-- 第三方插件 -->
+    <script src="SELLER_JS/plugins/pace/pace.min.js"></script>
+
+    <script type="text/javascript" src="MANAGE_JS/plugins/pop/yanue.pop.js"></script>
+    <!--jquery右下角pop弹窗start -->
+    <script type="text/javascript" >
+        var complain= "{$complain}";
+        if(complain == 1) {
+            yanuemessage(
+                "{:url('seller/ShopSettings/showComplain')}",
+                "{:url('seller/ShopSettings/updateComplain')}",
+                "您有新的投诉信息请注意查看",
+                "co_id"
+            );
+        }
+
+
+        //getRegion('ss_shop_city',this.value,'ss_shop_city',{$settledInFour.ss_shop_city},'{:url('pc/Base/getRegion')}','ss_shop_area');
+        yanuemessage(
+            "{:url('seller/ShopSettings/showReturnOrder')}",
+            "{:url('seller/ShopSettings/updateReturnOrder')}"
+        );
+
+
+    </script>
+    <div id="pop" style="display:none;">
+        <style type="text/css">
+            *{margin:0;padding:0;}
+            #pop{background:#fff;width:260px;border:1px solid #e0e0e0;font-size:12px;position: fixed;right:10px;bottom:10px;}
+            #popHead{line-height:32px;background:#f6f0f3;border-bottom:1px solid #e0e0e0;position:relative;font-size:12px;padding:0 0 0 10px;}
+            #popHead h2{font-size:14px;color:#666;line-height:32px;height:32px; margin: 0; padding: 0;}
+            #popHead #popClose{position:absolute;right:10px;top:1px;}
+            #popHead a#popClose:hover{color:#f00;cursor:pointer;}
+            #popContent{padding:5px 10px;}
+            #popTitle a{line-height:24px;font-size:14px;font-family:'微软雅黑';color:#333;font-weight:bold;text-decoration:none;}
+            #popTitle a:hover{color:#f60;}
+            #popIntro{text-indent:24px;line-height:160%;margin:5px 0;color:#666;}
+            #popMore{text-align:right;border-top:1px dotted #ccc;line-height:24px;margin:8px 0 0 0;}
+            #popMore a{color:#f60;}
+            #popMore a:hover{color:#f00;}
+            #modal{ display: none;}
+            #contactDesc{border: 1px solid #ccc;}
+            .list > .item,.list > .selectbefor{margin-bottom: 10px; }
+            .item > .label{ display: inline-block; margin-bottom: 5px;}
+        </style>
+        <div id="popHead">
+            <a id="popClose" title="关闭">关闭</a>
+            <h2>温馨提示</h2>
+        </div>
+        <div id="popContent">
+            <dl>
+                <dt id="popTitle"></dt>
+                <dd id="popIntro"></dd>
+            </dl>
+
+        </div>
+    </div>
+    <div class="jsondiv" style="display: none;"><?php echo json_encode($list) ?></div>
+    <script src="SELLER_JS/plugins/toastr/toastr.min.js">
+    </script>
+    <!-- 客服js -->
+    <script src="__STATIC__/customer_service/webim.config.js" type="text/javascript">
+    </script>
+    <script src="__STATIC__/customer_service/strophe-1.2.8.min.js" type="text/javascript">
+    </script>
+    <script src="__STATIC__/customer_service/websdk-1.4.13.js" type="text/javascript">
+    </script>
+    <script src="__STATIC__/customer_service/customerservice.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+
+
+
+
+        window.onload = function(){
+            var user = $("#user").val();
+            var options = {
+                apiUrl: WebIM.config.apiURL,
+                user: user,
+                pwd: '123456',
+                appKey: WebIM.config.appkey
+            };
+            // console.log(user);
+            conn.open(options);
+
+            var ss_ispop ="{$settledInFour.ss_ispop}";
+            if(ss_ispop == 0){
+                $("#modal").click();
+            }
+
+        }
+
+        function chatRecordLogs(u_im_ids,sm_im_id,msgs,type) {
+
+            $.ajax({
+                type:'POST',
+                data:{"u_im_ids":u_im_ids,"sm_im_id":sm_im_id,"msgs":msgs,"type":type},
+                url:'{:url("seller/ShopSettings/ajaxChatRecord1")}',
+                success:function(data){
+                    
+                    return data.code;
+                },
+                error:function () {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            });
+        }
+    </script>
+    <script src="PC_JS/amap.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(argument) {
+
+            $(".catselectC").each(function(key,element){
+                _contactMgc(element);
+            });
+            var ss_shop_province = $("select[name='ss_shop_province']").val();
+            if(ss_shop_province.length > 0){
+                var city1 = $("#city1").val();
+                var area1 = $("#area1").val();
+                //console.log("city1:"+city1);
+                //console.log("area1:"+area1);
+                var city1 = "{$settledInFour.ss_shop_city}";
+                var area1 = "{$settledInFour.ss_shop_area}";
+                getRegion('ss_shop_city',ss_shop_province,'ss_shop_city',city1,'{:url("pc/Base/getRegion")}');
+                getRegion('ss_shop_area',city1,'ss_shop_area',area1,'{:url("pc/Base/getRegion")}');
+            }
+
+            // var ss_delivery_province = $("select[name='ss_delivery_province']").val();
+            // if(ss_delivery_province.length > 0){
+            //     var city2 = $("#city2").val();
+            //     var area2 = $("#area2").val();
+            //     getRegion('ss_delivery_city',ss_delivery_province,'ss_delivery_city',city2,'/pc/Base/getRegion');
+            //     getRegion('ss_delivery_area',city2,'ss_delivery_area',area2,'/pc/Base/getRegion');
+            // }
+            var coordinate = $("#coordinate").val();
+            if(coordinate != ''){
+                regeocoder(coordinate);
+            }
+            var ss_is_shipping = $("input[name='ss_is_shipping']:checked").val();
+            if(ss_is_shipping == 1){
+                $("#ss_is_shipping").css('display','none');
+            }
+        })
+        /*验证店铺名称*/
+        function _contactName() {
+            var contactName = $("#contactName").val();
+            if(contactName == ''){
+                $("#error_contactName").html("请输入店铺名称！");
+                return false;
+            }else{
+                var BackName =/^[\u4e00-\u9fa5a-zA-Z0-9]+$/;
+                if(!BackName.test(contactName)){
+                    $("#error_contactName").html("请正确填写店铺名称！");
+                    return false;
+                }else{
+                    $("#error_contactName").html("");
+                }
+            }
+        }
+        /*验证店铺简介*/
+        function _contactDesc() {
+            var contactDesc = $("#contactDesc").val();
+            if(contactDesc == ''){
+                $("#error_contactDesc").html("请输入店铺简介2！");
+                return false;
+            }else{
+                // var contactDescs =/^[\u4e00-\u9fa5a-zA-Z0-9\_\-]+$/;
+                // if(!contactDescs.test(contactDesc)){
+                //     $("#error_contactDesc").html("请正确填写店铺简介！");
+                //     return false;
+                // }else{
+                //     $("#error_contactDesc").html("");
+                // }
+            }
+        }
+        /*验证店铺详细地址*/
+        function _contactAddress() {
+            var contactAddress = $("#contactAddress").val();
+            if(contactAddress == ''){
+                $("#error_contactAddress").html("请输入店铺详细地址！");
+                return false;
+            }else{
+                var contactAddress1 =/^[\u4e00-\u9fa5a-zA-Z0-9\_\-]+$/;
+                if(!contactAddress1.test(contactAddress)){
+                    $("#error_contactAddress").html("请正确填写店铺详细地址！");
+                    return false;
+                }else{
+                    $("#error_contactAddress").html("");
+                }
+            }
+        }
+
+        /*单选按钮样式*/
+        function _contactRadio(radio,input_type,div_type) {
+            if(radio > 0){
+                if(input_type == 'ss_is_shipping-'){
+                    $("#ss_is_shipping").css('display','none');
+                }
+                $('#'+div_type+'0').removeClass('selected');
+                $('#'+input_type+'0').attr('checked',false);
+            }else{
+                if(input_type == 'ss_is_shipping-'){
+                    $("#ss_is_shipping").css('display','');
+                }
+                $('#'+div_type+'1').removeClass('selected');
+                $('#'+input_type+'1').attr('checked',false);
+            }
+            $("#"+div_type+radio).addClass('selected');
+            $("#"+input_type+radio).attr('checked',true);
+        }
+        /*经营类目一级*/
+        function _contactMgc(element) {
+            var mgc_id = $(element).find("option:selected").val();
+            var index = $(element).parents(".mgc_id").index();
+
+            if(mgc_id == ""){
+                $(".selectbefor .item").eq(index+1).hide();
+                $(".selectbefor .item").eq(index+1).find(".value").html("");
+                return false;
+            }
+
+
+            if (mgc_id!=''){
+                $("#s_ss_mgc_ids").css('display','');
+            }else{
+                $("#s_ss_mgc_ids").css('display','none');
+                return false;
+            }
+            $(".selectbefor .item").eq(index+1).find(".value").empty();
+            $.ajax({
+                url:"{:url('seller/index/settledInAjax')}",
+                data:{mgc_id:mgc_id},
+                type:'post',
+                cache:false,
+                dataType:'json',
+                success:function(data){
+                    if(data.type == 1){
+                        swal({
+                            title:"通讯出错！",
+                            text:data.content
+                        });
+                    }else{
+
+                        var opt = '';
+                        var ajax = JSON.parse(data.content);
+                        opt = '<div style="width:330px">';
+
+                        $.each(ajax,function(i,n){
+                            if(i != 'ss_mgc_ids'){
+                                if($.inArray(n.mgc_id,ajax.ss_mgc_ids) == -1){
+                                    opt += '<input name="ss_mgc_ids[]" size="20" type="checkbox" value="'+n.mgc_id+'" style="margin-left:2%"/>'+n.mgc_name+'';
+                                }else{
+                                    opt += '<input name="ss_mgc_ids[]" size="20" type="checkbox" value="'+n.mgc_id+'" style="margin-left:2%" checked/>'+n.mgc_name+'';
+                                }
+                            }
+                        })
+                        opt += '<br><input size="20" type="checkbox" onclick="ss_mgc_ids(this)" style="margin-left:2%" id="ss_mgc_ids1"/>全选';
+                        opt += '</div>';
+                        //$(element).parents(".value").siblings("#ss_mgc_ids").append(opt);
+                        $(".selectbefor .item").eq(index+1).show();
+                        $(".selectbefor .item").eq(index+1).find(".value").append(opt);
+                    }
+                },
+                error : function() {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员噢!~"
+                    });
+                }
+            });
+        }
+        function ss_mgc_ids(element) {
+            if($(element).is(':checked')){
+                $(element).parents(".value").find("input[name = 'ss_mgc_ids[]' ]").prop('checked',true);
+            }else{
+                $(element).parents(".value").find("input[name = 'ss_mgc_ids[]' ]").prop('checked',false);
+            }
+        }
+        /*提交表单验证*/
+        function validates() {
+
+            var ss_shop_province = $("select[name='ss_shop_province']").val();
+            var subs=0;
+            if(ss_shop_province == '')
+            {
+                $("#error_pickeresle").html("请选择地址！");
+                var subs = 1;
+            }else{
+                $("#error_pickeresle").html("");
+            }
+
+            // var pickerInput = $("#pickerInput").val();
+            // if(pickerInput == '')
+            // {
+            //     $("#error_pickerInput").html("请选择个人经纬度！");
+            //     var subs = 1;
+            // }else{
+            //     $("#error_pickerInput").html("");
+            // }
+
+            var contactName = $("#contactName").val();
+            if(contactName == ''){
+                $("#error_contactName").html("请输入店铺名称！");
+                var subs = 1;
+            }else{
+                var BackName =/^[\u4e00-\u9fa5a-zA-Z0-9]+$/;
+                if(!BackName.test(contactName)){
+                    $("#error_contactName").html("请正确填写店铺名称！");
+                    var subs = 1;
+                }else{
+                    $("#error_contactName").html("");
+                }
+            }
+
+            /*验证店铺简介*/
+            var contactDesc = $("#contactDesc").val().trim();
+            if(contactDesc == ''){
+                $("#error_contactDesc").html("请输入店铺简介3！");
+                var subs = 1;
+            }
+
+            var contactAddress = $("#contactAddress").val();
+            if(contactAddress == ''){
+                $("#error_contactAddress").html("请输入店铺详细地址！");
+                var subs = 1;
+            }else{
+                var contactAddress1 =/^[\u4e00-\u9fa5a-zA-Z0-9\_\-]+$/;
+                if(!contactAddress1.test(contactAddress)){
+                    $("#error_contactAddress").html("请正确填写店铺详细地址！");
+                    var subs = 1;
+                }else{
+                    $("#error_contactAddress").html("");
+                }
+            }
+
+
+            if(subs == 0){
+                $(".btnloading").show();
+                $.ajax({
+                    url:"{:url('seller/index/settledInDealWith')}",
+                    type:"POST",
+                    data:$("#stepForm").serialize(),
+                    success:function(data){
+                        if(data.code==1){
+                            sweetAlert(data.msg,"","success");
+                            $(".confirm").click(function(){
+                                window.location.href=data.url;
+                            });
+                        }else{
+                            sweetAlert(data.msg,"","error");
+                        }
+                        $(".btnloading").hide();
+                    },error:function(data){
+                        $(".btnloading").hide();
+                    }
+                });
+            }
+
+            return false;
+            // if(subs > 0){
+            //     return false;
+            // }else{
+            //     $("#formid").submit();
+            // }
+        }
+
+        function addbtn(){
+            var list = eval("("+$(".jsondiv").text()+")");
+
+            var str ='<div class="item mgc_id"><div class="label"><em>*</em><span>一级经营类目：</span></div>';
+            str += '<div class="value"><select name="mgc_id[]" class="catselectC" onchange="_contactMgc(this)" id="mgc_id" ><option value="">请选择一级类目</option>'
+            for(var i in list){
+                str += "<option value='"+list[i]['mgc_id']+"'>"+list[i]['mgc_name']+"</option>";
+            }
+
+            str += ' </select>';
+            str += '<input type="button" class="btn btn-danger" value="删除" onclick="delbtn(this)"></div></div>';
+            str += '<div class="item" style="display:none" id="s_ss_mgc_ids" ><div class="label"><em>*</em><span> 二级经营类目：</span></div>';
+            str += '<div class="value" id="ss_mgc_ids"><div class="org"> </div> <div class="verify" ></div></div></div>';
+
+            $(".selectbefor").append(str);
+        }
+
+        function delbtn(element){
+            var index =$(element).parents(".item").index();
+            //$(element).parents(".item").remove();
+            // $(".item").eq(index).remove();
+            $(element).parents(".mgc_id").next(".item").remove();
+            $(element).parents(".item").remove();
+
+        }
+
+
+    </script>
+
+
+
+
+</body>
+
+</html>

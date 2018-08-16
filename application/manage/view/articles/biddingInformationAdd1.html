@@ -1,0 +1,69 @@
+
+        <style>
+
+
+            .onoffswitch-inner {
+                display: block;
+                width: 200%;
+                margin-left: -100%;
+                -webkit-transition: margin 0.3s ease-in 0s;
+                transition: margin 0.3s ease-in 0s;
+            }
+
+
+            .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+                margin-left:0;
+            }
+
+
+
+
+            .onoffswitch-inner:before,
+            .onoffswitch-inner:after {
+                display: block;
+                float: left;
+                width: 50%;
+                height: 16px;
+                padding: 0;
+                line-height: 16px;
+                font-size: 10px;
+                color: white;
+                font-family: Trebuchet, Arial, sans-serif;
+                font-weight: bold;
+                box-sizing: border-box;
+            }
+
+            .onoffswitch-inner:before {
+                content: "ON";
+                padding-left: 7px;
+                background-color: #23b7e5;
+                color: #FFFFFF;
+            }
+
+            .onoffswitch-inner:after {
+                content: "OFF";
+                padding-right: 7px;
+                background-color: #FFFFFF;
+                color: #919191;
+                text-align: right;
+            }
+
+
+        </style>
+
+
+
+
+
+
+
+                                            <div class="onoffswitch">
+                                                <input type="checkbox"  class="onoffswitch-checkbox" id="bi_is_show" name="bi_is_show">
+                                                <label class="onoffswitch-label" for="bi_is_show">
+                                                    <span class="onoffswitch-inner"></span>
+
+                                                </label>
+                                            </div>
+
+
+

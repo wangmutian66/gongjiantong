@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>入住流程</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>入住流程</h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a class="close-link" href="{:url('manage/index/welcome')}">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a href="{:url('manage/Shop/checkInProcessAdd')}">
+                                <i class="fa fa-plus"></i>
+                                添加入住流程
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>所属流程</th>
+                                        <th>流程信息标题</th>
+                                        <th>文章ID</th>
+                                        <th>排序</th>
+                                        <th>是否开启</th>
+                                        <th>下一步标题</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}
+                                        <tr id="cip_{$info.cip_id}">
+                                            <td>
+                                                <input type="checkbox" class="i-checks" name="cip_id[]" value="{$info.cip_id}">
+                                            </td>
+                                            <td>
+                                                {if condition="$info.cip_type eq '0'"}
+                                                    入住须知
+                                                {elseif condition="$info.cip_type eq '1'"}
+                                                    公司信息认证
+                                                {else /}
+                                                    店铺认证
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {$info.cip_title}
+                                            </td>
+                                            <td>
+                                                {$info.a_id}
+                                            </td>
+                                            <td>
+                                                {$info.cip_sort}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.cip_status eq '0'"}
+                                                    不显示
+                                                {else /}
+                                                    显示
+                                                {/if}
+                                            </td> 
+                                            <td>
+                                                {$info.cip_next_title}
+                                            </td>
+                                            <td>
+                                                <a href="{:url('manage/Shop/checkInProcessEdit',array('id'=>$info.cip_id))}" class="btn btn-default btn-xs"><i class="fa fa-wrench text-navy"></i>&nbsp;修改 </a>&nbsp;&nbsp;
+                                                <a onclick="del('cip_{$info.cip_id}',{$info.cip_id},'{:url(\"manage/Shop/checkInProcessDel\")}')" class="btn btn-default btn-xs"><i class="fa fa-close text-navy"></i>&nbsp;删除 </a>
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title">管理员信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span>管理员名称: </span>
+                        <span id="m_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>管理员状态: </span>
+                        <span id="m_status"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>添加时间: </span>
+                        <span id="m_registered_time"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>添加ip: </span>
+                        <span id="m_registered_ip"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>上次登录时间: </span>
+                        <span id="m_last_time"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>上次登录ip: </span>
+                        <span id="m_last_ip"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>添加此账号的管理员: </span>
+                        <span id="m_author"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>权限组名称: </span>
+                        <span id="mpg_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>有效期: </span>
+                        <span id="m_time"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="MANAGE_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="MANAGE_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/demo/peity-demo.js"></script>
+    <script src="MANAGE_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+        function mpg_show(id) {
+            $.ajax({
+                url:'{:url("manage/manager/managersShow")}',
+                type:"post",
+                data:{id:parseInt(id)},
+                dataType:"json",
+                success:function (info) {
+                    if (info.code != '1') {
+                        swal({
+                            title: "数据请求失败,请稍候再试!~",
+                            text: info.msg
+                        });
+                    }else{
+                        var param = JSON.parse(info.data);
+                        // console.log(param);
+                        $("#m_name").html(param.m_name);
+                        $("#m_status").html(param.m_status);
+                        $("#m_registered_time").html(param.m_registered_time);
+                        $("#m_registered_ip").html(param.m_registered_ip);
+                        $("#m_last_time").html(param.m_last_time);
+                        $("#m_last_ip").html(param.m_last_ip);
+                        $("#m_author").html(param.m_author);
+                        $("#mpg_name").html(param.mpg_name);
+                        $("#m_time").html(param.m_time);
+                    }
+                },
+                error:function () {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            })
+        }
+    </script>
+</body>
+</html>

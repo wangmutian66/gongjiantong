@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            商品配置
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/animate.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+        <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="SELLER_CSS/plugins/webuploader/webuploader.css">
+        <link rel="stylesheet" type="text/css" href="SELLER_CSS/demo/webuploader-demo.css">
+        <link href="SELLER_CSS/photoclip/jquery.gridly.css" rel="stylesheet">
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/ueditor.config.js"></script>
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/ueditor.all.min.js"> </script>
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/lang/zh-cn/zh-cn.js"></script>
+        <script src="SELLER_JS/photoclip/jquery-1.11.2.min.js"></script>
+        <script src="SELLER_JS/photoclip/vendor/jquery.ui.widget.js"></script>
+        <script src="SELLER_JS/photoclip/jquery.iframe-transport.js"></script>
+        <script type="text/javascript" src="SELLER_JS/photoclip/tools.js"></script>
+        <script src="SELLER_JS/photoclip/ajaxfileupload.js"></script>
+        <script src="SELLER_JS/photoclip/jquery.gridly.js" type="text/javascript"></script>
+        <script src="SELLER_JS/photoclip/iscroll-zoom.js"></script>
+        <script src="SELLER_JS/photoclip/hammer.js"></script>
+        <script src="SELLER_JS/photoclip/lrz.all.bundle.js"></script>
+        <script src="SELLER_JS/photoclip/jquery.photoClip.js"></script>
+        <style>
+            .lightBoxGallery img {
+                margin: 5px;
+                width: 160px;
+            }
+            .cancels{
+                width: 24px;height: 24px;display: inline;float: right;text-indent: -9999px;overflow: hidden;background: url(SELLER_IMG/icons.png) no-repeat;margin: 5px 1px 1px;background-position: -48px -24px;cursor: pointer;
+            }
+            .fileCancel{
+                position: absolute;height: 0;background: rgba( 0, 0, 0, 0.5 );width: 100%;top: 0;left: 0;overflow: hidden;z-index: 300;
+            }
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                  -webkit-appearance: none;
+            }
+            .gui{
+                border: solid 1px gray;
+                min-width: 70px;
+                float: left;
+                margin: 0px 4px;
+                text-align: center;
+                padding: 6px 12px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+        </style>
+        <script type="application/javascript">
+            function ajaxFileUploads(){
+               
+                $.ajaxFileUpload
+                (
+                    {
+
+                        url: '{:url("seller/Plugin/goodsImgupdate")}', //用于文件上传的服务器端请求地址
+                        secureuri: false, //是否需要安全协议，一般设置为false
+                        data: { img:$("#log_img").val() },
+                        fileElementId: ['log_img'], //文件上传域的ID
+                        dataType: 'json', //返回值类型 一般设置为json
+                        success: function (data, status)  //服务器成功响应处理函数
+                        {
+                            $("#views").html("<img src='/public/upload/"+data["pic_cover"]+"' width='200'>");
+
+                        },
+                        error: function (data, status, e)//服务器响应失败处理函数
+                        {
+                            alert(data);
+                        }
+                    }
+                )
+                return false;
+            }
+        </script>
+    </head>
+    <body class="gray-bg">
+        <a data-toggle="modal" data-target="#myModal23" id="mysqlqietu">
+            <i class="fa fa-plus"></i>
+            物流配置
+        </a>
+        
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div>
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" aria-expanded="true" onclick="tab('1')">物流配置</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <form class="form-horizontal" method="POST" action="{:url('seller/Plugin/logconfigEdit',array('id'=>$logc_value.logc_id))}" enctype="multipart/form-data" onsubmit="return logconfigAdd()">
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="panel-body">
+                                        <div class="col-sm-12">
+                                            <div class="ibox float-e-margins">
+                                                <div class="ibox-content">
+                                                <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            配送区域名称
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="logc_name" value="{$logc_value.logc_name|default=''}"/>
+                                                        </div>
+                                                    </div>
+                                                   <div class="hr-line-dashed"></div>
+                                                
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            首  重
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="logc_heavy" value="{$logc_value.logc_heavy|default=''}" style="width:100px;"/><span style="padding: 7px 5px;">千克以内费用：</span>
+
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="logc_cmoney" value="{$logc_value.logc_cmoney|default=''}" style="width:100px;"/><span style="padding: 7px 5px;">元</span>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            续重每
+                                                        </label>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="logc_contheavys" value="{$logc_value.logc_contheavys|default=''}" style="width:100px;"/><span style="padding: 7px 5px;">千克费用：</span>
+
+                                                            <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="logc_contcmoneys" value="{$logc_value.logc_contcmoneys|default=''}" style="width:100px;"/><span style="padding: 7px 5px;">元</span>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="hr-line-dashed"></div>
+                                                    
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">
+                                                            配送区域
+                                                        </label>
+                                                        <div class="input-group inputrelation" id="by"  style="left: 15px;max-width: 650px;">
+                                                            <input type="text" name="" id="brand_searchs" autocomplete="off" {if condition = "$logc_value.logc_national eq '1'"}disabled{/if}  oninput="search()" style="display: block;border-color: #cfdadd;border-radius: 2px;width: 190px;height: 30px;padding: 6px 12px;font-size: 14px;line-height: 1.42857143;color: #555;background-image: none;border: 1px solid #cfdadd;box-shadow: none;">
+                                                            {if condition="isset($logc_value['logc_area']) and $logc_value['logc_area'] neq '' " }
+                                                            {foreach name="s_guarantee" item="s_guarantee" key='i'}
+                                                            <div style="float:left;position: relative;" class="box" >
+                                                                <input type="hidden"  name="logc_area[]" value="{$s_guarantee.r_id}">
+                                                            <input type="text"   class ="baoyou" style="margin-top: 5px;text-align: center;width: 115px;margin-right:10px" readonly="readonly" value="{$s_guarantee.r_name}" >
+                                                            <span style="position: absolute;top: -4px;right: 7px;" onclick='yichu(this)'>x</span>
+                                                            </div>
+                                                            {/foreach}
+                                                            {/if}
+                                                            <div class="searchbox" style="z-index: 9999999;width: 190px;">
+                                                                <ul>
+                                                                </ul>
+                                                            </div>
+                                                            <input style="position: absolute;left:  195px;top: 0px;" class="btn btn-primary que" type="button" id="btn2" value="添加" />
+
+                                                            <div class="checkbox cbox" {if condition = "$logc_value.logc_national eq '0'"}style='display:none;'{/if}><input type="checkbox" id="quanguo" name="logc_national" {if condition = "$logc_value.logc_national eq '1'"}checked{/if}/> <label for="quanguo">全国</label> </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="submit" value="保存内容" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                    </div>
+                                </div>   
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <!-- 全局js -->
+        <!--<script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>-->
+        <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+        <!-- 自定义js -->
+        <script src="SELLER_JS/content.js?v=1.0.0"></script>
+        <script src="SELLER_JS/globals.js?v=1.0.0"></script>
+        <!-- Web Uploader -->
+        <script type="text/javascript">
+            var BASE_URL = 'SELLER_JS/plugins/webuploader';
+            var url = '{:url("seller/Plugin/logImg")}';
+            var gp = 'gp_picture_path[]';
+            var addImg = 'goods_img';
+        </script>
+
+        <!-- iCheck -->
+        <script src="SELLER_JS/plugins/iCheck/icheck.min.js"></script>
+        <!-- 复文本编辑器js -->
+        <script src="SELLER_JS/plugins/sweetalert/sweetalert.min.js"></script>
+        
+        <script>
+            function logconfigAdd(){
+                var bylen = $(".baoyou").length;
+                var logc_name = $("input[name=logc_name]").val();
+                var logc_heavy = $("input[name=logc_heavy]").val();
+                var logc_cmoney = $("input[name=logc_cmoney]").val();
+                var logc_contheavys = $("input[name=logc_contheavys]").val();
+                var logc_contcmoneys = $("input[name=logc_contcmoneys]").val();
+                if(logc_name == ""){
+                    swal({
+                        title: "通讯提示!",
+                        text: "请配送区域名称!"
+                    });
+                    return false;
+                }
+
+                if(logc_heavy == ""){
+                    swal({
+                        title: "通讯提示!",
+                        text: "请添加首重重量!"
+                    });
+                    return false;
+                }
+                if(logc_cmoney == ""){
+                    swal({
+                        title: "通讯提示!",
+                        text: "请添加首重金额!"
+                    });
+                    return false;
+                }
+
+                if(logc_contheavys == ""){
+                    swal({
+                        title: "通讯提示!",
+                        text: "请添加续重每克数!"
+                    });
+                    return false;
+                }
+                if(logc_contcmoneys == ""){
+                    swal({
+                        title: "通讯提示!",
+                        text: "请添加续重每克数费用!"
+                    });
+                    return false;
+                }
+
+
+                if(bylen <= 0 && !($('#quanguo').prop("checked"))){
+                    swal({
+                        title: "通讯提示!",
+                        text: "请添加配送区域!"
+                    });
+                    return false;
+                }
+            }
+             $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+                    $(".que").hide();
+            });
+
+            function search() {
+
+                var brand_search = $("#brand_searchs").val();
+                if(brand_search == ""){
+                    $(".searchbox").hide();
+                    $(".que").hide();
+                }
+                console.log($("#brand_searchs").val());
+                
+                $.ajax({
+                    url:'{:url("seller/Plugin/ajaxBrandSearch")}',
+                    type:"post",
+                    data:{brand_search:brand_search},
+                    dataType:"json",
+                    success:function (info) {
+                        if (info.code == 200) {
+                            var opt = "";
+                            var searchbox = "";
+                            var data = JSON.parse(info.data);
+                            $.each(data, function(i, n) {
+                                opt += "<option value='" + n.r_id + "'>" + n.r_name + "</option>";
+                                searchbox += "<li data-index='" + n.r_name + "' data-id='" + n.r_id + "'>" + n.r_name.replace(brand_search,"<span style='color:red'>"+brand_search+"</span>") + "</li>";
+                            })
+                            $(".searchbox ul").html(searchbox);
+                            $(".searchbox").show();
+                            $("#brand_searchs").attr("isclick","0");
+                        } else {
+                            if(brand_search!=""){
+                                $(".searchbox").show();
+                                $(".searchbox ul").html("<li>无相关地址</li>");
+                            }
+
+                        }
+
+                        searchclick();
+
+                    },
+                    error:function () {
+                        swal({
+                            title: "通讯出错!",
+                            text: "请联系开发人员或管理员!"
+                        });
+                    }
+                })
+            }
+            $("#btn2").click(function(){
+                var r_name =  $("#brand_searchs").val();
+                var r_id =  $("#brand_searchs").attr("data-id");
+                var isclick = $("#brand_searchs").attr("isclick");
+                var falg = true;
+                $(".baoyou").each(function(){
+                    if (r_name==$(this).val()) {
+                        falg = false;
+
+                        swal({
+                            title: "通讯提示!",
+                            text: "已有相同地址！~"
+                        });
+                    }
+                });
+                if (falg) {
+                    
+                }else{
+                    return false;
+                }
+
+                if(isclick != "1"){
+                    swal({
+                        title: "通讯提示!",
+                        text: "请在下拉菜单下选择！~"
+                    });
+                    return false;
+                }
+
+                if (r_name=="") {
+
+                    swal({
+                        title: "通讯提示!",
+                        text: "请输入配送区域地址！~"
+                    });
+                    return false;
+                }else{
+                    $(".cbox").hide();
+                    $("#by").append(' <div style="float:left;position: relative;" class="box" "><input type="hidden"  name="logc_area[]" value="'+r_id+'"><input type="text"  class ="baoyou" style="margin-top: 5px;text-align: center;max-width: 115px;margin-right:10px" readonly="readonly" value="'+r_name+'" ><span style="position: absolute;top: -4px;right: 7px;" onclick="yichu(this)">x</span></div>');
+                };
+
+            });
+            function yichu(element) {
+                $(element).parent(".box").remove();
+                if($('.box').length==0){
+                    $('.cbox').show();
+                }
+            }
+             function searchclick(){
+                $(".searchbox ul li").click(function(){
+                    var r_name = $(this).attr("data-index");
+                    var r_id=$(this).attr("data-id");
+                    $(".searchbox").hide();
+                    $(".que").show();
+                    $("#brand_searchs").attr("data-id",r_id);
+                    $("#brand_searchs").val(r_name);
+                    $("#brand_searchs").attr("isclick","1");
+                });
+            }
+
+            $('.cbox').click(function(){
+                $('#brand_searchs').prop('disabled',$('#quanguo').prop('checked'));
+            });
+            </script>
+    </body>
+</html>

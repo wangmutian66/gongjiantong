@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>
+            文章修改
+        </title>
+        <meta content="" name="keywords"/>
+        <meta content="" name="description"/>
+        <link href="favicon.ico" rel="shortcut icon"/>
+        <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+        <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/animate.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
+        <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/ueditor.config.js"></script>
+        <script type="text/javascript" charset="utf-8" src="__UEDITOR__/ueditor.all.min.js"> </script>
+        <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+        <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+        <script type="text/javascript" charset="utf-8" src="lang/zh-cn/zh-cn.js"></script>
+    </head>
+    <body class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>文章修改</h5>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a class="close-link" href="{:url('manage/index/welcome')}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                            <div class="ibox-tools" style="margin-right: 15px;">
+                                <a href="{:url('manage/Articles/articlesList')}">
+                                    <i class="fa fa-bars"></i>
+                                    文章列表
+                                </a>
+                            </div>
+                        </div>  
+                        <div class="ibox-content">
+                            <form class="form-horizontal" method="POST" action="{:url('manage/Articles/articlesEdit',array('id'=>$info.a_id))}" enctype="multipart/form-data" >
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        分类
+                                    </label>
+                                    <div class="col-sm-2 m-b-xs">
+                                        <select class="input-sm form-control input-s-sm inline" onchange="getCategory(this.value,2)" name="ac_parent_id_1" style="height: 32px;">
+                                            <option value="">请选择文章分类</option>
+                                            {if condition="isset($first_cate) and !empty($first_cate)"}
+                                                {foreach name="first_cate" item="first"}
+                                                    <option value="{$first.ac_id}" {if condition="$first.ac_id eq $info.parent_1"}selected{/if}>{$first.ac_name}</option>
+                                                {/foreach}
+                                            {/if}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 m-b-xs">
+                                        <select class="input-sm form-control input-s-sm inline" name="ac_parent_id_2" onchange="getCategory(this.value,3)" id="ac_parent_id_2" style="height: 32px;">
+                                            <option value="">请选择文章分类</option>
+                                            {if condition="isset($second_cate) and !empty($second_cate)"}
+                                                {foreach name="second_cate" item="second"}
+                                                    <option value="{$second.ac_id}"{if condition="isset($info.parent_2) and ($second.ac_id eq $info.parent_2)"}selected{/if}>{$second.ac_name}</option>
+                                                {/foreach}
+                                            {/if}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 m-b-xs">
+                                        <select class="input-sm form-control input-s-sm inline" id="ac_parent_id_3" name="ac_parent_id_3" style="height: 32px;">
+                                            <option value="">请选择文章分类</option>
+                                            {if condition="isset($third_cate) and !empty($third_cate)"}
+                                                {foreach name="third_cate" item="third"}
+                                                    <option value="{$third.ac_id}"{if condition="isset($info.parent_1) and ($third.ac_id eq $info.parent_1)"}selected{/if}>{$third.ac_name}</option>
+                                                {/foreach}
+                                            {/if}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        标题
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="a_title" value="{$info.a_title}" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        作者
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input  class="form-control" name="a_author" value="{$info.a_author}" />
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        是否开启
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <div class="switch">
+                                            <div class="onoffswitch">
+                                                <input type="checkbox" checked class="onoffswitch-checkbox" id="a_is_open" name="a_is_open" {if condition="$info.a_is_open eq '1'"}checked{/if}>
+                                                <label class="onoffswitch-label" for="a_is_open">
+                                                    <span class="onoffswitch-inner"></span>
+                                                    <span class="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        文章缩略图
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="file" aria-required="true" aria-invalid="true" name="a_thumb_path" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        简述
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control" type="text" required="" aria-required="true" aria-invalid="true" name="a_description" value="{$info.a_description}" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        内容
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <script id="editor" type="text/plain" style="height:500px;" name="a_content">{$info.a_content}</script>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2 pull-right">
+                                        <input class="btn btn-primary" type="submit" value="保存内容" />
+                                        <input class="btn btn-white" type="button" onclick="window.history.go(-1)" value="取消" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 全局js -->
+        <script src="MANAGE_JS/jquery.min.js?v=2.1.4">
+        </script>
+        <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6">
+        </script>
+        <!-- 自定义js -->
+        <script src="MANAGE_JS/content.js?v=1.0.0">
+        </script>
+        <!-- iCheck -->
+        <script src="MANAGE_JS/plugins/iCheck/icheck.min.js">
+        </script>
+        <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+        <script>
+            var ue = UE.getEditor('editor');
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+            function getCategory(id,add) {
+                if (id > 0) {
+                    $.ajax({
+                        url:"{:url('manage/Articles/getArticlesCategory')}",
+                        type:"post",
+                        data:{id:id},
+                        dataType:"json",
+                        success:function(info){
+                            $("#ac_parent_id_"+add).empty();
+                            if (info.code == 200) {
+                                var opt = "<option value=''>请选择文章分类</option>";
+                                var data = JSON.parse(info.data);
+                                $.each(data,function(i,n){
+                                    opt += "<option value='" + n.ac_id + "'>" + n.ac_name + "</option>";
+                                })
+                                $("#ac_parent_id_"+add).append(opt);
+                            }
+                        },
+                        error:function(){
+                            swal({
+                                title: "通讯出错!",
+                                text: "请联系开发人员或管理员!"
+                            });
+                        }
+                    })
+                }
+            }
+        </script>
+    </body>
+</html>

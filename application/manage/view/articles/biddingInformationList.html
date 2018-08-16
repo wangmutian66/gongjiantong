@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>招投标列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="MANAGE_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="MANAGE_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="MANAGE_CSS/animate.css" rel="stylesheet">
+    <link href="MANAGE_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="MANAGE_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>
+                            {if condition="$bi_type eq '0'"}
+                                招标列表
+                            {elseif condition="$bi_type eq '1'"/}
+                                中标列表
+                            {else /}
+                                公告列表
+                            {/if}
+                        </h5>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a class="close-link" href="{:url('manage/index/welcome')}">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                        <div class="ibox-tools" style="margin-right: 15px;">
+                            <a href="{:url('manage/Articles/biddingInformationAdd')}">
+                                <i class="fa fa-plus"></i>
+                                发布招投标信息
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <form action="" method="get">
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="请输入关键字" class="input-sm form-control" name="bi_title" value="{if condition="isset($data.bi_title)"}{$data.bi_title}{/if}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <!--<select class="input-sm form-control input-s-sm inline" name="r_id" id="r_id" style="height: 32px;">-->
+                                            <!---->
+                                        <!--</select>-->
+                                        <select class="input-sm form-control input-s-sm inline" name="bi_status" id="bi_status" style="height: 32px;">
+                                            <option value="">全部</option>
+                                            <option value="1">招标中</option>
+                                            <option value="2">已留标</option>
+                                            <option value="3">已结束</option>
+                                        </select>
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-sm btn-primary"> 搜索</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width:3%"> </th>
+                                        <th>标题</th>
+                                        <th>开始时间</th>
+                                        <th>结束时间</th>
+                                        <th>投放地区</th>
+                                        <th>是否显示</th>
+                                        <th>添加人</th>
+                                        <th>招标状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {if condition="isset($list) and !empty($list)"}
+                                    {foreach name="list" item="info"}
+                                        <tr id="ac_{$info.bi_id}">
+                                            <td>
+                                                <input type="checkbox" class="i-checks" name="bi_id[]" value="{$info.bi_id}">
+                                            </td>
+                                            <td>
+                                                {$info.bi_title}
+                                            </td>
+
+                                            <td>
+                                                {$info.bi_add_time|date='Y-m-d',###}
+                                            </td>
+                                            <td>
+                                                {if condition="$info.bi_end_time neq 0 and $info.bi_end_time gt 0 and $info.bi_end_time neq ''"} {$info.bi_end_time|date='Y-m-d',###} {/if}
+
+                                            </td>
+                                            <td>
+                                                {$info.r_name}
+                                            </td>
+                                            <td>
+                                                {if condition="isset($info.bi_is_show) and $info.bi_is_show eq 0"}
+                                                    关闭
+                                                {else /}
+                                                    开启
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {$info.m_name}
+                                            </td>
+                                            <td>
+
+                                                {if condition="$info.bi_status eq '1'"}
+                                                <span>招标中</span>
+                                                {elseif condition="$info.bi_status eq '2'"}
+                                                <span>已留标</span>
+                                                {elseif condition="$info.bi_status eq '3'"}
+                                                <span>已结束</span>
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#myModal2" onclick="mpg_show({$info.bi_id})" class="btn btn-default btn-xs"><i class="fa fa-eye text-navy"></i>&nbsp;查看 </a>&nbsp;&nbsp;
+                                                <a href="{:url('manage/Articles/biddingInformationEdit',array('id'=>$info.bi_id))}" class="btn btn-default btn-xs"><i class="fa fa-wrench text-navy"></i>&nbsp;修改 </a>&nbsp;&nbsp;
+                                                <a onclick="del('ac_{$info.bi_id}',{$info.bi_id},'{:url(\"manage/Articles/biddingInformationDel\")}')" class="btn btn-default btn-xs"><i class="fa fa-close text-navy"></i>&nbsp;删除 </a>
+                                                {if condition="$info.bi_status neq '3'"}
+                                                <a href="{:url('manage/Articles/biddingInformationEnd',array('id'=>$info.bi_id))}" class="btn btn-default btn-xs"><i class="fa fa-wrench text-navy"></i>&nbsp;结束 </a>&nbsp;&nbsp;
+                                                {/if}
+                                            </td>
+                                        </tr>
+                                    {/foreach}
+                                {/if}
+                                </tbody>
+                            </table>
+                            <label>选中(<span class="delnum">0</span>)</label>  <button class="btn btn-sm btn-primary" onclick="delbtn()">全部删除</button>
+                        </div>
+                        <!-- 分页 start -->
+                        {if condition="isset($page) and !empty($page)"}
+                            {$page}
+                        {/if}
+                        <!-- 分页 end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title">文章详情</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span>标题: </span>
+                        <span id="bi_title"></span>
+                    </div>
+                    <div class="form-group rm1">
+                        <span>中标人: </span>
+                        <span id="bi_winning_bid"></span>
+                    </div>
+                    <div class="form-group rm2">
+                        <span>中标时间: </span>
+                        <span id="bi_winning_bid_time"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>发布时间: </span>
+                        <span id="bi_add_time"></span>
+                    </div>
+                    <div class="form-group rm3">
+                        <span>发标时间: </span>
+                        <span id="bi_start_time"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>投放地区: </span>
+                        <span id="r_name"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>添加人: </span>
+                        <span id="bi_author"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>是否显示: </span>
+                        <span id="bi_is_show"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>描述: </span>
+                        <span id="bi_desc"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>添加人: </span>
+                        <span id="bi_editor"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>修改时间: </span>
+                        <span id="bi_edit_time"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>招标代理: </span>
+                        <span id="bi_agent"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>业主单位: </span>
+                        <span id="bi_proprietor_com"></span>
+                    </div>
+                    <div class="form-group">
+                        <span>所属行业: </span>
+                        <span id="bi_industry"></span>
+                    </div>
+                    <div class="form-group" style="width: 100%;">
+                        <span>内容: </span>
+                        <span id="bi_contents"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="MANAGE_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="MANAGE_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/plugins/peity/jquery.peity.min.js"></script>
+    <!-- 自定义js -->
+    <script src="MANAGE_JS/content.js?v=1.0.0"></script>
+    <!-- iCheck -->
+    <script src="MANAGE_JS/plugins/iCheck/icheck.min.js"></script>
+    <!-- Peity -->
+    <script src="MANAGE_JS/demo/peity-demo.js"></script>
+    <script src="MANAGE_JS/globals.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            $('.iCheck-helper').click(function(){
+                var typelen = $('input[type=checkbox]:checked').length;
+                $('.delnum').text(typelen);
+
+            });
+
+
+
+        });
+
+
+        function delbtn(){
+            arr = [];
+            $('input[type=checkbox]:checked').each(function(){
+                arr.push($(this).val());
+            });
+
+            sweetAlert({
+                title: "确定删除吗?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#AEDEF4",
+                confirmButtonText: "确定",
+                cancelButtonText:"取消",
+                closeOnConfirm: false
+            }, function() {
+                $.ajax({
+                    url:"{:url('manage/Articles/biddingInformationallDel')}",
+                    data:{id:arr},
+                    type:"POST",
+                    dataType:"json",
+                    success:function(info){
+                        if (info.code != '1') {
+                            swal({
+                                title: "删除失败!",
+                                text: info.msg
+                            });
+                        } else {
+                            swal({
+                                title: info.msg,
+                            });
+                            window.location.reload();
+                        }
+                    }
+                });
+            });
+
+
+        }
+
+        function mpg_show(id) {
+            $.ajax({
+                url:'{:url("manage/Articles/biddingInformationShow")}',
+                type:"post",
+                data:{id:parseInt(id)},
+                dataType:"json",
+                success:function (info) {
+                    if (info.code != '1') {
+                        swal({
+                            title: "数据请求失败,请稍候再试!~",
+                            text: info.msg
+                        });
+                    }else{
+                        var param = JSON.parse(info.data);
+                        console.log(param);
+                        $("#bi_title").html(param.bi_title);
+                        $("#bi_winning_bid").html(param.bi_winning_bid);
+                        $("#bi_winning_bid_time").html(param.bi_winning_bid_time);
+                        $("#bi_add_time").html(param.bi_add_time);
+                        $("#bi_start_time").html(param.bi_start_time);
+                        $("#r_name").html(param.r_name);
+                        $("#bi_author").html(param.bi_author);
+                        $("#bi_is_show").html(param.bi_is_show);
+                        $("#bi_desc").html(param.bi_desc);
+                        $("#bi_editor").html(param.bi_editor);
+                        $("#bi_edit_time").html(param.bi_edit_time);
+                        $("#bi_agent").html(param.bi_agent);
+                        $("#bi_proprietor_com").html(param.bi_proprietor_com);
+                        $("#bi_industry").html(param.bi_industry);
+
+                        $("#bi_contents").html(param.bi_contents);
+                        if (param.bi_type == 0) {
+                            $(".rm1").empty();//中标人
+                            $(".rm2").empty();//中标时间
+                            // $(".rm3").empty();//发标时间
+                        }else if (param.bi_type == 1) {
+                            // $(".rm1").empty();
+                            // $(".rm2").empty();
+                            $(".rm3").empty();
+                        }else if (param.bi_type == 2) {
+                            $(".rm1").empty();
+                            $(".rm2").empty();
+                            $(".rm3").empty();
+                        }
+                    }
+                },
+                error:function () {
+                    swal({
+                        title: "通讯出错!",
+                        text: "请联系开发人员或管理员!"
+                    });
+                }
+            })
+        }
+
+        $.ajax({
+            url:"{:url('manage/Base/getRegion')}",
+            type:"post",
+            data:{},
+            dataType:"json",
+            success:function(info){
+                if (info.code == 1) {
+                    var opt = "<option value=''>请选择投放地区</option>";
+                    var data = JSON.parse(info.data);
+                    $.each(data,function(i,n){
+                        if ("{:isset($data.r_id) && $data.r_id}" == n.r_id) {
+                            str = "selected";
+                        }else{
+                            str = '';
+                        }
+                        opt += "<option value='" + n.r_id + "' "+ str +">" + n.r_name + "</option>";
+                    })
+                    $("#r_id").append(opt);
+                }else{
+                    swal({
+                        title: "出错啦!",
+                        text: info.msg,
+                    });
+                }
+            },
+            error:function(){
+                // swal({
+                //     title: "通讯出错!",
+                //     text: "请联系开发人员或管理员!"
+                // });
+            }
+        })
+    </script>
+</body>
+</html>

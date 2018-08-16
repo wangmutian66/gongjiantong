@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>退货列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="SELLER_CSS/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="SELLER_CSS/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="SELLER_CSS/animate.css" rel="stylesheet">
+    <link href="SELLER_CSS/style.css?v=4.1.0" rel="stylesheet">
+    <link href="SELLER_CSS/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<body>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">地址</h4>
+            </div>
+            <div class="modal-body">
+                <textarea style="width: 100%; height: 140px; border-radius: 3px; border:1px solid #ccc; resize: none;" name="or_address_1"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="submitupdate()">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>商品订单</h5>
+                    <div class="ibox-tools" style="margin-right: 15px;">
+                        <a class="close-link" href="{:url('seller/index/welcome')}">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="ibox-content">
+                    <form action="" method="post" id="priceForm" name="priceForm">
+                        <input type="hidden" name="or_address" onchange="editaddress()"/>
+                        <table class="table table-striped table-hover">
+                            <tr>
+                                <td><span class="tabletitle">退换货类型</span><span class="tablecontent">
+                                {if condition="$orrow.or_type eq '0'"}
+                                    <b>退货</b>
+                                {elseif condition="$orrow.or_type eq '1'"}
+                                    <b>换货</b>
+                                {/if}
+                                </span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="tabletitle">订单编号</span><span class="tablecontent">{$oRow.o_sn}</span></td>
+                            </tr>
+
+                            <tr>
+                                <td><span class="tabletitle">用户</span><span class="tablecontent">{$name}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="tabletitle">申请日期</span><span class="tablecontent">{$orrow['or_time']|date="Y-m-d H:i",###}</span></td>
+                            </tr>
+                              {if condition="$orrow.or_type eq '0'"}
+                            <tr>
+                                <td><span class="tabletitle">退款详情</span><span class="tablecontent">需退款金额<input type="text" name="returnprice" value="{$returnprice}"></span></td>
+                            </tr>
+                            {/if}
+                            <tr>
+                                <td><span class="tabletitle">商品名称</span><span class="tablecontent">{$gRow.g_name}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="tabletitle">退换货描述</span><span class="tablecontent">{$orrow.or_describe}</span></td>
+                            </tr>
+
+                            {if condition="$orrow.or_status eq '0' or $orrow.or_receiving eq '0'"}
+                            <tr>
+                                <td><span class="tabletitle">审核意见</span><span class="tablecontent">
+                                    <label><input type="radio" name="or_examine" checked="" value="1" onclick="distribution(1)">审核通过</label>
+                                    <label><input type="radio" name="or_examine" value="-1" onclick="distribution(-1)">拒绝通过</label></span></td>
+                            </tr>
+                            {/if}
+                            <tr {if condition="$orrow.or_examine eq 1 or $orrow.or_examine eq '' " } style="display:none" {/if} id="distribution">
+                                <td><span class="tabletitle" style="float: left;margin-top: 10px;">拒绝原因</span><span class="tablecontent"><textarea name="or_examine_content" id="remark" style="width:300px; height:120px;" placeholder="拒绝原因" class="tarea">{$orrow.or_examine_content}</textarea></span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="tabletitle">状态</span><span class="tablecontent">
+                                    {if condition="$orrow.or_status eq '0'"}
+                                    待审核
+                                    {elseif condition="$orrow.or_receiving eq '0'"}
+                                    待收货
+                                    {elseif condition="$orrow.or_refund eq '0'"}
+                                    待退款
+                                    {elseif condition="$orrow.or_refund eq '1'"}
+                                    待完成
+                                    {/if}
+                                </span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="tabletitle" style="float: left;margin-top: 10px;">退换货原因</span><span class="tablecontent"><textarea name="or_why" id="remark" style="width:300px; height:120px;" placeholder="退货原因" class="tarea" readonly>{$orrow.or_why}</textarea></span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="tabletitle" style="float: left;margin-top: 10px;">退换货图片</span><span class="tablecontent"><img src="__UPLOAD__/{$orrow.or_img_path1}" alt="" style="width:300px"><img src="__UPLOAD__/{$orrow.or_img_path2}" alt="" style="width:300px"><img src="__UPLOAD__/{$orrow.or_img_path3}" alt="" style="width:300px"></span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="tabletitle" style="float: left;margin-top: 10px;">处理备注</span><span class="tablecontent"><textarea name="or_remarks" id="remark" style="width:300px; height:120px;" placeholder="退货描述" class="tarea"></textarea></span></td>
+                            </tr>
+                        </table>
+
+                        <div class="bot">
+                            {if condition="$orrow.or_status eq '0'"}
+                            <input type="hidden" name="file" value="or_status">
+                            <!--onclick="document.priceForm.submit()"-->
+                            <a data-toggle="modal" data-target="#myModal" class="ncap-btn-big ncap-btn-green">确认</a>
+                            {elseif condition="$orrow.or_receiving eq '0'"}
+                            <input type="hidden" name="file" value="or_receiving">
+                            <a href="JavaScript:void(0);" onclick="document.priceForm.submit()" class="ncap-btn-big ncap-btn-green">收货</a>
+                            {elseif condition="$orrow.or_refund eq '0'"}
+                            <input type="hidden" name="file" value="or_refund">
+
+                            <a href="JavaScript:void(0);" onclick="document.priceForm.submit()" class="ncap-btn-big ncap-btn-green" id="orrowtype">{if condition="$orrow.or_type eq '0'"}申请退款{else/}换货{/if}</a>
+                            {/if}
+                            <a href="JavaScript:void(0);" onclick="javascript:history.go(-1)" class="ncap-btn-big ncap-btn-mini">取消</a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="SELLER_JS/jquery.min.js?v=2.1.4"></script>
+    <script src="SELLER_JS/bootstrap.min.js?v=3.3.6"></script>
+    <script src="MANAGE_JS/plugins/sweetalert/sweetalert.min.js"></script>
+    <script type="text/javascript">
+        function ajax_submit_form(url){
+            $.ajax({
+                url:url,
+                type:"POST",
+                data:{"note":$("#note").val()},
+                dataType:"json",
+                success:function(data){
+                    if(data.code == 200){
+                        swal({
+                            title: "通讯提示!",
+                            text: "操作成功!"
+                        });
+                        $(".sa-button-container .confirm").click(function(){
+                            window.location.reload();
+                        });
+
+                    }else{
+                        swal({
+                            title: "通讯提示!",
+                            text: "操作失败!"
+                        });
+                    }
+
+                }
+            });
+        }
+
+
+        function submitupdate(){
+
+            var or_address_1 = $("textarea[name=or_address_1]").val();
+            $("input[name=or_address]").val(or_address_1);
+            document.priceForm.submit();
+        }
+
+
+
+
+        function distribution(type){
+            if(type == -1){
+                $("#distribution").show();
+
+                $("#orrowtype").text("拒绝"+"{if condition="$orrow.or_type eq '0'"}退款{else/}换货{/if}");
+            }else{
+                $("#distribution").hide();
+                $("#orrowtype").text("{if condition="$orrow.or_type eq '0'"}退款{else/}换货{/if}");
+            }
+        }
+    </script>
+</body>
+</html>
